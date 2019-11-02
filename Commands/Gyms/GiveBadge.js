@@ -6,7 +6,7 @@ module.exports = {
   category: "Gyms",
   description: "Gives a badge to a user",
   usage: "<type> <@user>",
-  permissions: [],
+  permissions: ["Manage Roles"],
   run: async (client, message, args) => {
 	if(message.deletable) message.delete();
 
