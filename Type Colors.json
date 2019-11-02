@@ -1,0 +1,20 @@
+{
+	"bugColor": "#b7cf51",
+	"darkColor": "#908888",
+	"dragon": "#9843ad",
+	"electric": "#fffe00",
+	"fairy": "#da9cdd",
+	"fighting": "#87403b",
+	"fire": "#b22222",
+	"flying": "#759ef0",
+	"ghost": "#7771bf",
+	"grass": "#608038",
+	"ground": "#d6b35f",
+	"ice": "#8fe6f9",
+	"normal": "#b9b99f",
+	"poison": "#a2549a",
+	"psychic": "#e550a3",
+	"rock": "#bfb378",
+	"steel": "#b7b6c5",
+	"water": "#0077be"
+}
