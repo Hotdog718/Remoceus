@@ -70,7 +70,8 @@ function getCategoryEmbed(client, categoryNames, index){
       name: object.name,
       description: object.description,
       usage: object.usage,
-      permissions: object.permissions.join(", ")
+      permissions: object.permissions.join(", "),
+      aliases: object.aliases
     }
     commands.push(obj);
   })
@@ -84,7 +85,7 @@ function getCategoryEmbed(client, categoryNames, index){
   }else{
     for(let i = 0; i<commands.length; i++){
       let temp = commands[i];
-      embed.addField(`${client.config.prefix}${temp.name} ${temp.usage}`, `Description: ${temp.description}\n${temp.permissions? `Permissions: ${temp.permissions}`: ``}`)
+      embed.addField(`${client.config.prefix}${temp.name} ${temp.usage}`, `Description: ${temp.description}${temp.permissions? `\nPermissions: ${temp.permissions}`: ``}${temp.aliases.length > 0?`\nAliases: !${temp.aliases.join(", !")}`: ``}`)
     }
   }
   return embed;
