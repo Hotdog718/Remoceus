@@ -8,7 +8,7 @@ module.exports = {
 	usage: "<@user>",
 	permissions: ["Administrator"],
 	run: async (client, message, args) => {
-		if(!message.member.hasPermission("ADMINISTRATOR", true, true)) return client.errors.noPerms(message, "Administrator");
+		if(!message.member.hasPermission("ADMINISTRATOR", false, true, true)) return client.errors.noPerms(message, "Administrator");
 		let pUser = message.guild.member(message.mentions.users.first());
 		if(!pUser) return errors.noUser(message);
 		Badges.findOneAndDelete({

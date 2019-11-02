@@ -1,5 +1,5 @@
 ﻿
-const Discord = require("discord.js");
+const { RichEmbed } = require("discord.js");
 
 module.exports = {
   name: "help",
@@ -74,7 +74,7 @@ function getCategoryEmbed(client, categoryNames, index){
     }
     commands.push(obj);
   })
-  let embed = new Discord.RichEmbed()
+  let embed = new RichEmbed()
   .setTitle(`${categoryNames[index]} Commands`)
   .setColor(client.config.color)
   .setThumbnail(client.user.displayAvatarURL)
