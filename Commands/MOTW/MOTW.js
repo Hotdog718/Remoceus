@@ -11,7 +11,7 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
-		let motws = args[0] ? getMOTWWithSpecies(args[0]) : await getMOTW();
+		let motws = args[0] ? await getMOTWWithSpecies(args[0]) : await getMOTW();
 		if(motws && motws.length > 1){
 			motws = motws.reverse();
 		}
@@ -78,6 +78,9 @@ const createMOTWEmbed = (client, message, motws) => {
 				 .addField("EVs", `${formatEVSpread(currentSet)}`)
 				 .addField("Moveset", `${currentSet.move1}\n${currentSet.move2}\n${currentSet.move3}\n${currentSet.move4}`)
 				 .setFooter(`Set #${index+1} of ${motws.length}`);
+				 if(currentSet.ytLink){
+           embed.setURL(currentSet.ytLink);
+         }
 	}
 	return embed;
 }

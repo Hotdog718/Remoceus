@@ -19,7 +19,7 @@ module.exports = {
 
 		if(!client.gymTypes.includes(type)) return client.errors.noType(message)
 
-		let winners = Badges.find({
+		Badges.find({
 			serverID: message.guild.id,
 		}).exec((err, res) => {
 			if(err) console.log(err);
@@ -88,7 +88,7 @@ function getEmbed(message, type, res, client){
 			if(member === "User Left"){
 				members.push(`${member}`);
 			}else{
-				members.push(`${member.user.tag}`)	
+				members.push(`${member.user.tag}`)
 			}
 		}
 		embed.addField(`Users who have the ${type} badge`, members.join("\n"))

@@ -29,5 +29,4 @@ module.exports = (client) => {
 	client.on("warn", (info) => console.warn(info));
 
 	client.login(token.token);
-
 }

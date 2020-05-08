@@ -21,31 +21,7 @@ module.exports = {
 			}, (err, badges) => {
 				if(err) console.log(err);
 				if(!badges){
-					const newBadges = new Badges({
-					userID: pUser.id,
-					serverID: message.guild.id,
-					bug: false,
-					dark: false,
-					dragon: false,
-					electric: false,
-					fairy: false,
-					fighting: false,
-					fire: false,
-					flying: false,
-					ghost: false,
-					grass: false,
-					ground: false,
-					ice: false,
-					normal: false,
-					poison: false,
-					psychic: false,
-					rock: false,
-					steel: false,
-					water: false,
-					count: 0
-				})
-					message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`).then(m => m.delete(5000));
-					newBadges.save().catch(err => console.log(err));
+					message.channel.send(`${pUser.user.username} hasn't registered for the gym challenge yet.`);
 				}else{
 					if(badges[type.toLowerCase()]){
 						badges[type.toLowerCase()] = false;

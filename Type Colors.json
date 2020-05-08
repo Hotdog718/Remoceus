@@ -1,6 +1,6 @@
 {
-	"bugColor": "#b7cf51",
-	"darkColor": "#908888",
+	"bug": "#b7cf51",
+	"dark": "#908888",
 	"dragon": "#9843ad",
 	"electric": "#fffe00",
 	"fairy": "#da9cdd",
