@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/Hotdog718/Remoceus-Remake#readme",
   "dependencies": {
-    "discord.js": "^11.5.1",
+    "discord.js": "^11.6.4",
     "fs": "0.0.1-security",
-    "mongodb": "^3.3.2",
+    "mongodb": "^3.5.7",
     "mongoose": "^5.7.5"
   }
 }
