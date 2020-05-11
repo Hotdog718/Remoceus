@@ -12,10 +12,10 @@ module.exports = {
 		let type = args[0];
 		let status = args[1];
 
-		let gymAnnouncements = message.guild.channels.find(channel => channel.name === "announcements") || message.channel;
+		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
 
 		if(!type) return client.errors.noType(message);
-		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete(5000));
+		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete({timeout: 5000}));
 
 		if(client.errors.checkGyms(type, message.member)){
 			Gyms.findOne({
@@ -53,7 +53,7 @@ module.exports = {
 				}
 			})
 		}else{
-			message.channel.send("You don't own this gym").then(m => m.delete(5000));
+			message.channel.send("You don't own this gym").then(m => m.delete({timeout: 5000}));
 		}
 	}
 }

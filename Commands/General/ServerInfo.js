@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
 	name: "serverinfo",
@@ -9,9 +9,9 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
-    let thumbnail = message.guild.iconURL;
+    let thumbnail = message.guild.iconURL();
 
-    let serverEmbed = new RichEmbed()
+    let serverEmbed = new MessageEmbed()
     .setTitle(`${message.guild.name}`)
     .setColor(client.config.color)
     .addField("Server Owner",`${message.guild.owner}`)

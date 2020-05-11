@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   name: "roll",
@@ -12,10 +12,10 @@ module.exports = {
       let diceRolls = args[0].split("d");
       let num = parseInt(diceRolls[0]);
       let type = parseInt(diceRolls[1]);
-      if(!num || isNaN(num) || !type || isNaN(type)) return message.channel.send("Error").then(m => m.delete(5000).catch(err => {}));
-      if(num > 24) return message.channel.send("Cannot roll more than 24 dice at a time").then(m => m.delete(5000).catch(err => {}))
+      if(!num || isNaN(num) || !type || isNaN(type)) return message.channel.send("Error").then(m => m.delete({timeout: 5000}).catch(err => {}));
+      if(num > 24) return message.channel.send("Cannot roll more than 24 dice at a time").then(m => m.delete({timeout: 5000}).catch(err => {}))
       var promise = new Promise(function(resolve, reject){
-        let rollEmbed = new RichEmbed()
+        let rollEmbed = new MessageEmbed()
         .setTitle("Dice Rolls")
         .setColor(client.config.color);
         let sum = 0;
@@ -24,11 +24,6 @@ module.exports = {
           rollEmbed.addField(`#${i+1}`, roll, true);
           sum+=roll;
           if(i === num-1){
-            if(num%3 === 1){
-              rollEmbed.addBlankField(true).addBlankField(true);
-            }else if(num%3 === 2){
-              rollEmbed.addBlankField(true);
-            }
             rollEmbed.setDescription(`Average of rolled dice: ${Math.round(sum/num)}, Sum of rolled dice: ${sum}`);
             resolve(rollEmbed);
           }

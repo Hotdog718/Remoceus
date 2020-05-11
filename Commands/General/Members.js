@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const membersPerPage = 10;
 let page = 1;
 
@@ -58,9 +58,9 @@ module.exports = {
 function getMemberPage(client, guild){
   let guildMembers = guild.members.array().filter(member => !member.user.bot);
   let maxPages = Math.ceil(guildMembers.length/membersPerPage);
-  let guildEmbed = new RichEmbed()
+  let guildEmbed = new MessageEmbed()
   .setTitle(`${guild.name}'s Members`)
-  .setThumbnail(guild.iconURL)
+  .setThumbnail(guild.iconURL())
   .setColor(client.config.color)
   .setFooter(`Page ${page} out of ${maxPages}`);
   for(let i = (page-1)*membersPerPage; i<page*membersPerPage && i<guildMembers.length; i++){
