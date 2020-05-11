@@ -9,8 +9,8 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
-    let str = args.join(" ");
-    let arr = str.split(", ").join(",").split(",");
+    let str = args.join(" ").trim();
+    let arr = str.split(/,+ +|,+/g);
     let name = arr[0] || message.author.username;
     let town = arr[1] || "Location TBA";
 
@@ -46,7 +46,7 @@ module.exports = {
       	water: false,
       	count: 0
       });
-      message.channel.send(`You have been registered for the gym challenge under the name ${name} and the town of ${town}`).then(m => m.delete(5000));
+      message.channel.send(`You have been registered for the gym challenge under the name ${name} and the town of ${town}`).then(m => m.delete({timeout: 5000}));
       newBadges.save().catch(err => console.log(err));
     })
 	}

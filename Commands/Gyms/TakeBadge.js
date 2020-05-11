@@ -26,15 +26,15 @@ module.exports = {
 					if(badges[type.toLowerCase()]){
 						badges[type.toLowerCase()] = false;
 						badges.count--;
-						message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`).then(msg => msg.delete(5000));
+						message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`).then(msg => msg.delete({timeout: 5000}));
 					}else{
-						message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`).then(m => m.delete(5000));
+						message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`).then(m => m.delete({timeout: 5000}));
 					}
 					badges.save().catch(err => console.log(err));
 				}
 			})
 		}else {
-			return message.channel.send("oof.").then(msg => msg.delete(5000));
+			return message.channel.send("oof.").then(msg => msg.delete({timeout: 5000}));
 		}
 	}
 }

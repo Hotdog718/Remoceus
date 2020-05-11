@@ -10,14 +10,14 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
 
-		if(!client.errors.checkFrontier(message.member)) return message.channel.send("You are not a frontier brain").then(m => m.delete(5000));
+		if(!client.errors.checkFrontier(message.member)) return message.channel.send("You are not a frontier brain").then(m => m.delete({timeout: 5000}));
 		let amount = parseInt(args[0]);
 		let type = args[1];
 
 		//if no amount given or amount isn't a number, send a message and exit the command
-		if(!amount || isNaN(amount)) return message.channel.send("Please give an amount of medals to give").then(m => m.delete(5000));
+		if(!amount || isNaN(amount)) return message.channel.send("Please give an amount of medals to give").then(m => m.delete({timeout: 5000}));
 		//if no type or type is not a given type, send a message and exit the command
-		if(!type || !(type.toLowerCase() === "bronze" || type.toLowerCase() === "silver" || type.toLowerCase() === "gold" || type.toLowerCase() === "platinum")) return message.channel.send("Medal type must be Bronze, Silver, Gold, or Platinum").then(m => m.delete(5000));
+		if(!type || !(type.toLowerCase() === "bronze" || type.toLowerCase() === "silver" || type.toLowerCase() === "gold" || type.toLowerCase() === "platinum")) return message.channel.send("Medal type must be Bronze, Silver, Gold, or Platinum").then(m => m.delete({timeout: 5000}));
 
 		//search for a user in mentions or by username
 		let mUser = message.guild.member(message.mentions.users.first()) || message.guild.members.find(member => member.user.username === args.slice(2).join(" "));
@@ -40,11 +40,11 @@ module.exports = {
 					platinum: 0
 				})
 				newMedals[type.toLowerCase()] += Math.abs(amount);
-				message.channel.send(`Awarded ${mUser.user.username} ${Math.abs(amount)} ${type} medals.`).then(m => m.delete(5000));
+				message.channel.send(`Awarded ${mUser.user.username} ${Math.abs(amount)} ${type} medals.`).then(m => m.delete({timeout: 5000}));
 				newMedals.save().catch(err => console.log(err))
 			}else{
 				medals[type.toLowerCase()] += Math.abs(amount);
-				message.channel.send(`Awarded ${mUser.user.username} ${Math.abs(amount)} ${type} medals.`).then(m => m.delete(5000));
+				message.channel.send(`Awarded ${mUser.user.username} ${Math.abs(amount)} ${type} medals.`).then(m => m.delete({timeout: 5000}));
 				medals.save().catch(err => console.log(err))
 			}
 		})

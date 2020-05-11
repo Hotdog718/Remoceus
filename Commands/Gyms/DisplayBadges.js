@@ -1,5 +1,5 @@
 ﻿const Badges = require("../../Models/Badges.js");
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 let index = 0;
 let itemsPerPage = 10;
 let maxPages = 0;
@@ -75,7 +75,7 @@ module.exports = {
 }
 
 function getEmbed(message, type, res, client){
-	let embed = new RichEmbed()
+	let embed = new MessageEmbed()
 	.setThumbnail(message.guild.iconURL)
 	.setColor(client.config.color)
 	.setFooter(`Page ${index+1} of ${maxPages}`);

@@ -1,6 +1,6 @@
 
 const Pokemon = require("../../Utils/Pokemon.js");
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   name: "move",
@@ -11,13 +11,14 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     if(message.deletable) message.delete();
-    let move = args.join("").split("-").join("").toLowerCase().trim();
-    if(!move) return message.channel.send("No arguments").then(m => m.delete(5000));
+    let str = args.join(" ");
+    let move = str.replace(/[^a-z0-9]/gi, "").toLowerCase().trim();
+    if(!move) return message.channel.send("No arguments").then(m => m.delete({timeout: 5000}));
     let MoveInfo = Pokemon.MoveInfo[move];
-    if(!MoveInfo) return message.channel.send(`Could not find ${args.join(" ")}.`).then(m => m.delete(5000));
+    if(!MoveInfo) return message.channel.send(`Could not find ${args.join(" ")}.`).then(m => m.delete({timeout: 5000}));
     let url = `https://www.serebii.net/pokedex-bw/type/${MoveInfo.type.toLowerCase()}.gif`;
 
-    let embed = new RichEmbed()
+    let embed = new MessageEmbed()
     .setTitle(`${MoveInfo.name} Info`)
     .setThumbnail(url)
     .setColor(Pokemon.TypeColors[MoveInfo.type])

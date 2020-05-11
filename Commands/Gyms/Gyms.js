@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Gyms = require("../../Models/Gyms.js");
 const b = require("../../Badges.json")
 
@@ -15,7 +15,7 @@ module.exports = {
 		Gyms.findOne({
 			serverID: ServerID
 		}, (err, gyms) => {
-			let embed = new RichEmbed()
+			let embed = new MessageEmbed()
 			.setTitle("Available Gym Leaders")
 			.setColor(client.config.color);
 			if(!gyms){
@@ -26,13 +26,6 @@ module.exports = {
 					if(gyms[client.gymTypes[i]].toLowerCase() === "open"){
 						embed.addField(`${client.gymTypes[i].substring(0,1).toUpperCase()}${client.gymTypes[i].substring(1).toLowerCase()}`, b[client.gymTypes[i]], true);
 						gymCount++;
-					}
-				}
-				//check for blanks
-				if(gymCount%3 !== 0){
-					embed.addBlankField(true);
-					if((gymCount+1)%3 !== 0){
-						embed.addBlankField(true);
 					}
 				}
 				if(gymCount === 0){

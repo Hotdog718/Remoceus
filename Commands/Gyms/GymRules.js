@@ -1,5 +1,5 @@
 const GymRules = require("../../Models/GymRules.js");
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
 	name: "gymrules",
@@ -22,8 +22,8 @@ module.exports = {
 			type: type
 		}, (err, gymrules) => {
 			if(err) console.log(err);
-			let embed = new RichEmbed()
-			.setTitle(`${client.helpers.getTitleCase(type)} Gym Rules`)
+			let embed = new MessageEmbed()
+			.setTitle(`${client.helpers.toTitleCase(type)} Gym Rules`)
 			.setColor(client.typeColors[type])
 			.setImage(gymrules.banner)
 			.setThumbnail(client.helpers.rankLinks[gymrules.rank.toUpperCase()])

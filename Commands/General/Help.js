@@ -1,5 +1,5 @@
 ﻿
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   name: "help",
@@ -35,9 +35,6 @@ module.exports = {
       const collector = msg.createReactionCollector(filter, {});
 
       collector.on('collect', (reaction) => {
-        setTimeout(function(){
-          reaction.remove(message.author.id).catch(err => {});
-        }, 250)
         switch(reaction.emoji.name){
           case '⬅':{
             index = (index-1) < 0? categoryNames.length-1 :index-1;
@@ -75,10 +72,10 @@ function getCategoryEmbed(client, categoryNames, index){
     }
     commands.push(obj);
   })
-  let embed = new RichEmbed()
+  let embed = new MessageEmbed()
   .setTitle(`${categoryNames[index]} Commands`)
   .setColor(client.config.color)
-  .setThumbnail(client.user.displayAvatarURL)
+  .setThumbnail(client.user.displayAvatarURL())
   .setFooter(`Page ${index+1} of ${categoryNames.length}`);
   if(commands.length == 0){
     embed.addField("No Commands", "No Commands Listed");

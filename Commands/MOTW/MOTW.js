@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const MOTW = require("../../Models/MOTW.js");
 let index = 0;
 
@@ -33,9 +33,6 @@ module.exports = {
 			const collector = msg.createReactionCollector(filter, {});
 
 			collector.on('collect', (reaction) => {
-				setTimeout(function(){
-					reaction.remove(message.author.id).catch(err => {});
-				}, 250)
 				switch(reaction.emoji.name){
 					case '⬅':{
 						index = (index - 1) < 0 ? motws.length - 1 : index - 1;
@@ -64,7 +61,7 @@ module.exports = {
 }
 
 const createMOTWEmbed = (client, message, motws) => {
-	let embed = new RichEmbed()
+	let embed = new MessageEmbed()
 	.setThumbnail(message.guild.iconURL)
 	.setColor(client.config.color);
 	if(!motws || motws.length === 0 || !motws[index]){
@@ -72,7 +69,7 @@ const createMOTWEmbed = (client, message, motws) => {
 	}else{
 		let currentSet = motws[index];
 		embed.setTitle(currentSet.setName)
-				 .addField("Pokemon", client.helpers.getTitleCase(currentSet.pokemon))
+				 .addField("Pokemon", client.helpers.toTitleCase(currentSet.pokemon))
 				 .addField("Ability(s)", currentSet.ability)
 				 .addField("Item(s)", currentSet.item)
 				 .addField("EVs", `${formatEVSpread(currentSet)}`)

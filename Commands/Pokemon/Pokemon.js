@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const { PokemonInfo, TypeColors } = require("../../Utils/Pokemon.js");
 
 module.exports = {
@@ -10,10 +10,11 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     if(message.deletable) message.delete();
-    let pokemon = args.join("").split("-").join("").toLowerCase().trim();
-    if(!pokemon) return message.channel.send("No name given").then(m => m.delete(5000));
+    let str = args.join(" ");
+    let pokemon = str.replace(/[^a-z]/gi, "").toLowerCase().trim();
+    if(!pokemon) return message.channel.send("No name given").then(m => m.delete({timeout: 5000}));
     let PokeObject = PokemonInfo[pokemon];
-    if(!PokeObject) return message.channel.send("Could not find pokemon").then(m => m.delete(5000));
+    if(!PokeObject) return message.channel.send("Could not find pokemon").then(m => m.delete({timeout: 5000}));
     message.channel.send(getPokeEmbed(PokeObject, client))
   }
 }
@@ -22,7 +23,7 @@ function getPokeEmbed(obj, client, page = "stats"){
   let url = `https://www.serebii.net/pokemon/art/${getNum(obj.num)}${getforme(obj)}.png`;
   let numOfPokemon = getMaxDex();
   const { forme, baseSpecies, species, types, num, heightm, weightkg, baseStats, abilities, eggGroups, color, evos, prevo } = obj;
-  let embed = new RichEmbed()
+  let embed = new MessageEmbed()
   .setTitle(`${(forme?`${baseSpecies}-${forme}`:species)}`)
   .setThumbnail(url)
   .setColor(TypeColors[types[0]])
