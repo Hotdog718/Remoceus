@@ -10,10 +10,8 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		let ServerID = message.guild.id;
-
 		Gyms.findOne({
-			serverID: ServerID
+			serverID: message.guild.id
 		}, (err, gyms) => {
 			let embed = new MessageEmbed()
 			.setTitle("Available Gym Leaders")
@@ -24,7 +22,7 @@ module.exports = {
 				let gymCount = 0;
 				for(let i = 0; i<client.gymTypes.length; i++){
 					if(gyms[client.gymTypes[i]].toLowerCase() === "open"){
-						embed.addField(`${client.gymTypes[i].substring(0,1).toUpperCase()}${client.gymTypes[i].substring(1).toLowerCase()}`, b[client.gymTypes[i]], true);
+						embed.addField(`${client.helpers.toTitleCase(client.gymTypes[i])}`, b[client.gymTypes[i]], true);
 						gymCount++;
 					}
 				}

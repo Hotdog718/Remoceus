@@ -11,10 +11,10 @@ module.exports = {
 		let pUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
 		let type = args[0];
 
-		if(!pUser) return errors.noUser(message);
-		if(!type) return errors.noType(message);
+		if(!pUser) return client.errors.noUser(message);
+		if(!type) return client.errors.noType(message);
 
-		if(client.errors.checkGyms(type, message.member, true)){
+		if(client.helpers.checkGyms(client, type, message.member, true)){
 			Badges.findOne({
 				userID: pUser.id,
 				serverID: message.guild.id

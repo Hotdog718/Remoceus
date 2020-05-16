@@ -10,13 +10,13 @@ module.exports = {
   run: async (client, message, args) => {
   	if(message.deletable) message.delete();
 
-  	let pUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
+  	let pUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[1]);
     let type = args[0];
 
     if(!pUser) return client.errors.noUser(message);
     if(!type) return client.errors.noType(message);
 
-    if(!client.errors.checkGyms(type, message.member, true)) return message.channel.send("oof.").then(m => m.delete({timeout: 5000}));
+    if(!client.helpers.checkGyms(client, type, message.member, true)) return message.channel.send("oof.").then(m => m.delete({timeout: 5000}));
 
     Badges.findOne({
       userID: pUser.id,
