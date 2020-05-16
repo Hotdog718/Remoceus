@@ -9,8 +9,8 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
-    if(args.length <= 0) return message.channel.send("Please enter a new name.").then(m => m.delete({timeout: 5000}));
-    let newName = args.join(" ");
+    //if(args.length <= 0) return message.channel.send("Please enter a new name.").then(m => m.delete({timeout: 5000}));
+    let newName = args.length > 0 ? args.join(" ") : message.author.username;
 
     Badges.findOne({
       userID: message.author.id,

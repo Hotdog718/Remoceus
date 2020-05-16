@@ -29,6 +29,9 @@ module.exports = {
 			.setThumbnail(client.helpers.rankLinks[gymrules.rank.toUpperCase()])
 			.setDescription(`__~${gymrules.title}~__` || `__~COMING SOON~__`)
 			.addField("__Gym Rules__", gymrules.rules);
+			if(gymrules.sub.toLowerCase() !== `none`){
+				embed.addField(`__Gym Leader Sub__`, gymrules.sub);
+			}
 
 			message.channel.send(embed);
 		})

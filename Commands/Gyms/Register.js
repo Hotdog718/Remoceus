@@ -10,7 +10,7 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
     let str = args.join(" ").trim();
-    let arr = str.split(/,+ +|,+/g);
+    let arr = str.split(/,+\s*/g);
     let name = arr[0] || message.author.username;
     let town = arr[1] || "Location TBA";
 

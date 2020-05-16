@@ -10,7 +10,7 @@ module.exports = {
 	run: async (client, message, args) => {
     if(message.deletable) message.delete();
 
-		if(!client.errors.checkFrontier(message.member)) return message.channel.send("You are not a frontier brain").then(m => m.delete({timeout: 5000}));
+		if(!client.helpers.checkFrontier(message.member)) return message.channel.send("You are not a frontier brain").then(m => m.delete({timeout: 5000}));
 		let amount = parseInt(args[0]);
 		let type = args[1];
 

@@ -62,7 +62,7 @@ module.exports = {
 
 const createMOTWEmbed = (client, message, motws) => {
 	let embed = new MessageEmbed()
-	.setThumbnail(message.guild.iconURL)
+	.setThumbnail(message.guild.iconURL())
 	.setColor(client.config.color);
 	if(!motws || motws.length === 0 || !motws[index]){
 		embed.addField("No MOTWs", "Come back later!");

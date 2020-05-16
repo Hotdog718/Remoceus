@@ -17,7 +17,7 @@ module.exports = {
 		if(!type) return client.errors.noType(message);
 		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete({timeout: 5000}));
 
-		if(client.errors.checkGyms(type, message.member)){
+		if(client.helpers.checkGyms(client, type, message.member)){
 			Gyms.findOne({
 				serverID: message.guild.id
 			}, (err, gyms) => {
