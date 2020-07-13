@@ -8,7 +8,15 @@ module.exports = (client) => {
 
 	client.on("message", async message => {
 		if(message.channel.type === "dm") return;
-		if(message.author.bot) return;
+		if(message.author.bot){
+			let currentMember = message.guild.members.cache.find(member => member.user.tag === message.author.username);
+			if(currentMember){
+				message.author = currentMember.user;
+				message.member = currentMember;
+			}else{
+				return;
+			}
+		}
 		let prefix = client.config.prefix;
 		let messageArray = message.content.split(" ");
 		let cmd = messageArray[0];
