@@ -18,7 +18,7 @@ client.commands = new Collection();
 client.aliases = new Collection();
 client.errors = errors;
 client.gymTypes = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
-client.currentSeason = ["dark", "dragon", "fairy", "fire", "ghost", "grass", "ice", "steel", "water"];
+client.currentSeason = ["bug", "electric", "fighting", "flying", "ground", "normal", "poison", "psychic", "rock"];
 client.helpers = helper;
 client.typeColors = typeColors;
 

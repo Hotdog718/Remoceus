@@ -24,7 +24,7 @@ module.exports = {
         }
       })
     });
-    if(badgeArray.length <= 0) return message.channel.send(`Sorry, but no users were found.`).then(m => m.delete({timeout: 5000}));
+    if(badgeArray.length <= 0) return message.channel.send(`Sorry, but no users were registered for the gym challenge.`).then(m => m.delete({timeout: 5000}));
     let maxPages = Math.ceil(badgeArray.length/resultsPerPage);
     badgeArray = badgeArray.sort((a, b) => {
       if(a.count == b.count){
