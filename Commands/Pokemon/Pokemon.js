@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { PokemonInfo, TypeColors } = require("../../Utils/Pokemon.js");
+const Pokemon = require("../../Utils/Pokemon.js");
 
 module.exports = {
   name: "pokemon",
@@ -13,20 +13,20 @@ module.exports = {
     let str = args.join(" ");
     let pokemon = str.replace(/[^a-z]/gi, "").toLowerCase().trim();
     if(!pokemon) return message.channel.send("No name given").then(m => m.delete({timeout: 5000}));
-    let PokeObject = PokemonInfo[pokemon];
+    let PokeObject = Pokemon.PokemonInfo[pokemon];
     if(!PokeObject) return message.channel.send("Could not find pokemon").then(m => m.delete({timeout: 5000}));
     message.channel.send(getPokeEmbed(PokeObject, client))
   }
 }
 
 function getPokeEmbed(obj, client, page = "stats"){
-  let url = `https://www.serebii.net/pokemon/art/${getNum(obj.num)}${getforme(obj)}.png`;
   let numOfPokemon = getMaxDex();
-  const { forme, baseSpecies, species, types, num, heightm, weightkg, baseStats, abilities, eggGroups, color, evos, prevo } = obj;
+  const { forme, baseSpecies, name, types, num, heightm, weightkg, baseStats, abilities, eggGroups, color, evos, prevo } = obj;
+  let url = Pokemon.GetSerebiiURL(name, forme || '', (Math.floor(Math.random() * 100) == 0))
   let embed = new MessageEmbed()
-  .setTitle(`${(forme?`${baseSpecies}-${forme}`:species)}`)
+  .setTitle(`${(forme?`${baseSpecies}-${forme}`:name)}`)
   .setThumbnail(url)
-  .setColor(TypeColors[types[0]])
+  .setColor(Pokemon.TypeColors[types[0]])
   .setFooter(`Pokemon #${num < 10?`00${num}`: (num < 100? `0${num}`: num)} of ${getMaxDex()}`)
   .addField("Typing", types.join("/\n"), true)
   .addField("Height/ Weight", `Height: ${heightm} m\nWeight: ${weightkg} kg`, true)
@@ -35,7 +35,7 @@ function getPokeEmbed(obj, client, page = "stats"){
   .addField("Egg Groups", eggGroups, true)
   .addField("Color", color, true)
   if(prevo || evos){
-    embed.addField("Evolutions", `${prevo? `Evolves from: ${PokemonInfo[prevo].species} (${getEvoType(obj)})\n`: ``}${evos?`Evolves into: ${getEvos(evos).join(" or ")}`: ''}`);
+    embed.addField("Evolutions", `${prevo ? `Evolves from: ${prevo} (${getEvoType(obj)})\n`: ``}${evos?`Evolves into: ${evos.join(" or ")}`: ''}`);
   }
   return embed;
 }
@@ -43,7 +43,7 @@ function getPokeEmbed(obj, client, page = "stats"){
 function getEvos(evos){
   for(let i = 0; i<evos.length; i++){
     let evo = evos[i];
-    evos[i] = `${PokemonInfo[evo].species} (${getEvoType(PokemonInfo[evo])})`;
+    evos[i] = `${Pokemon.PokemonInfo(evo).name} (${getEvoType(Pokemon.PokemonInfo(evo))})`;
   }
   return evos;
 }
@@ -59,11 +59,11 @@ function getEvoType(poke){
 }
 
 function getMaxDex(){
-  var keys = Object.keys(PokemonInfo);
+  var keys = Object.keys(Pokemon.PokemonInfo);
   var max = 0;
   keys.forEach(function(r, i){
-    if(PokemonInfo[r].num > max){
-      max = PokemonInfo[r].num;
+    if(Pokemon.PokemonInfo[r].num > max){
+      max = Pokemon.PokemonInfo[r].num
     }
   })
   return max;
@@ -87,23 +87,5 @@ function getAbilities(abilities){
     return abilityArray;
   }else{
     return "No Special Abilities";
-  }
-}
-
-function getforme(obj){
-  if(obj.formeLetter){
-    return `-${obj.formeLetter.toLowerCase()}`;
-  }else{
-    return '';
-  }
-}
-
-function getNum(number){
-  if(number < 10){
-    return `00${number}`;
-  }else if(number < 100){
-    return `0${number}`;
-  }else{
-    return number;
   }
 }

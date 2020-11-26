@@ -2,7 +2,7 @@
 
 module.exports = {
 	toTitleCase: (word) => {
-		//takes a string as an argument and returns a string (getTitleCase("hello") => returns "Hello")
+		//takes a string as an argument and returns a string (toTitleCase("hello") => returns "Hello")
 		if(word.length === 0) return word;
 		let wordArr = word.split(" ");
 		for(let i = 0; i < wordArr.length; i++){
@@ -19,33 +19,46 @@ module.exports = {
 		"D": "https://i.imgur.com/TSAzjav.png",
 	},
 	checkGyms: (client, type, member, checkAdmin=false) => {
-		return (checkAdmin && member.hasPermission("MANAGE_ROLES", false, true, true)) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`))
-		/*if(checkAdmin && member.hasPermission("MANAGE_ROLES", false, true, true)){
-			return true;
-		}else if((type === "normal" && member.roles.cache.find(role => role.name === "Normal Gym Leader"))
-    || (type === "fire" && member.roles.cache.find(role => role.name === "Fire Gym Leader"))
-    || (type === "water" && member.roles.cache.find(role => role.name === "Water Gym Leader"))
-    || (type === "grass" && member.roles.cache.find(role => role.name === "Grass Gym Leader"))
-    || (type === "electric" && member.roles.cache.find(role => role.name === "Electric Gym Leader"))
-    || (type === "flying" && member.roles.cache.find(role => role.name === "Flying Gym Leader"))
-    || (type === "bug" && member.roles.cache.find(role => role.name === "Bug Gym Leader"))
-    || (type === "ghost" && member.roles.cache.find(role => role.name === "Ghost Gym Leader"))
-    || (type === "poison" && member.roles.cache.find(role => role.name === "Poison Gym Leader"))
-    || (type === "psychic" && member.roles.cache.find(role => role.name === "Psychic Gym Leader"))
-    || (type === "dragon" && member.roles.cache.find(role => role.name === "Dragon Gym Leader"))
-    || (type === "dark" && member.roles.cache.find(role => role.name === "Dark Gym Leader"))
-    || (type === "rock" && member.roles.cache.find(role => role.name === "Rock Gym Leader"))
-    || (type === "ground" && member.roles.cache.find(role => role.name === "Ground Gym Leader"))
-    || (type === "fairy" && member.roles.cache.find(role => role.name === "Fairy Gym Leader"))
-    || (type === "ice" && member.roles.cache.find(role => role.name === "Ice Gym Leader"))
-    || (type === "fighting" && member.roles.cache.find(role => role.name === "Fighting Gym Leader"))
-    || (type === "steel" && member.roles.cache.find(role => role.name === "Steel Gym Leader"))){
-			return true;
-		}else{
-			return false;
-		}*/
+		return (checkAdmin && member.hasPermission("MANAGE_ROLES", false, true, true)) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
 	},
-	checkFrontier: (member) => {
-		return member.roles.cache.find(role => role.name === "Battle Frontier") || member.hasPermission("MANAGE_ROLES", false, true, true)
+	createMenuEmbed: (client, message, data, embedFunction) => {
+		const { MessageCollector } = require('discord.js');
+		let index = 0;
+		let embed = embedFunction(client, index, data);
+		message.channel.send(embed).then(msg => {
+			//set filter to only let only set reactions and message author to respond
+      const filter = (m) => {
+        return m.author.id === message.author.id;
+      }
+
+			//create msgCollector
+      const collector = new MessageCollector(message.channel, filter, {idle: 60000});
+
+			collector.on('collect', (m) => {
+        switch(m.content){
+          case '!back': {
+            if(m.deletable) m.delete();
+            index = (index-1) < 0 ? data.length-1 : index-1;
+            msg.edit(embedFunction(client, index, data)).catch(err => collector.stop());
+            break;
+          }
+          case '!next': {
+            if(m.deletable) m.delete();
+            index = (index+1)%data.length;
+            msg.edit(embedFunction(client, index, data)).catch(err => collector.stop());
+            break;
+          }
+          case '!stop': {
+            if(m.deletable) m.delete();
+            collector.stop("Manually Stopped");
+            break;
+          }
+        }
+      })
+
+			collector.on('end', (collected, reason) => {
+        msg.delete();
+      })
+		})
 	}
 }
