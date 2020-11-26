@@ -17,6 +17,8 @@ module.exports = {
 		if(!pUser) return client.errors.noUser(message);
 		if(!type) return client.errors.noType(message);
 
+		if(!client.gymTypes.includes(type.toLowerCase())) return message.channel.send(`Sorry, but ${type} is not a gym type.`).then(m => m.delete({timeout: 5000}));
+
 		if(client.helpers.checkGyms(client, type, message.member, true)){
 			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 			await Badges.findOne({
