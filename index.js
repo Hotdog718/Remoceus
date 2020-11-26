@@ -6,12 +6,14 @@ const errors = require("./Utils/Errors.js");
 const helper = require("./Utils/Helper.js")
 const typeColors = require("./Type Colors.json");
 
+/*
 const token = require("./token.json")
 const mongoose = require("mongoose")
 mongoose.connect(
 	token.mongodb_uri,
 	{useNewUrlParser: true, useUnifiedTopology: true}
 );
+*/
 
 client.config = botconfig;
 client.commands = new Collection();

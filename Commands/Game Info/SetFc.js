@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const FC = require("../../Models/FC.js");
 
 module.exports = {
@@ -10,7 +13,9 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
 		let myNewFC = args.length > 0 ? args.join(" "): "No FC set, use !setfc <fc> to set your fc (ex. !setfc 3883-7141-8049)";
-		FC.findOne({
+
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		await FC.findOne({
 			userID: message.author.id,
 		}, (err, fc) => {
 			if(err) console.log(err);
@@ -27,5 +32,6 @@ module.exports = {
 			}
 			message.channel.send(`Set Friend Code to: ${myNewFC}`);
 		})
+		db.disconnect();
 	}
 }

@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Gyms = require("../../Models/Gyms.js")
 
 module.exports = {
@@ -18,7 +21,8 @@ module.exports = {
 		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete({timeout: 5000}));
 
 		if(client.helpers.checkGyms(client, type, message.member)){
-			Gyms.findOne({
+			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+			await Gyms.findOne({
 				serverID: message.guild.id
 			}, (err, gyms) => {
 				if(err) console.log(err);
@@ -52,6 +56,7 @@ module.exports = {
           gyms.save().catch(err => console.log(err));
 				}
 			})
+			db.disconnect();
 		}else{
 			message.channel.send("You don't own this gym").then(m => m.delete({timeout: 5000}));
 		}

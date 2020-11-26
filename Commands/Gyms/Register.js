@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Badges = require("../../Models/Badges.js");
 
 module.exports = {
@@ -14,7 +17,9 @@ module.exports = {
     let name = arr[0] || message.author.username;
     let town = arr[1] || "Location TBA";
 
-    Badges.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+		await Badges.findOne({
       userID: message.author.id,
       serverID: message.guild.id
     }, (err, badges) => {
@@ -49,5 +54,6 @@ module.exports = {
       message.channel.send(`You have been registered for the gym challenge under the name ${name} and the town of ${town}`).then(m => m.delete({timeout: 5000}));
       newBadges.save().catch(err => console.log(err));
     })
+		db.disconnect();
 	}
 }

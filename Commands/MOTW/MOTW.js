@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const { MessageEmbed } = require("discord.js");
 const MOTW = require("../../Models/MOTW.js");
 let index = 0;
@@ -94,6 +97,7 @@ const formatEVSpread = ({evs}) => {
 }
 
 const getMOTW = async () => {
+	const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 	let motws = await new Promise(function(resolve, reject) {
 		MOTW.find().exec((err, res) => {
 			if(err) console.log(err);
@@ -101,10 +105,12 @@ const getMOTW = async () => {
 			resolve(res);
 		})
 	});
+	db.disconnect();
 	return motws;
 }
 
 const getMOTWWithSpecies = async (species) => {
+	const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 	let motws = await new Promise(function(resolve, reject) {
 		MOTW.find({
 			pokemon: species.toLowerCase()
@@ -114,5 +120,6 @@ const getMOTWWithSpecies = async (species) => {
 			resolve(res);
 		})
 	});
+	db.disconnect();
 	return motws;
 }

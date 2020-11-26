@@ -1,6 +1,11 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Badges = require("../../Models/Badges.js");
 const { MessageEmbed } = require("discord.js");
 const b = require("../../Badges.json");
+
+
 
 module.exports = {
   name: "badges",
@@ -14,7 +19,9 @@ module.exports = {
 
   	let leUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.find(member => member.user.username === args.join(" ")) || message.member;
 
-  	Badges.findOne({
+    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+  	await Badges.findOne({
   		userID: leUser.id,
   		serverID: message.guild.id
   	}, (err, badges) => {
@@ -43,5 +50,6 @@ module.exports = {
   		}
   		message.channel.send(embed);
     })
+    db.disconnect();
   }
 }
