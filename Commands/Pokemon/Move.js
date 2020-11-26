@@ -15,7 +15,7 @@ module.exports = {
     let move = str.replace(/[^a-z0-9]/gi, "").toLowerCase().trim();
     if(!move) return message.channel.send("No arguments").then(m => m.delete({timeout: 5000}));
     let MoveInfo = Pokemon.MoveInfo[move];
-    if(!MoveInfo) return message.channel.send(`Could not find ${args.join(" ")}.`).then(m => m.delete({timeout: 5000}));
+    if(!MoveInfo) return message.channel.send(`Could not find ${str}.`).then(m => m.delete({timeout: 5000}));
     let url = `https://www.serebii.net/pokedex-bw/type/${MoveInfo.type.toLowerCase()}.gif`;
 
     let embed = new MessageEmbed()
@@ -75,6 +75,12 @@ async function getBasicInfo(moveinfo){
       item: "zMovePower",
       func: (power) => {
         return ["Z-Move Power",power];
+      }
+    },
+    {
+      item: "gmaxPower",
+      func: (power) => {
+        return ["Max Move Power", power]
       }
     }
   ]
