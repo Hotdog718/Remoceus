@@ -1,4 +1,7 @@
-﻿const Badges = require("../../Models/Badges.js");
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
+const Badges = require("../../Models/Badges.js");
 const { MessageEmbed } = require("discord.js");
 let index = 0;
 let itemsPerPage = 10;
@@ -18,6 +21,7 @@ module.exports = {
 		if(!type) return client.errors.noType(message);
 
 		if(!client.gymTypes.includes(type)) return client.errors.noType(message)
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		let badges = await new Promise(function(resolve, reject) {
 			Badges.find({
 				serverID: message.guild.id
@@ -30,6 +34,8 @@ module.exports = {
 				}
 			})
 		});
+
+		db.disconnect();
 
 		let arr = filterType(badges, type);
 		maxPages = Math.ceil(arr.length/itemsPerPage);

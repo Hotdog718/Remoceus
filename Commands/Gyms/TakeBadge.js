@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Badges = require("../../Models/Badges.js");
 
 module.exports = {
@@ -15,7 +18,8 @@ module.exports = {
 		if(!type) return client.errors.noType(message);
 
 		if(client.helpers.checkGyms(client, type, message.member, true)){
-			Badges.findOne({
+			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+			await Badges.findOne({
 				userID: pUser.id,
 				serverID: message.guild.id
 			}, (err, badges) => {
@@ -33,6 +37,7 @@ module.exports = {
 					badges.save().catch(err => console.log(err));
 				}
 			})
+			db.disconnect();
 		}else {
 			return message.channel.send("oof.").then(msg => msg.delete({timeout: 5000}));
 		}

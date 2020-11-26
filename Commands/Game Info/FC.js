@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const FC = require("../../Models/FC.js");
 const { MessageEmbed } = require("discord.js");
 
@@ -12,7 +15,8 @@ module.exports = {
     if(message.deletable) message.delete();
     let leUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.find(member => member.user.username === args.join(" ")) || message.member;
 
-    FC.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    await FC.findOne({
       userID: leUser.id
     }, (err, fc) => {
       if(err) console.log(err);
@@ -25,5 +29,6 @@ module.exports = {
 
       message.channel.send(embed);
     })
+		db.disconnect();
 	}
 }

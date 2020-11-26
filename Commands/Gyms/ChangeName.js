@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Badges = require("../../Models/Badges.js");
 
 module.exports = {
@@ -12,7 +15,9 @@ module.exports = {
     //if(args.length <= 0) return message.channel.send("Please enter a new name.").then(m => m.delete({timeout: 5000}));
     let newName = args.length > 0 ? args.join(" ") : message.author.username;
 
-    Badges.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    await Badges.findOne({
       userID: message.author.id,
       serverID: message.guild.id
     }, (err, badges) => {
@@ -25,5 +30,6 @@ module.exports = {
         message.channel.send(`You have now changed your name to ${newName}`).then(m => m.delete({timeout: 5000}));
       }
     })
+		db.disconnect();
 	}
 }

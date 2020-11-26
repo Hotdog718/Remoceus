@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const { MessageEmbed } = require("discord.js");
 const Gyms = require("../../Models/Gyms.js");
 const b = require("../../Badges.json")
@@ -10,7 +13,9 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		Gyms.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+		await Gyms.findOne({
 			serverID: message.guild.id
 		}, (err, gyms) => {
 			let embed = new MessageEmbed()
@@ -32,5 +37,6 @@ module.exports = {
 			}
 			message.channel.send(embed);
 		})
+		db.disconnect();
 	}
 }

@@ -1,3 +1,5 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
 const { MessageEmbed } = require("discord.js");
 const Badges = require("../../Models/Badges.js");
 const resultsPerPage = 10;
@@ -12,6 +14,7 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
     let index = 0;
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
     let badgeArray = await new Promise(function(resolve, reject) {
       Badges.find({
         serverID: message.guild.id
@@ -24,6 +27,7 @@ module.exports = {
         }
       })
     });
+		db.disconnect();
     if(badgeArray.length <= 0) return message.channel.send(`Sorry, but no users were registered for the gym challenge.`).then(m => m.delete({timeout: 5000}));
     let maxPages = Math.ceil(badgeArray.length/resultsPerPage);
     badgeArray = badgeArray.sort((a, b) => {

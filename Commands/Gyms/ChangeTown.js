@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const Badges = require("../../Models/Badges.js");
 
 module.exports = {
@@ -14,7 +17,9 @@ module.exports = {
 
     if(!newTown || newTown === "") newTown = "Location TBA";
 
-    Badges.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+    await Badges.findOne({
       userID: message.author.id,
       serverID: message.guild.id
     }, (err, badges) => {
@@ -27,5 +32,6 @@ module.exports = {
         message.channel.send(`You have now changed your town to ${newTown}`).then(m => m.delete({timeout: 5000}));
       }
     })
+		db.disconnect();
 	}
 }

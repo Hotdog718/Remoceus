@@ -1,3 +1,6 @@
+const { mongodb_uri } = require("../../token.json");
+const mongoose = require("mongoose");
+
 const GymRules = require("../../Models/GymRules.js");
 const { MessageEmbed } = require("discord.js");
 
@@ -17,7 +20,9 @@ module.exports = {
 		if(!type) return client.errors.noType(message);
 		if(!client.gymTypes.includes(type)) return client.errors.noType(message);
 
-		GymRules.findOne({
+		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+
+		await GymRules.findOne({
 			serverID: message.guild.id,
 			type: type
 		}, (err, gymrules) => {
@@ -35,5 +40,6 @@ module.exports = {
 
 			message.channel.send(embed);
 		})
+		db.disconnect();
 	}
 }
