@@ -38,15 +38,25 @@ module.exports = {
   			if(badges.count === 0){
   				embed.addField("Error 404", "No Badges Found");
   			}else{
-  				let types = ["bug","dark","dragon","electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
-  				for(let i = 0; i<types.length; i++){
-  					if(badges[types[i]]){
-              //${types[i].substring(0,1).toUpperCase()}${types[i].substring(1).toLowerCase()}
-  						embed.addField(`${client.helpers.toTitleCase(types[i])}`,b[types[i]],true);
-  					}
-  				}
-  				embed.setFooter(`Badge Count: ${badges.count} out of 9`);
-  			}
+  				let major = [];
+          let minor = [];
+          for(let i = 0; i < client.major.length; i++){
+            let emote = message.guild.emojis.cache.find(emote => emote.name === `badge_${client.major[i]}`)
+            if(badges[client.major[i]]){
+              major.push(emote ? emote : b[client.major[i]]);
+            }
+          }
+          for(let i = 0; i < client.minor.length; i++){
+            let emote = message.guild.emojis.cache.find(emote => emote.name === `badge_${client.minor[i]}`)
+            if(badges[client.minor[i]]){
+              minor.push(emote ? emote : b[client.minor[i]]);
+            }
+          }
+
+          embed.addField(`__Major League Badges__`, major.length > 0 ? major.join(" ") : `No Major League badges.`)
+               .addField(`__Minor League Badges__`, minor.length > 0 ? minor.join(" ") : `No Minor League badges.`);
+				}
+  				embed.setFooter(`Badge Count: ${badges.count} out of 18`);
   		}
   		message.channel.send(embed);
     })
