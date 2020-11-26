@@ -6,7 +6,7 @@ const motwSchema = mongoose.Schema({
   ability: String,
   nature: String,
   item: String,
-  evs: Array,
+  evs: Object,
   move1: String,
   move2: String,
   move3: String,
