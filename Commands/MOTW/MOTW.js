@@ -1,9 +1,9 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
 
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageCollector } = require("discord.js");
 const MOTW = require("../../Models/MOTW.js");
-let index = 0;
+const Pokemon = require("../../Utils/Pokemon.js");
 
 module.exports = {
 	name: "motw",
@@ -14,64 +14,24 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
-		let motws = args[0] ? await getMOTWWithSpecies(args[0]) : await getMOTW();
+		let motws = args[0] ? await getMOTWWithSpecies(args.join(" ")) : await getMOTW();
 		if(motws && motws.length > 1){
 			motws = motws.reverse();
 		}
-		let embed = createMOTWEmbed(client, message, motws);
-		message.channel.send(embed).then(msg => {
-			let reactions = ["⬅", "➡", "⏹"];
-			if(motws){
-				reactions.forEach(function(r, i){
-					setTimeout(function(){
-						msg.react(r);
-					}, i*800)
-				})
-			}
 
-			const filter = (reaction, user) => {
-				return reactions.includes(reaction.emoji.name) && user.id === message.author.id;
-			}
-
-			const collector = msg.createReactionCollector(filter, {});
-
-			collector.on('collect', (reaction) => {
-				switch(reaction.emoji.name){
-					case '⬅':{
-						index = (index - 1) < 0 ? motws.length - 1 : index - 1;
-						embed = createMOTWEmbed(client, message, motws);
-						msg.edit(embed);
-						break;
-					}
-					case '➡':{
-						index = (index + 1) % motws.length;
-						embed = createMOTWEmbed(client, message, motws);
-						msg.edit(embed);
-						break;
-					}
-					case '⏹':{
-						collector.emit('end');
-						break;
-					}
-				}
-			})
-
-			collector.on('end', collected => {
-				msg.delete();
-			})
-		})
+		client.helpers.createMenuEmbed(client, message, motws, createMOTWEmbed);
 	}
 }
 
-const createMOTWEmbed = (client, message, motws) => {
+const createMOTWEmbed = (client, index, motws) => {
 	let embed = new MessageEmbed()
-	.setThumbnail(message.guild.iconURL())
 	.setColor(client.config.color);
 	if(!motws || motws.length === 0 || !motws[index]){
 		embed.addField("No MOTWs", "Come back later!");
 	}else{
 		let currentSet = motws[index];
 		embed.setTitle(currentSet.setName)
+				 .setThumbnail(Pokemon.GetSerebiiURL(currentSet.pokemon, currentSet.forme, currentSet.shiny))
 				 .addField("Pokemon", client.helpers.toTitleCase(currentSet.pokemon))
 				 .addField("Ability(s)", currentSet.ability)
 				 .addField("Item(s)", currentSet.item)
@@ -87,10 +47,18 @@ const createMOTWEmbed = (client, message, motws) => {
 
 const formatEVSpread = ({evs}) => {
 	let res = ``;
-	let stat = ["HP", "Atk", "Def", "Sp Atk", "Sp Def", "Speed"];
-	for(let i = 0; i < evs.length; i++){
+	let keys = Object.keys(evs);
+	let stat = {
+		hp: "HP",
+		atk: "Atk",
+		def: "Def",
+		spa: "Sp. Atk",
+		spd: "Sp. Def",
+		spe: "Speed"
+	};
+	for(let i = 0; i < keys.length; i++){
 		if(evs[i] != 0){
-			res += `${evs[i]} ${stat[i]}, `;
+			res += `${evs[keys[i]]} ${stat[keys[i]]}, `;
 		}
 	}
 	return res.substring(0, res.length - 2);

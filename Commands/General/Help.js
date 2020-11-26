@@ -1,4 +1,4 @@
-﻿const { MessageEmbed } = require("discord.js");
+﻿const { MessageEmbed, MessageCollector } = require("discord.js");
 
 module.exports = {
   name: "help",
@@ -16,50 +16,12 @@ module.exports = {
         categoryNames.push(object.category);
       }
     })
-    message.channel.send(getCategoryEmbed(client, categoryNames, index)).then(msg => {
-      //Add Reactions to msg
-      let reactions = ["⬅", "➡", "⏹"];
-      reactions.forEach(function(r, i){
-        setTimeout(function(){
-          msg.react(r);
-        }, i*800)
-      })
 
-      //set filter to only let only set reactions and message author to respond
-      const filter = (reaction, user) => {
-        return reactions.includes(reaction.emoji.name) && user.id === message.author.id;
-      }
-
-      //create reactionCollector
-      const collector = msg.createReactionCollector(filter, {});
-
-      collector.on('collect', (reaction) => {
-        switch(reaction.emoji.name){
-          case '⬅':{
-            index = (index-1) < 0? categoryNames.length-1 :index-1;
-            msg.edit(getCategoryEmbed(client, categoryNames, index));
-            break;
-          }
-          case '➡':{
-            index = (index+1)%categoryNames.length;
-            msg.edit(getCategoryEmbed(client, categoryNames, index));
-            break;
-          }
-          case '⏹':{
-            collector.emit('end');
-            break;
-          }
-        }
-      })
-
-      collector.on('end', collected => {
-        msg.delete();
-      })
-    })
+    client.helpers.createMenuEmbed(client, message, categoryNames, getCategoryEmbed);
   }
 }
 
-function getCategoryEmbed(client, categoryNames, index){
+function getCategoryEmbed(client, index, categoryNames){
   let commands = [];
   client.commands.filter(r => r.category === categoryNames[index]).forEach(function(object, key, map){
     let obj = {
