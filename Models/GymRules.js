@@ -1,13 +1,30 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const gymSettingsSchema = mongoose.Schema({
-  serverID: String,
+const gymRulesSchema = mongoose.Schema({
   type: String,
+  serverID: String,
+  rules: {
+    singles: {
+      bannedPokemon: String,
+      bannedDynamax: String,
+      itemClause: String,
+      noLegends: Boolean,
+      battleReadyClause: Boolean
+    },
+    doubles: {
+      bannedPokemon: String,
+      bannedDynamax: String,
+      itemClause: String,
+      noLegends: Boolean,
+      battleReadyClause: Boolean
+    }
+  },
   banner: String,
-  rules: String,
-  sub: String,
   title: String,
-  rank: String
-});
+  location: String,
+  sub: String,
+  separateRules: Boolean,
+  majorLeague: Boolean
+})
 
-module.exports = mongoose.model("gymSettings", gymSettingsSchema);
+module.exports = mongoose.model("gymRules", gymRulesSchema);
