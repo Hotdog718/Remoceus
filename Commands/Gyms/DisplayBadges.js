@@ -1,6 +1,5 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
-
 const Badges = require("../../Models/Badges.js");
 const { MessageEmbed } = require("discord.js");
 let index = 0;
@@ -22,18 +21,7 @@ module.exports = {
 
 		if(!client.gymTypes.includes(type)) return client.errors.noType(message)
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let badges = await new Promise(function(resolve, reject) {
-			Badges.find({
-				serverID: message.guild.id
-			}).exec((err, res) => {
-				if(err) console.log(err);
-				if(!res){
-					resolve([]);
-				}else{
-					resolve(res);
-				}
-			})
-		});
+		let badges = await Badges.find({serverID: message.guild.id});
 
 		db.disconnect();
 

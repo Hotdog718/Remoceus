@@ -1,7 +1,6 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
-
-const Badges = require("../..//Models/Badges.js")
+const Badges = require("../../Models/Badges.js")
 
 module.exports = {
   name: "givebadge",
