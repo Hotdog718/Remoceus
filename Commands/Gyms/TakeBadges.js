@@ -1,6 +1,5 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
-
 const Badges = require("../../Models/Badges.js");
 
 module.exports = {
@@ -16,14 +15,8 @@ module.exports = {
 		if(!pUser) return client.errors.noUser(message);
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-
-		Badges.findOneAndDelete({
-			userID: pUser.id,
-			serverID: message.guild.id
-		}, (err, res) =>{
-			if(err) console.log(err);
-			message.channel.send(`${pUser.user.username}\'s badges have been revoked`);
-		})
+		await Badges.findOneAndDelete({userID: pUser.id, serverID: message.guild.id})
 		db.disconnect();
+		message.channel.send(`${pUser.user.username}\'s badges have been revoked`);
 	}
 }

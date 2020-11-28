@@ -1,8 +1,7 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
-
 const { MessageEmbed } = require("discord.js");
-const Gyms = require("../../Models/Gyms.js");
+const Gyms = require("../../Models/GymRules.js");
 const b = require("../../Badges.json")
 
 module.exports = {
@@ -13,30 +12,31 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
+		if(message.deletable) message.delete();
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-		await Gyms.findOne({
-			serverID: message.guild.id
-		}, (err, gyms) => {
-			let embed = new MessageEmbed()
-			.setTitle("Available Gym Leaders")
-			.setColor(client.config.color);
-			if(!gyms){
-				embed.addField("No Gyms are Open", "Please come back later!");
-			}else{
-				let gymCount = 0;
-				for(let i = 0; i<client.gymTypes.length; i++){
-					if(gyms[client.gymTypes[i]].toLowerCase() === "open"){
-						embed.addField(`${client.helpers.toTitleCase(client.gymTypes[i])}`, b[client.gymTypes[i]], true);
-						gymCount++;
-					}
-				}
-				if(gymCount === 0){
-					embed.addField("No Gyms are Open", "Please come back later!");
-				}
-			}
-			message.channel.send(embed);
-		})
+		let majorGyms = await Gyms.find({open: true, majorLeague: true, serverID: message.guild.id});
+		let minorGyms = await Gyms.find({open: true, majorLeague: false, serverID: message.guild.id});
 		db.disconnect();
+
+		let embed = new MessageEmbed()
+		.setTitle(`List of open gyms`)
+		.setColor(client.config.color)
+		.setThumbnail(message.guild.iconURL())
+		.setFooter(`${majorGyms.length+minorGyms.length} gyms open out of 18`);
+		let majorEmotes = [];
+		for(let i = 0; i < majorGyms.length; i++){
+			let emote = client.emojis.cache.find(emote => emote.name === `${majorGyms[i].type}`) || b[majorGyms[i].type];
+			majorEmotes.push(emote);
+		}
+		let minorEmotes = [];
+		for(let i = 0; i < minorGyms.length; i++){
+			let emote = client.emojis.cache.find(emote => emote.name === `${minorGyms[i].type}`) || b[minorGyms[i].type];
+			minorEmotes.push(emote);
+		}
+
+		embed.addField("Major Gyms", majorEmotes.join(" ") || "No Major Gyms Open").addField("Minor Gyms", minorEmotes.join(" ") || "No Minor Gyms Open");
+
+		message.channel.send(embed);
 	}
 }

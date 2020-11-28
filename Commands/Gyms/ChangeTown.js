@@ -18,20 +18,13 @@ module.exports = {
     if(!newTown || newTown === "") newTown = "Location TBA";
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-
-    await Badges.findOne({
-      userID: message.author.id,
-      serverID: message.guild.id
-    }, (err, badges) => {
-      if(err) console.log(err);
-      if(!badges){
-        message.channel.send(`You haven't registered for the gym challenge. Please use !register.`).then(m => m.delete({timeout: 5000}));
-      }else{
-        badges.hometown = newTown;
-        badges.save().catch(err => console.log(err));
-        message.channel.send(`You have now changed your town to ${newTown}`).then(m => m.delete({timeout: 5000}));
-      }
-    })
+		let badges = await Badges.findOne({userID: message.author.id, serverID: message.guild.id});
+		if(!badges) return message.channel.send(`You haven't registered for the gym challenge. Please use !register.`).then(m => m.delete({timeout: 5000})).then(() => db.disconnect()).catch(err => console.log(err));
+		badges.hometown = newTown;
+		await badges.save()
+								.then(() => message.channel.send(`You have now changed your town to ${newTown}`))
+								.then(m => m.delete({timeout: 5000}))
+								.catch(err => console.log(err));
 		db.disconnect();
 	}
 }

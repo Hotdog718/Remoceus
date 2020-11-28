@@ -42,6 +42,7 @@ module.exports = {
 		if(rules.sub){
 			embed.addField("__**Gym Sub**__", rules.sub);
 		}
+		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"));
 		message.channel.send(embed);
 	}
 }

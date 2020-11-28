@@ -1,7 +1,6 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
-
-const Gyms = require("../../Models/Gyms.js")
+const Gyms = require("../../Models/GymRules.js")
 
 module.exports = {
 	name: "setgym",
@@ -22,40 +21,9 @@ module.exports = {
 
 		if(client.helpers.checkGyms(client, type, message.member)){
 			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-			await Gyms.findOne({
-				serverID: message.guild.id
-			}, (err, gyms) => {
-				if(err) console.log(err);
-				if(!gyms){
-					const newGyms = new Gyms({
-		        bug: "Closed",
-		        dark: "Closed",
-		        dragon: "Closed",
-		        electric: "Closed",
-		        fairy: "Closed",
-		        fighting: "Closed",
-		        fire: "Closed",
-		        flying: "Closed",
-		        ghost: "Closed",
-		        grass: "Closed",
-		        ground: "Closed",
-		        ice: "Closed",
-		        normal: "Closed",
-		        poison: "Closed",
-		        psychic: "Closed",
-		        rock: "Closed",
-		        steel: "Closed",
-		        water: "Closed"
-	        })
-					newGyms[type.toLowerCase()] = status;
-          gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}!`);
-          newGyms.save().catch(err => console.log(err));
-				}else{
-					gyms[type.toLowerCase()] = status;
-          gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}!`);
-          gyms.save().catch(err => console.log(err));
-				}
-			})
+			let gym = await Gyms.findOne({type: type, serverID: message.guild.id})
+			gym.open = (status.toLowerCase() === "open") ? true : false;
+			await gym.save();
 			db.disconnect();
 		}else{
 			message.channel.send("You don't own this gym").then(m => m.delete({timeout: 5000}));
