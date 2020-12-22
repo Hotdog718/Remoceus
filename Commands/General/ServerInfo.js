@@ -4,7 +4,7 @@ module.exports = {
 	name: "serverinfo",
 	aliases: [],
 	category: "General",
-	description: "Displays information on the current guild",
+	description: "Displays information on the current server",
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {

@@ -11,6 +11,9 @@ const motwSchema = mongoose.Schema({
   move2: String,
   move3: String,
   move4: String,
+  forme: String,
+  shiny: Boolean,
+  year: Number,
   ytLink: String
 });
 

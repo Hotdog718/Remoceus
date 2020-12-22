@@ -1,5 +1,7 @@
 {
 	"color": "",
 	"botowner": "",
-	"prefix": "!"
+	"prefix": "!",
+	"modChannel": "moderation",
+	"muteRole": "Timeout"
 }
