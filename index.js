@@ -9,6 +9,7 @@ const typeColors = require("./Type Colors.json");
 client.config = botconfig;
 client.commands = new Collection();
 client.aliases = new Collection();
+client.polls = new Collection();
 client.errors = errors;
 client.gymTypes = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
 client.major = ["bug", "electric", "fighting", "flying", "ground", "normal", "poison", "psychic", "rock"];
