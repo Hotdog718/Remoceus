@@ -49,16 +49,13 @@ module.exports = {
             break;
           }
           case '!stop': {
-            if(m.deletable) m.delete();
             collector.stop("Manually Stopped");
             break;
           }
         }
       })
 
-			collector.on('end', (collected, reason) => {
-        msg.delete();
-      })
+			collector.on('end', (collected, reason) => {});
 		})
 	}
 }
