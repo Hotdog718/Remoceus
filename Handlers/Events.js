@@ -13,9 +13,10 @@ module.exports = (client) => {
 	});
 
 	client.on("guildMemberAdd", async (member) => {
+		let joinMessage = ["Please leave your soul at the door, LowRes will come to collect it later.", "Be sure to leave a tribute to appease the glitch gods!", "Don't ask the humble merchant about the monkey's paw, he's out of stock!", "Please don't clap your hands thinking it'll rain. That stopped working after Gen 5.", "If you don't pick Moo Moo Meadows, you're against freedom."]
 		let channel = member.guild.systemChannel;
 		if(channel){
-			channel.send(`Welcome ${member} to ${member.guild.name}! Please leave your soul at the door, Lowres will come to collect it later.`).catch(err => console.log(err));
+			channel.send(`Welcome ${member} to ${member.guild.name}! ${joinMessage[Math.floor(Math.random()*joinMessage.length)]}`).catch(err => console.log(err));
 		}
 		member.roles.add("791897933276250163").catch(err => {});
 	})
