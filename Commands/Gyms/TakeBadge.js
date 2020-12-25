@@ -10,8 +10,8 @@ module.exports = {
 	usage: "<type> <@user>",
 	permissions: [],
 	run: async (client, message, args) => {
-		let pUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[1]);
-		let type = args[0];
+		let pUser = message.guild.member(message.mentions.users.first());
+		let type = client.helpers.getGymType(client, message.member) || args[0];
 
 		if(!pUser) return client.errors.noUser(message);
 		if(!type) return client.errors.noType(message);
@@ -22,7 +22,7 @@ module.exports = {
 			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 			let badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
 
-			if(!badges) return message.channel.send(`${pUser.user.username} hasn't registered for the gym challenge yet.`);
+			if(!badges) return message.channel.send(`There was an error. No data for this user was found.`).then(m => m.delete({timeout: 5000}));
 
 			if(!badges[type.toLowerCase()]) return message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`).then(m => m.delete({timeout: 5000}));
 			badges[type.toLowerCase()] = false;

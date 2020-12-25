@@ -10,20 +10,52 @@ module.exports = {
 	usage: "[open/closed]",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
-		let type = args[0];
-		let status = args[1];
+		//let type = args[0];
+		let status = args[0];
 
-		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
+		//let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
+
+		let type = client.helpers.getGymType(client, message.member);
 
 		if(!type) return client.errors.noType(message);
+
 		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete({timeout: 5000}));
 
 		if(client.helpers.checkGyms(client, type, message.member)){
 			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-			let gym = await Gyms.findOne({type: type, serverID: message.guild.id})
-			gym.open = (status.toLowerCase() === "open") ? true : false;
-			await gym.save();
+			let gym = await Gyms.findOne({type: type, serverID: message.guild.id});
+			if(!gym){
+				const newGym = new Gyms({
+					type: type,
+					serverID: message.guild.id,
+					rules: {
+						singles: {
+							bannedPokemon: "",
+							bannedDynamax: "",
+							itemClause: "",
+							noLegends: false,
+							battleReadyClause: false
+						},
+						doubles: {
+							bannedPokemon: "",
+							bannedDynamax: "",
+							itemClause: "",
+							noLegends: false,
+							battleReadyClause: false
+						}
+					},
+					banner: "",
+					title: "COMING SOON",
+					location: "Location TBA",
+					separateRules: false,
+					open: (status.toLowerCase() === "open") ? true : false,
+					majorLeague: client.major.includes(type)
+				})
+				await newGym.save();
+			}else{
+				gym.open = (status.toLowerCase() === "open") ? true : false;
+				await gym.save();
+			}
 			db.disconnect();
 		}else{
 			message.channel.send("You don't own this gym").then(m => m.delete({timeout: 5000}));

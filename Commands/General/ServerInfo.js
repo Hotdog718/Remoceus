@@ -8,7 +8,6 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
     let thumbnail = message.guild.iconURL();
 
     let serverEmbed = new MessageEmbed()

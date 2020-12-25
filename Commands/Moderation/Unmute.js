@@ -7,7 +7,6 @@ module.exports = {
   usage: "<@user>",
   permissions: ["Manage Roles"],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let tomute = message.guild.member(message.mentions.users.first());
     if(!tomute) return client.errors.noUser(message);
     if(!message.member.hasPermission("MANAGE_ROLES")) return client.errors.noPerms(message, "Manage Roles");

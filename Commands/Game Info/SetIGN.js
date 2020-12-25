@@ -10,7 +10,6 @@ module.exports = {
 	usage: "<ign>",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
 		let myNewIGN = args.length > 0 ? args.join(" "): "No IGN set, use !setign <ign> to set your ign (ex. !setign Thot Slayer)";
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});

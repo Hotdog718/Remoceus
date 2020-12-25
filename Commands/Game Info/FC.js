@@ -11,7 +11,6 @@ module.exports = {
 	usage: "none or <@user>",
 	permissions: [],
 	run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let leUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.find(member => member.user.username === args.join(" ")) || message.member;
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});

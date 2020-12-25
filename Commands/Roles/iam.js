@@ -8,7 +8,6 @@ module.exports = {
   usage: "[rolename]",
   permissions: [],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let rolename = args.join(" ");
     let helpEmbed = require("../../Utils/iamroles.js")(client);
     if(!rolename){

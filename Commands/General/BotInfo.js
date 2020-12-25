@@ -9,7 +9,6 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
 		let bott = new MessageEmbed()
     .setTitle("Bot Info")
     .setColor(client.config.color)

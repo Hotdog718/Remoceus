@@ -6,7 +6,6 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
 		let leFlip = Math.round(Math.random()) == 1 ? "Heads" : "Tails";
 
 		message.channel.send(`You got a ${leFlip}.`, {

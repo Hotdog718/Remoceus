@@ -7,7 +7,6 @@ module.exports = {
   usage: "<none or @role>",
   permissions: [],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let role = message.mentions.roles.first();
     let membersArray = message.guild.members.cache.array();
     let guildMembers = !args[0] || !role? membersArray.filter(member => !member.user.bot): membersArray.filter(member => member.roles.cache.find(r => r.id === role.id) && !member.user.bot);

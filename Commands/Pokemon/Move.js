@@ -10,7 +10,6 @@ module.exports = {
   usage: "<move name>",
   permissions: [],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let str = args.join(" ");
     let move = str.replace(/[^a-z0-9]/gi, "").toLowerCase().trim();
     if(!move) return message.channel.send("No arguments").then(m => m.delete({timeout: 5000}));
