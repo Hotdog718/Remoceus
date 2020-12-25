@@ -4,7 +4,17 @@ module.exports = (client) => {
 
 	client.on("ready", () => {
 		console.log(`${client.user.tag} is online!`);
+		client.user.setPresence({
+			status: "online",
+			activity: {
+				name: "!help or !help list"
+			}
+		})
 	});
+
+	client.on("guildMemberAdd", member => {
+		message.channel.send(`Welcome ${member.user.tag} to ${member.guild.name}! Please leave your soul at the door, Lowres will come to collect it later.`);
+	})
 
 	client.on("message", async message => {
 		if(message.channel.type === "dm") return;

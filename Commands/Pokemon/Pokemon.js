@@ -9,7 +9,6 @@ module.exports = {
   usage: "<pokemon name>",
   permissions: [],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let str = args.join(" ");
     let pokemon = str.replace(/[^a-z]/gi, "").toLowerCase().trim();
     if(!pokemon) return message.channel.send("No name given").then(m => m.delete({timeout: 5000}));

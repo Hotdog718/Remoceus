@@ -11,8 +11,6 @@ module.exports = {
 	usage: "<type>",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
-
 		let type = args[0] ? args[0].toLowerCase(): "";
 
 		//If no type given or type given isn't a gym type, send no type response
@@ -29,6 +27,7 @@ module.exports = {
 		let embed = new MessageEmbed()
 		.setTitle(`${client.helpers.toTitleCase(type)} Gym Rules`)
 		.setColor(client.typeColors[type])
+		.setThumbnail(client.emojis.cache.find(e => e.name === type.toLowerCase()).url || message.guild.iconURL())
 		.setDescription(`__***${rules.title}***__`)
 		.setFooter(`${rules.location || "TBA"}\n${rules.majorLeague ? "Major League" : "Minor League"}`);
 		if(rules.banner){
@@ -39,10 +38,26 @@ module.exports = {
 		if(rules.separateRules){
 			embed.addField(`__**Doubles Rules**__`, formatRules(rules.rules.doubles));
 		}
-		if(rules.sub){
-			embed.addField("__**Gym Sub**__", rules.sub);
+
+		//let roleManager = await message.guild.roles.fetch();
+		//let role = roleManager.cache.find(r => r.name === `${client.helpers.toTitleCase(type)} Gym Leader`);
+
+		let gymLeaders = await client.helpers.getGymLeaders(message, client.helpers.toTitleCase(type));
+		if(gymLeaders && gymLeaders.array().length > 0){
+			embed.addField("__**Gym Leader**__", gymLeaders.array().join(",\n"), true);
 		}
-		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"));
+
+
+		let gymSubs = await client.helpers.getGymSubs(message, client.helpers.toTitleCase(type));
+		if(gymSubs && gymSubs.array().length > 0){
+			embed.addField("__**Gym Subs**__", gymSubs.array().join(",\n"), true);
+		}
+
+		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"), !(gymSubs && gymSubs.array().length > 0));
+
+		// if(rules.sub){
+		// 	embed.addField("__**Gym Sub**__", rules.sub);
+		// }
 		message.channel.send(embed);
 	}
 }

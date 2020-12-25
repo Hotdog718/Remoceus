@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const badgeSchema = mongoose.Schema({
 	userID: String,
 	serverID: String,
-	name: String,
-	hometown: String,
 	bug: Boolean,
 	dark: Boolean,
 	dragon: Boolean,

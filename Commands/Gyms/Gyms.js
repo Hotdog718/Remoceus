@@ -8,11 +8,10 @@ module.exports = {
 	name: "gyms",
 	aliases: [],
 	category: "Gyms",
-	description: "Displays currently open gyms",
+	description: "Displays currently open gyms on the current server.",
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 		let majorGyms = await Gyms.find({open: true, majorLeague: true, serverID: message.guild.id});

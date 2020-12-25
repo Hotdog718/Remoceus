@@ -12,7 +12,6 @@ module.exports = {
 	usage: "<none or PokemonName>",
 	permissions: [],
 	run: async (client, message, args) => {
-		if(message.deletable) message.delete();
 		let motws = args[0] ? await getMOTWWithSpecies(args.join(" ")) : await getMOTW();
 		if(motws && motws.length > 1){
 			motws = motws.reverse();
@@ -36,7 +35,7 @@ const createMOTWEmbed = (client, index, motws) => {
 			 .addField("Item(s)", currentSet.item)
 			 .addField("EVs", `${formatEVSpread(currentSet)}`)
 			 .addField("Moveset", `${currentSet.move1}\n${currentSet.move2}\n${currentSet.move3}\n${currentSet.move4}`)
-			 .setFooter(`Set #${index+1} of ${motws.length}`);
+			 .setFooter(`Set #${index+1} of ${motws.length}\nUse "${client.config.prefix}next" to go to the next page\nUse "${client.config.prefix}back" to go to the last page\nAnd use "${client.config.prefix}stop" to stop the help dialog box.`);
 			 if(currentSet.ytLink){
          embed.setURL(currentSet.ytLink);
        }

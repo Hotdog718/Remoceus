@@ -9,8 +9,6 @@ module.exports = {
   usage: "<@user> <reason>",
   permissions: ["Ban Members"],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
-
     if(!args[0]){
       return message.channel.send("You need to mention another user").then(m => m.delete({timeout: 5000}));
     }

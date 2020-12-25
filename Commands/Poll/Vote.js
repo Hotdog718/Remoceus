@@ -7,7 +7,6 @@ module.exports = {
   usage: "<A-Z>",
   permissions: [],
   run: async (client, message, args) => {
-    if(message.deletable) message.delete();
     let vote = args.length > 0 ? args[0].toUpperCase() : null;
     if(!vote) return message.channel.send("Enter a value from A-Z").then(m => m.delete({timeout: 5000}));
     let responses = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];

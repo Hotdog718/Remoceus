@@ -21,6 +21,30 @@ module.exports = {
 	checkGyms: (client, type, member, checkAdmin=false) => {
 		return (checkAdmin && member.hasPermission("MANAGE_ROLES", false, true, true)) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
 	},
+	getGymType: (client, member) => {
+		// client.gymTypes
+		for(let i = 0; i < client.gymTypes.length; i++){
+			//console.log(client.helpers.toTitleCase(client.gymTypes[i]));
+			if(member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(client.gymTypes[i])} Gym Leader`)){
+				return client.gymTypes[i];
+			}
+		}
+		return;
+	},
+	getGymLeaders: async (message, type) => {
+		let roleManager = await message.guild.roles.fetch();
+		let typeRole = roleManager.cache.find(r => r.name === `${type} Gym Leader`);
+		let gymLeaders = roleManager.cache.find(r => r.name === "Gym Leaders").members;
+		let typeGymLeaders = gymLeaders.filter(users => users.roles.cache.has(typeRole.id));
+		return typeGymLeaders;
+	},
+	getGymSubs: async (message, type) => {
+		let roleManager = await message.guild.roles.fetch();
+		let typeRole = roleManager.cache.find(r => r.name === `${type} Gym Leader`);
+		let gymLeaders = roleManager.cache.find(r => r.name === "Gym Subs").members;
+		let typeGymLeaders = gymLeaders.filter(users => users.roles.cache.has(typeRole.id));
+		return typeGymLeaders;
+	},
 	createMenuEmbed: (client, message, data, embedFunction) => {
 		const { MessageCollector } = require('discord.js');
 		let index = 0;
@@ -49,13 +73,19 @@ module.exports = {
             break;
           }
           case '!stop': {
+						if(m.deletable) m.delete();
             collector.stop("Manually Stopped");
             break;
           }
+					default: break;
         }
       })
 
-			collector.on('end', (collected, reason) => {});
+			collector.on('end', (collected, reason) => {
+				if(reason === "Manually Stopped" && msg.deletable){
+					msg.delete();
+				}
+			});
 		})
 	}
 }
