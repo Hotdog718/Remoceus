@@ -25,10 +25,10 @@ module.exports = {
 								 .then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
 								 .catch(err => console.log(err));
 		}else{
-			fc.fc = myNewFC;
-			await fc.save()
-							.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
-							.catch(err => console.log(err));
+			friendCard.fc = myNewFC;
+			await friendCard.save()
+											.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
+											.catch(err => console.log(err));
 		}
 
 		db.disconnect();
