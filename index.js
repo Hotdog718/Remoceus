@@ -1,5 +1,5 @@
 const { Client, Collection } = require("discord.js");
-const client = new Client({disableEveryone: true});
+const client = new Client();
 const fs = require("fs");
 const botconfig = require("./botconfig.json")
 const errors = require("./Utils/Errors.js");

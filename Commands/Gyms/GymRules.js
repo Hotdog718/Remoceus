@@ -27,9 +27,12 @@ module.exports = {
 		let embed = new MessageEmbed()
 		.setTitle(`${client.helpers.toTitleCase(type)} Gym Rules`)
 		.setColor(client.typeColors[type])
-		.setThumbnail(client.emojis.cache.find(e => e.name === type.toLowerCase()).url || message.guild.iconURL())
 		.setDescription(`__***${rules.title}***__`)
 		.setFooter(`${rules.location || "TBA"}\n${rules.majorLeague ? "Major League" : "Minor League"}`);
+		let thumb = client.emojis.cache.find(e => e.name === type.toLowerCase()).url || message.guild.iconURL();
+		if(thumb){
+				embed.setThumbnail(thumb);
+		}
 		if(rules.banner){
 			embed.setImage(rules.banner)
 		}
