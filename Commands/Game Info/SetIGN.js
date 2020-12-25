@@ -15,7 +15,7 @@ module.exports = {
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		let friendCard = await FC.findOne({userID: message.author.id});
 
-		if(!fc){
+		if(!friendCard){
 			const newFC = new FC({
 				userID: message.author.id,
 				fc: "No FC set, use !setfc <fc> to set your fc (ex. !setfc 3883-7141-8049)",
@@ -25,10 +25,10 @@ module.exports = {
 								 .then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
 								 .catch(err => console.log(err));
 		}else{
-			fc.ign = myNewIGN;
-			await fc.save()
-							.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
-							.catch(err => console.log(err));
+			friendCard.ign = myNewIGN;
+			await friendCard.save()
+											.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
+											.catch(err => console.log(err));
 		}
 
 		db.disconnect();

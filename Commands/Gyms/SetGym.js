@@ -13,7 +13,7 @@ module.exports = {
 		//let type = args[0];
 		let status = args[0];
 
-		//let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
+		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "gym-announcements") || message.channel;
 
 		let type = client.helpers.getGymType(client, message.member);
 
@@ -56,9 +56,10 @@ module.exports = {
 				gym.open = (status.toLowerCase() === "open") ? true : false;
 				await gym.save();
 			}
+			gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}`);
 			db.disconnect();
 		}else{
-			message.channel.send("You don't own this gym").then(m => m.delete({timeout: 5000}));
+			return message.channel.send("You aren't a gym leader").then(m => m.delete({timeout: 5000}));
 		}
 	}
 }

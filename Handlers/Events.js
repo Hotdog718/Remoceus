@@ -12,11 +12,15 @@ module.exports = (client) => {
 		})
 	});
 
-	client.on("guildMemberAdd", member => {
-		message.channel.send(`Welcome ${member.user.tag} to ${member.guild.name}! Please leave your soul at the door, Lowres will come to collect it later.`);
+	client.on("guildMemberAdd", async (member) => {
+		let channel = member.guild.systemChannel;
+		if(channel){
+			channel.send(`Welcome ${member} to ${member.guild.name}! Please leave your soul at the door, Lowres will come to collect it later.`).catch(err => console.log(err));
+		}
+		member.roles.add("791897933276250163").catch(err => {});
 	})
 
-	client.on("message", async message => {
+	client.on("message", async (message) => {
 		if(message.channel.type === "dm") return;
 		if(message.author.bot){
 			return;
@@ -32,7 +36,6 @@ module.exports = (client) => {
 		let messageArray = message.content.split(" ");
 		let cmd = messageArray[0];
 		let args = messageArray.slice(1);
-
 		let command = client.commands.get(cmd.slice(prefix.length) ||client.aliases.get(cmd.slice(prefix.length)));
 		if(!command || !message.content.startsWith(prefix)){
 			return;
