@@ -32,17 +32,15 @@ module.exports = {
 		return;
 	},
 	getGymLeaders: async (message, type) => {
-		let roleManager = await message.guild.roles.fetch();
-		let typeRole = roleManager.cache.find(r => r.name === `${type} Gym Leader`);
-		let gymLeaders = roleManager.cache.find(r => r.name === "Gym Leaders").members;
-		let typeGymLeaders = gymLeaders.filter(users => users.roles.cache.has(typeRole.id));
+		let guildMembers = await message.guild.members.fetch();
+		let typeRole = message.guild.roles.cache.find(r => r.name === `${type} Gym Leader`);
+		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has("687405133927284742"))
 		return typeGymLeaders;
 	},
 	getGymSubs: async (message, type) => {
-		let roleManager = await message.guild.roles.fetch();
-		let typeRole = roleManager.cache.find(r => r.name === `${type} Gym Leader`);
-		let gymLeaders = roleManager.cache.find(r => r.name === "Gym Subs").members;
-		let typeGymLeaders = gymLeaders.filter(users => users.roles.cache.has(typeRole.id));
+		let guildMembers = await message.guild.members.fetch();
+		let typeRole = message.guild.roles.cache.find(r => r.name === `${type} Gym Leader`);
+		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has("791863866702692392"))
 		return typeGymLeaders;
 	},
 	createMenuEmbed: (client, message, data, embedFunction) => {
