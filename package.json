@@ -1,6 +1,6 @@
 {
   "name": "remoceus-remake",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A bot created for the Silver League",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "discord.js": "^12.5.1",
     "fs": "0.0.1-security",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.11.8"
+    "mongoose": "^5.11.8",
+    "ms": "^2.1.3"
   }
 }

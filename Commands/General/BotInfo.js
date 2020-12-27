@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const ms = require("ms");
 const pack = require("../../package.json");
 
 module.exports = {
@@ -16,6 +17,7 @@ module.exports = {
     .addField("Bot Name",`${client.user.username}`)
     .addField("Bot Description", `${pack.description}`)
     .addField("Bot's Lord and Savior",`${pack.author}`)
+		.addField("Uptime", ms(client.uptime))
     .setFooter(`Remoceus Version: ${pack.version}`);
     message.channel.send(bott);
 	}
