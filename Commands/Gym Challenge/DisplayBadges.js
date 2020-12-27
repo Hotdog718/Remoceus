@@ -1,7 +1,7 @@
 const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
 const Badges = require("../../Models/Badges.js");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageCollector } = require("discord.js");
 let index = 0;
 let itemsPerPage = 10;
 let maxPages = 0;
@@ -28,42 +28,38 @@ module.exports = {
 		let embed = await getEmbed(message, type, arr, client);
 
 		message.channel.send(embed).then((msg) => {
-			let reactions = ["⬅", "➡", "⏹"];
-			reactions.forEach(function(r, i){
-				setTimeout(function(){
-					msg.react(r);
-				}, i*800)
-			})
-
 			//set filter to only let only set reactions and message author to respond
-			const filter = (reaction, user) => {
-				return reactions.includes(reaction.emoji.name) && user.id === message.author.id;
-			}
+			const filter = (m) => m && m.author.id === message.author.id;
 
-			//create reactionCollector
-			const collector = msg.createReactionCollector(filter, {});
+			// Create MessageCollector
+			const collector = new MessageCollector(message.channel, filter, {idle: 60000});
+			// create reactionCollector
+			// const collector = msg.createReactionCollector(filter, {});
 
-			collector.on('collect', async (reaction) => {
-				switch(reaction.emoji.name){
-					case '⬅':{
+			collector.on('collect', async (m) => {
+				switch(m.content.toLowerCase()){
+					case '!back':{
 						index = (index-1) < 0? maxPages-1 :index-1;
 						msg.edit(await getEmbed(message, type, arr, client));
 						break;
 					}
-					case '➡':{
+					case '!next':{
 						index = (index+1)%maxPages;
 						msg.edit(await getEmbed(message, type, arr, client));
 						break;
 					}
-					case '⏹':{
-						collector.emit('end');
+					case '!stop':{
+						collector.stop("Manually Stopped");
 						break;
 					}
+					default: break;
 				}
 			})
 
-			collector.on('end', collected => {
-				msg.delete();
+			collector.on('end', (collected, reason) => {
+				if(reason === "Manually Stopped" && msg.deletable){
+					msg.delete();
+				}
 			})
 		});
 	}
