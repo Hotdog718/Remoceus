@@ -33,6 +33,14 @@ module.exports = (client) => {
 			// 	return;
 			// }
 		}
+
+		for(let i = 0; i < client.bannedWords.length; i++){
+			if(message.content.includes(client.bannedWords[i])){
+				message.delete();
+				return message.author.send("We don't use those words on this server (If this was on accident, please message Hotdog)");
+			}
+		}
+
 		let prefix = client.config.prefix;
 		let messageArray = message.content.split(" ");
 		let cmd = messageArray[0];

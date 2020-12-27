@@ -5,6 +5,7 @@ const botconfig = require("./botconfig.json")
 const errors = require("./Utils/Errors.js");
 const helper = require("./Utils/Helper.js")
 const typeColors = require("./Type Colors.json");
+const bannedWords = require("./bannedWords.js");
 
 client.config = botconfig;
 client.commands = new Collection();
@@ -16,6 +17,7 @@ client.major = ["bug", "electric", "fighting", "flying", "ground", "normal", "po
 client.minor = ["dark", "dragon", "fairy", "fire", "ghost", "grass", "ice", "steel", "water"]
 client.helpers = helper;
 client.typeColors = typeColors;
+client.bannedWords = bannedWords;
 
 const Handlers = ["Commands.js", "Events.js"];
 Handlers.forEach((r) => {
