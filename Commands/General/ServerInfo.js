@@ -10,12 +10,15 @@ module.exports = {
 	run: async (client, message, args) => {
     let thumbnail = message.guild.iconURL();
 
+		let guildMembers = await message.guild.members.fetch({force: true});
+
     let serverEmbed = new MessageEmbed()
     .setTitle(`${message.guild.name}`)
     .setColor(client.config.color)
     .addField("Server Owner",`${message.guild.owner}`)
-    .addField("Total Members",`${message.guild.memberCount}`)
-    .addField("Reigon",`${message.guild.region}`)
+		.addField("Reigon",`${message.guild.region}`)
+		.addField("Member Count",`${message.guild.members.cache.filter(member => !member.user.bot).array().length}`, true)
+    .addField("Bot Count",`${message.guild.members.cache.filter(member => member.user.bot).array().length}`, true)
     .addField("Creation Date",`${message.guild.createdAt}`);
     if(thumbnail){
       serverEmbed.setThumbnail(`${thumbnail}`);
