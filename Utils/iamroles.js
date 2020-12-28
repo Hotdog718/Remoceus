@@ -10,6 +10,7 @@ module.exports = (client) => {
   .addField("Gym Challenger", "Receive pings when gyms open up.")
   .addField("Multi", "Receive pings when players want multi battles.")
   .addField("Singles", "Receive pings when players want single battles.")
+  .addField("Smash", "Receive pings from players wanting to smash.")
   .addField("Spoilers", "Lets you see the spoilers channel.");
   return help;
 }
