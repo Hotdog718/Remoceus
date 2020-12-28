@@ -72,6 +72,16 @@ module.exports = {
         break;
       }
 
+      case 'smash': {
+        let roleTitle = "Smash"
+        let role = message.guild.roles.cache.find(r => r.name === roleTitle);
+        if(!role) return message.channel.send(`Could not find ${roleTitle} role`).then(m => m.delete({timeout: 5000}).catch(err => {}));
+        message.member.roles.remove(role)
+          .then(r => message.channel.send(`Removed ${roleTitle} role to ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})))
+          .catch(err => message.channel.send(`Failed to remove ${roleTitle} role to ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})));
+        break;
+      }
+
       default: {
         message.channel.send(helpEmbed);
         break;
