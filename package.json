@@ -1,6 +1,6 @@
 {
   "name": "remoceus-remake",
-  "version": "1.0.8",
+  "version": "1.0.7",
   "description": "A bot created for the Silver League",
   "main": "index.js",
   "scripts": {
