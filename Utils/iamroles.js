@@ -1,17 +1,26 @@
 const { MessageEmbed } = require("discord.js");
 
-module.exports = (client) => {
+module.exports = (client, guild, roles) => {
   let help = new MessageEmbed()
   .setTitle("Assignable Roles")
-  .setThumbnail(client.user.displayAvatarURL)
-  .setColor(client.config.color)
-  .addField("Doubles", "Receive pings when players want double battles.")
-  .addField("FFAs", "Receive pings when players want FFA battles.")
-  .addField("Gym Challenger", "Receive pings when gyms open up.")
-  .addField("Multi", "Receive pings when players want multi battles.")
-  .addField("Singles", "Receive pings when players want single battles.")
-  .addField("Smash", "Receive pings from players wanting to smash.")
-  .addField("Spoilers", "Lets you see the spoilers channel.")
-  .addField("Spriter", "For people who wanna see the pretty pixel art.");
+  .setThumbnail(client.user.displayAvatarURL())
+  .setColor(client.config.color);
+  let keys = Object.keys(roles);
+  keys.sort((a, b) => {
+    if(a.toUpperCase() < b.toUpperCase()){
+      return -1;
+    }
+    if(a.toUpperCase() > b.toUpperCase()){
+      return 1;
+    }
+    return 0;
+  })
+
+  for(let i = 0; i < keys.length; i++){
+    let roleInfo = roles[keys[i]];
+    let role = guild.roles.cache.get(roleInfo.id);
+    if(!role) continue;
+    help.addField(role.name, roleInfo.description);
+  }
   return help;
 }
