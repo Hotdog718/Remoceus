@@ -16,7 +16,7 @@ module.exports = {
     .setTitle(`${message.guild.name}`)
     .setColor(client.config.color)
     .addField("Server Owner",`${message.guild.owner}`)
-		.addField("Reigon",`${message.guild.region}`)
+		.addField("Region",`${message.guild.region}`)
 		.addField("Member Count",`${message.guild.members.cache.filter(member => !member.user.bot).array().length}`, true)
     .addField("Bot Count",`${message.guild.members.cache.filter(member => member.user.bot).array().length}`, true)
     .addField("Creation Date",`${message.guild.createdAt}`);
