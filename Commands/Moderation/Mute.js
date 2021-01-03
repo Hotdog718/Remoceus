@@ -10,7 +10,7 @@ module.exports = {
   run: async (client, message, args) => {
     let tomute = message.guild.member(message.mentions.users.first());
     if(!tomute) return client.errors.noUser(message);
-    if(!message.member.hasPermission("MANAGE_ROLES")) return client.errors.noPerms(message, "Manage Roles");
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return client.errors.noPerms(message, "Manage Roles");
     if(!tomute.kickable) return message.channel.send("I cant mute them because I don't have permission to kick them").then(m => m.delete({timeout: 5000}))
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
 

@@ -21,11 +21,11 @@ module.exports = {
       return message.channel.send("Could not find user").then(m => m.delete({timeout: 5000}));
     }
 
-    if(!message.member.hasPermission("BAN_MEMBERS", false, true, true)){
+    if(!message.member.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
       return client.errors.noPerms(message, "Ban Members");
     }
 
-    if(!message.guild.me.hasPermission("BAN_MEMBERS", false, true, true)){
+    if(!message.guild.me.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
       return message.channel.send("Sorry, but I don't have permission to ban members").then(m => m.delete({timeout: 5000}));
     }
 
