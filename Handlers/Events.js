@@ -2,14 +2,8 @@ const token = require("../token.json")
 
 module.exports = (client) => {
 
-	client.on("ready", () => {
+	client.once("ready", () => {
 		console.log(`${client.user.tag} is online!`);
-		client.user.setPresence({
-			status: "online",
-			activity: {
-				name: "!help or !help list"
-			}
-		})
 	});
 
 	client.on("guildMemberAdd", async (member) => {
@@ -18,12 +12,18 @@ module.exports = (client) => {
 		if(channel){
 			channel.send(`Welcome ${member} to ${member.guild.name}! ${joinMessage[Math.floor(Math.random()*joinMessage.length)]}`).catch(err => console.log(err));
 		}
-		await member.guild.roles.fetch();
+	})
+
+	const checkMember = async (member) => {
 		let memberRole = member.guild.roles.cache.find(r => r.name === "Members");
+		if(member.roles.cache.has(memberRole.id)){
+			return;
+		}
 		if(memberRole){
 			member.roles.add(memberRole.id).catch(err => {});
 		}
-	})
+		return;
+	}
 
 	client.on("message", async (message) => {
 		if(message.channel.type === "dm") return;
@@ -38,8 +38,9 @@ module.exports = (client) => {
 			// }
 		}
 
+		checkMember(message.member);
 		for(let i = 0; i < client.bannedWords.length; i++){
-			if(message.content.includes(client.bannedWords[i])){
+			if(message.content.toLowerCase().includes(client.bannedWords[i])){
 				message.delete();
 				return message.author.send("We don't use those words on this server (If this was on accident, please message Hotdog)");
 			}
@@ -57,6 +58,15 @@ module.exports = (client) => {
 			command.run(client, message, args);
 		}catch(e){
 			console.log(e)
+		}
+	})
+
+	client.on("messageUpdate", async (oldMessage, newMessage) => {
+		for(let i = 0; i < client.bannedWords.length; i++){
+			if(newMessage.content.toLowerCase().includes(client.bannedWords[i])){
+				newMessage.delete();
+				return newMessage.author.send("We don't use those words on this server (If this was on accident, please message Hotdog)");
+			}
 		}
 	})
 
