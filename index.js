@@ -1,5 +1,12 @@
 const { Client, Collection } = require("discord.js");
-const client = new Client();
+const client = new Client({
+	presence: {
+		status: "online",
+		activity: {
+			name: "!help or !help list"
+		}
+	}
+});
 const fs = require("fs");
 const botconfig = require("./botconfig.json")
 const errors = require("./Utils/Errors.js");
