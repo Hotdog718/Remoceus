@@ -82,6 +82,16 @@ module.exports = {
         break;
       }
 
+      case 'spriter': {
+        let roleTitle = "Spriters"
+        let role = message.guild.roles.cache.find(r => r.name === roleTitle);
+        if(!role) return message.channel.send(`Could not find ${roleTitle} role`).then(m => m.delete({timeout: 5000}).catch(err => {}));
+        message.member.roles.add(role)
+          .then(r => message.channel.send(`Added ${roleTitle} role to ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})))
+          .catch(err => message.channel.send(`Failed to add ${roleTitle} role to ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})));
+        break;
+      }
+
       default: {
         message.channel.send(helpEmbed);
         break;
