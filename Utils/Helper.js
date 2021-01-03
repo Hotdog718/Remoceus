@@ -19,7 +19,7 @@ module.exports = {
 		"D": "https://i.imgur.com/TSAzjav.png",
 	},
 	checkGyms: (client, type, member, checkAdmin=false) => {
-		return (checkAdmin && member.hasPermission("MANAGE_ROLES", false, true, true)) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
+		return (checkAdmin && member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
 	},
 	getGymType: (client, member) => {
 		// client.gymTypes
@@ -34,13 +34,15 @@ module.exports = {
 	getGymLeaders: async (message, type) => {
 		let guildMembers = await message.guild.members.fetch();
 		let typeRole = message.guild.roles.cache.find(r => r.name === `${type} Gym Leader`);
-		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has("687405133927284742"))
+		let leaderRole = message.guild.roles.cache.find(r => r.name === "Gym Leaders")
+		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has(leaderRole.id))
 		return typeGymLeaders;
 	},
 	getGymSubs: async (message, type) => {
 		let guildMembers = await message.guild.members.fetch();
 		let typeRole = message.guild.roles.cache.find(r => r.name === `${type} Gym Leader`);
-		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has("791863866702692392"))
+		let subRole = message.guild.roles.cache.find(r => r.name === "Gym Subs")
+		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has(subRole.id))
 		return typeGymLeaders;
 	},
 	createMenuEmbed: (client, message, data, embedFunction) => {

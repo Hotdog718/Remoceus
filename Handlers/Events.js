@@ -18,7 +18,11 @@ module.exports = (client) => {
 		if(channel){
 			channel.send(`Welcome ${member} to ${member.guild.name}! ${joinMessage[Math.floor(Math.random()*joinMessage.length)]}`).catch(err => console.log(err));
 		}
-		member.roles.add("791897933276250163").catch(err => {});
+		await member.guild.roles.fetch();
+		let memberRole = member.guild.roles.cache.find(r => r.name === "Members");
+		if(memberRole){
+			member.roles.add(memberRole.id).catch(err => {});
+		}
 	})
 
 	client.on("message", async (message) => {
