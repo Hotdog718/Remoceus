@@ -23,6 +23,8 @@ const gymRulesSchema = mongoose.Schema({
   title: String,
   location: String,
   separateRules: Boolean,
+  wins: Number,
+  losses: Number,
   open: Boolean,
   majorLeague: Boolean
 })

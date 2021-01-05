@@ -57,10 +57,10 @@ module.exports = {
 		}
 
 		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"), !(gymSubs && gymSubs.array().length > 0));
+		embed.addField("__**W-L Ratio**__", `0-0`);
+		embed.addField("__**Challenge Cost**__", "50", true)
+				 .addField("__**Points Accumulated**__", "0", true);
 
-		// if(rules.sub){
-		// 	embed.addField("__**Gym Sub**__", rules.sub);
-		// }
 		message.channel.send(embed);
 	}
 }

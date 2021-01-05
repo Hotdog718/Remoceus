@@ -2,7 +2,7 @@ const { mongodb_uri } = require("../../token.json");
 const mongoose = require("mongoose");
 const { MessageEmbed } = require("discord.js");
 const Badges = require("../../Models/Badges.js");
-const resultsPerPage = 10;
+const resultsPerPage = 15;
 
 module.exports = {
 	name: "rankings",
@@ -16,12 +16,15 @@ module.exports = {
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
     let badgeArray = await Badges.find({serverID: message.guild.id});
 		db.disconnect();
+		await message.guild.members.fetch();
     if(badgeArray.length <= 0) return message.channel.send(`Sorry, there was no documents that I could find.`).then(m => m.delete({timeout: 5000}));
     let maxPages = Math.ceil(badgeArray.length/resultsPerPage);
     badgeArray = badgeArray.sort((a, b) => {
       if(a.count == b.count){
-        let aName = a.name.toUpperCase();
-        let bName = b.name.toUpperCase();
+				let aUser = message.guild.members.cache.get(a.userID);
+				let bUser = message.guild.members.cache.get(b.userID);
+        let aName = aUser ? aUser.user.username.toUpperCase() : "User not found";
+        let bName = aUser ? bUser.user.username.toUpperCase() : "User not found";
         if(aName > bName){
           return 1;
         }
@@ -84,7 +87,7 @@ async function getEmbed(client, badgeArray, index){
   let embed = new MessageEmbed().setTitle(`Current SL Gym Rankings`).setColor(client.config.color).setThumbnail(client.user.displayAvatarURL()).setFooter(`Page ${index+1} of ${maxPages}`);
   for(let i = index*resultsPerPage; i < badgeArray.length && i < (index+1)*resultsPerPage; i++){
 		let user = await client.users.fetch(badgeArray[i].userID);
-    embed.addField(`#${i+1}: ${user.tag || "User not found"}`, `Badge Count: ${badgeArray[i].count}`);
+    embed.addField(`#${i+1}: ${user.tag || "User not found"}`, `Hometown: ${badgeArray[i].hometown || "Location TBA"}\nBadge Count: ${badgeArray[i].count}`);
   }
   return embed;
 }
