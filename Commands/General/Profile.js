@@ -21,7 +21,7 @@ module.exports = {
 		db.disconnect();
 
 		let embed = new MessageEmbed()
-		.setTitle(`${leUser.user.username}\'s Profile`)
+		.setTitle(`${leUser.nickname || leUser.user.username}\'s Profile`)
 		.setColor(leUser.roles.color.color || client.config.color)
 		.setThumbnail(leUser.user.displayAvatarURL())
     .setDescription(badges ? badges.hometown : '')
