@@ -24,33 +24,7 @@ module.exports = {
     const badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
 
     if(!badges){
-      const newBadges = new Badges({
-        userID: pUser.id,
-        serverID: message.guild.id,
-        bug: false,
-        dark: false,
-        dragon: false,
-        electric: false,
-        fairy: false,
-        fighting: false,
-        fire: false,
-        flying: false,
-        ghost: false,
-        grass: false,
-        ground: false,
-        ice: false,
-        normal: false,
-        poison: false,
-        psychic: false,
-        rock: false,
-        steel: false,
-        water: false,
-        count: 0
-      })
-      newBadges[type.toLowerCase()] = true;
-      newBadges.count++;
-      message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`).then(m => m.delete({timeout: 5000}));
-      await newBadges.save().catch(err => console.log(err));
+      message.channel.send(`${pUser.user.username} has not registered for the gym challenge. They need to use !register [hometown] to sign up.`)
     }else if(!badges[type.toLowerCase()]){
       badges[type.toLowerCase()] = true;
       badges.count++;

@@ -21,7 +21,9 @@ const badgeSchema = mongoose.Schema({
 	rock: Boolean,
 	steel: Boolean,
 	water: Boolean,
-	count: Number
+	count: Number,
+	hometown: String,
+	points: Number
 });
 
 module.exports = mongoose.model("Badges", badgeSchema);

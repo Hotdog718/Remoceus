@@ -38,7 +38,8 @@ module.exports = {
       	steel: false,
       	water: false,
       	count: 0,
-      	hometown: (hometown ? hometown : 'Location TBA')
+      	hometown: (hometown ? hometown : 'Location TBA'),
+				points: 100
       });
       await newBadges.save()
                      .then(() => message.channel.send(`You are now signed up for the Ginune Region Gym Challenge with a hometown of ${newBadges.hometown}`))
