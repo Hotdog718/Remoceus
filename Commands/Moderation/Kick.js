@@ -10,7 +10,7 @@ module.exports = {
   permissions: ["Kick Members"],
   run: async (client, message, args) => {
     if(!args[0]){
-      return message.channel.send("You need to mention another user").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("You need to mention another user");
     }
 
     let reason = args.slice(1).join(" ") || "No Reason Given";
@@ -18,7 +18,7 @@ module.exports = {
     let toKick = message.mentions.members.first();
 
     if(!toKick){
-      return message.channel.send("Could not find user").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("Could not find user");
     }
 
     if(!message.member.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
@@ -26,11 +26,11 @@ module.exports = {
     }
 
     if(!message.guild.me.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
-      return message.channel.send("Sorry, but I don't have permission to kick members").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("Sorry, but I don't have permission to kick members");
     }
 
     if(toKick.id === message.author.id){
-      return message.channle.send("You cannot kick yourself").then(m => m.delete({timeout: 5000}));
+      return message.channle.send("You cannot kick yourself");
     }
 
     if(toKick.id === client.user.id){
@@ -54,9 +54,9 @@ module.exports = {
     }
 
     toKick.kick(reason)
-      .then(() =>{
-        return kickChannel.send(kickEmbed)
-      })
-      .catch(err => console.log(err));
+          .then(() =>{
+            return kickChannel.send(kickEmbed)
+          })
+          .catch(err => console.log(err));
   }
 }

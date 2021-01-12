@@ -9,7 +9,7 @@ module.exports = {
   permissions: ["Manage Channels"],
   run: async (client, message, args) => {
     if(!message.member.hasPermission("MANAGE_CHANNELS", {checkAdmin: true, checkOwner: true})){
-      message.channel.send("Sorry, but you do not have permission to use this command").then(m => m.delete({timeout: 5000}));
+      message.channel.send("Sorry, but you do not have permission to use this command");
       return;
     }
     let argString = args.join(" ");
@@ -19,8 +19,8 @@ module.exports = {
     let answerArray = answerString.split(/,\s/g);
     //answerArray[answerArray.length - 1] = answerArray[answerArray.length - 1].substring(0, answerArray[answerArray.length - 1].length - 1);
 
-    if(!question || answerArray.length <= 0) return message.channel.send("Not enough arguments").then(m => m.delete({timeout: 5000}));
-    if(answerArray >= 25) return message.channel.send("Sorry, a max of 24 responses are allowed.").then(m => m.delete({timeout: 5000}));
+    if(!question || answerArray.length <= 0) return message.channel.send("Not enough arguments");
+    if(answerArray >= 25) return message.channel.send("Sorry, a max of 24 responses are allowed.");
 
     let responses = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -36,7 +36,7 @@ module.exports = {
     }
 
     const filter = m => m.author.id === message.author.id && (m.content.toLowerCase() == "yes" || m.content.toLowerCase() == "no");
-    message.channel.send("Allow for multiple responses? Yes or No (Multiple responses means that users can vote on multiple options rather than one) (Defaults to No after 10 seconds)").then(m => m.delete({timeout: 10000}));
+    message.channel.send("Allow for multiple responses? Yes or No (Multiple responses means that users can vote on multiple options rather than one) (Defaults to No after 10 seconds)");
     let collected = await message.channel.awaitMessages(filter, {max: 1, time: 10000});
     poll.multipleVotes = collected.size > 0 && collected.first().content.toLowerCase() === "yes";
     let embed = new MessageEmbed()

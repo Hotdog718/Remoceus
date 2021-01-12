@@ -15,14 +15,14 @@ module.exports = {
     isShiny = (Math.floor(Math.random() * 100) == 0);
     const learnsets = Pokemon.LearnSets;
     let pokemon = args.join(" ").replace(/[^a-z]/gi, "").toLowerCase();
-    if(!pokemon) return message.channel.send("Could not find argument").then(m => m.delete({timeout: 5000}));
-    if(!learnsets[pokemon]) return message.channel.send(`Could not find moveset for ${pokemon}`).then(m => m.delete({timeout: 5000}));
+    if(!pokemon) return message.channel.send("Could not find argument");
+    if(!learnsets[pokemon]) return message.channel.send(`Could not find moveset for ${pokemon}`);
     let MoveSets = learnsets[pokemon].learnset;
-    if(!MoveSets) return message.channel.send(`Could not find moveset for ${pokemon}`).then(m => m.delete({timeout: 5000}));
+    if(!MoveSets) return message.channel.send(`Could not find moveset for ${pokemon}`);
     let maxPages = Math.ceil(Object.keys(MoveSets).length/movesPerPage);
     let index = 0;
     let search = Pokemon.PokemonInfo[pokemon];
-    if(!search) return message.channel.send(`Could not find pokemon`).then(m => m.delete({timeout: 5000}));
+    if(!search) return message.channel.send(`Could not find pokemon`);
     message.channel.send(await getMoveSetEmbed(client, search, MoveSets, index)).then(msg => {
       const filter = zeMessage => {
 				return zeMessage.author.id === message.author.id;

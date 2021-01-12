@@ -16,9 +16,9 @@ module.exports = {
     if(!pUser) return client.errors.noUser(message);
     if(!type) return client.errors.noType(message);
 
-    if(!client.gymTypes.includes(type.toLowerCase())) return message.channel.send(`Sorry, but ${type} is not a gym type.`).then(m => m.delete({timeout: 5000}));
+    if(!client.gymTypes.includes(type.toLowerCase())) return message.channel.send(`Sorry, but ${type} is not a gym type.`);
 
-    if(!client.helpers.checkGyms(client, type, message.member, true)) return message.channel.send("oof.").then(m => m.delete({timeout: 5000}));
+    if(!client.helpers.checkGyms(client, type, message.member, true)) return message.channel.send("You don't have permission for this action.");
 
     const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
     const badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
@@ -31,10 +31,9 @@ module.exports = {
       badges.save()
             .then(() => db.disconnect())
             .then(() => message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`))
-            .then(m => m.delete({timeout: 5000}))
             .catch(err => console.log(err));
     }else{
-      message.channel.send(`${pUser.user.tag} already has the ${type} badge.`).then(m => m.delete({timeout: 5000}));
+      message.channel.send(`${pUser.user.tag} already has the ${type} badge.`);
     }
 
 

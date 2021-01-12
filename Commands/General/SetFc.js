@@ -22,13 +22,13 @@ module.exports = {
 				ign: "No IGN set, use !setign <ign> to set your ign (ex. !setign Thot Slayer)"
 			});
 			await newFC.save()
-								 .then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
-								 .catch(err => console.log(err));
+					   .then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
+					   .catch(err => console.log(err));
 		}else{
 			friendCard.fc = myNewFC;
 			await friendCard.save()
-											.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
-											.catch(err => console.log(err));
+							.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
+							.catch(err => console.log(err));
 		}
 
 		db.disconnect();

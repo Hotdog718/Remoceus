@@ -11,9 +11,9 @@ module.exports = {
   run: async (client, message, args) => {
     let str = args.join(" ");
     let pokemon = str.replace(/[^a-z]/gi, "").toLowerCase().trim();
-    if(!pokemon) return message.channel.send("No name given").then(m => m.delete({timeout: 5000}));
+    if(!pokemon) return message.channel.send("No name given");
     let PokeObject = Pokemon.PokemonInfo[pokemon];
-    if(!PokeObject) return message.channel.send("Could not find pokemon").then(m => m.delete({timeout: 5000}));
+    if(!PokeObject) return message.channel.send("Could not find pokemon");
     message.channel.send(getPokeEmbed(PokeObject, client))
   }
 }

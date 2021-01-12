@@ -16,17 +16,10 @@ module.exports = {
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
     if(!muterole){
       return message.channel.send("No \"Timeout\" role")
-            .then(m => m.delete({timeout: 5000}))
-            .catch(err => {});
     }
 
     tomute.roles.remove(muterole)
-    .then(() => {
-      return message.channel.send(`${tomute.user.tag} has been unmuted`)
-    })
-    .then(m => {
-      return m.delete({timeout: 5000});
-    })
-    .catch(err => message.channel.send("Could not remove role.").then(m => m.delete({timeout: 5000}).catch(err => {})))
+                .then(() => message.channel.send(`${tomute.user.tag} has been unmuted`))
+                .catch(err => message.channel.send("Could not remove role."));
   }
 }

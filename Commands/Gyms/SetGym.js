@@ -19,7 +19,7 @@ module.exports = {
 
 		if(!type) return client.errors.noType(message);
 
-		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`).then(m => m.delete({timeout: 5000}));
+		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")) return message.channel.send(`Status must be either Open or Closed`);
 
 		if(client.helpers.checkGyms(client, type, message.member)){
 			const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -60,7 +60,7 @@ module.exports = {
 			gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && gymChallengers ? ` ${gymChallengers}`: '')}`);
 			db.disconnect();
 		}else{
-			return message.channel.send("You aren't a gym leader").then(m => m.delete({timeout: 5000}));
+			return message.channel.send("You aren't a gym leader");
 		}
 	}
 }

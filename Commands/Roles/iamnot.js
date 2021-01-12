@@ -26,9 +26,9 @@ module.exports = {
     let assignableRole = assignableRoles.roles[rolename.toLowerCase()];
     if(!assignableRole) return message.channel.send(helpEmbed);
     let role = message.guild.roles.cache.get(assignableRole.id);
-    if(!role) return message.channel.send(`Could not find ${role.name} role`).then(m => m.delete({timeout: 5000}).catch(err => {}));
+    if(!role) return message.channel.send(`Could not find ${role.name} role`);
     message.member.roles.remove(role)
-      .then(r => message.channel.send(`Removed ${role.name} role from ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})))
-      .catch(err => message.channel.send(`Failed to remove ${role.name} role from ${message.author.tag}`).then(m => m.delete({timeout: 5000}).catch(err => {})));
+      .then(r => message.channel.send(`Removed ${role.name} role from ${message.author.tag}`))
+      .catch(err => message.channel.send(`Failed to remove ${role.name} role from ${message.author.tag}`));
   }
 }

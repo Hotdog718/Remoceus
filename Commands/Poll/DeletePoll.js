@@ -8,12 +8,12 @@ module.exports = {
   permissions: ["Manage Channels"],
   run: async (client, message, args) => {
     if(!message.member.hasPermission("MANAGE_CHANNELS", {checkAdmin: true, checkOwner: true})){
-      message.channel.send("Sorry, but you do not have permission to use this command").then(m => m.delete({timeout: 5000}));
+      message.channel.send("Sorry, but you do not have permission to use this command");
       return;
     }
 
     let poll = client.polls.get(message.channel.id);
-    if(!poll) return message.channel.send("There is no poll for this channel, make sure you're in the right channel").then(m => m.delete({timeout: 5000}));
+    if(!poll) return message.channel.send("There is no poll for this channel, make sure you're in the right channel");
 
     let m = await message.channel.messages.fetch(poll.messageID);
     if(!m) return;

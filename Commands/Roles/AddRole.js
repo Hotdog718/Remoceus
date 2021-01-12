@@ -11,11 +11,11 @@ module.exports = {
   permissions: ["Mange Roles"],
   run: async (client, message, args) => {
     // Check user permissions
-    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return message.channel.send("You do not have permission for this.").then(m => m.delete({timeout: 5000}))
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return message.channel.send("You do not have permission for this.");
 
     // Get role
     let role = message.mentions.roles.first();
-    if(!role) return message.channel.send("You must provide a role").then(m => m.delete({timeout: 5000}));
+    if(!role) return message.channel.send("You must provide a role");
 
     // Get description
     let description = args.slice(1).join(" ") || "";
@@ -35,7 +35,6 @@ module.exports = {
       newAssignableRoles.save()
                         .then(() => db.disconnect())
                         .then(() => message.channel.send(`Added ${role.name} to assignable role list!`))
-                        .then(m => m.delete({timeout: 5000}))
                         .catch(err => console.log(err))
     }else{
       assignableRoles.roles[role.name.toLowerCase()] = {
@@ -46,7 +45,6 @@ module.exports = {
       assignableRoles.save()
                      .then(() => db.disconnect())
                      .then(() => message.channel.send(`Added ${role.name} to assignable role list!`))
-                     .then(m => m.delete({timeout: 5000}))
                      .catch(err => console.log(err))
     }
   }

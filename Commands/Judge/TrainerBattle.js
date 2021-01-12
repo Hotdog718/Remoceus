@@ -21,7 +21,7 @@ module.exports = {
     const badges2 = await Badges.findOne({userID: member2.id, serverID: message.guild.id});
     db.disconnect();
 
-    if(!badges1 || !badges2) return message.channel.send(`One or both of the members is not signed up for the gym challenge.`).then(m => m.delete({timeout: 5000}));
+    if(!badges1 || !badges2) return message.channel.send(`One or both of the members is not signed up for the gym challenge.`);
 
     let name1 = member1.nickname || member1.user.username;
     let name2 = member2.nickname || member2.user.username;
