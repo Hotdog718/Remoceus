@@ -59,7 +59,7 @@ module.exports = {
 		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"), !(gymSubs && gymSubs.array().length > 0));
 		embed.addField("__**W-L Ratio**__", `${rules.wins}-${rules.losses}`);
 		embed.addField("__**Challenge Cost**__", "50", true)
-				 .addField("__**Points Accumulated**__", "0", true);
+				 .addField("__**Points Accumulated**__", rules.points, true);
 
 		message.channel.send(embed);
 	}

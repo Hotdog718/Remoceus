@@ -13,6 +13,7 @@ const errors = require("./Utils/Errors.js");
 const helper = require("./Utils/Helper.js")
 const typeColors = require("./Type Colors.json");
 const bannedWords = require("./bannedWords.js");
+const modifiers = require('./Utils/BadgeModifiers.js')
 
 client.config = botconfig;
 client.commands = new Collection();
@@ -25,6 +26,7 @@ client.minor = []
 client.helpers = helper;
 client.typeColors = typeColors;
 client.bannedWords = bannedWords;
+client.modifiers = modifiers;
 
 const Handlers = ["Commands.js", "Events.js"];
 Handlers.forEach((r) => {
