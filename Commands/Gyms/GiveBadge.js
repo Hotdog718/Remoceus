@@ -28,12 +28,15 @@ module.exports = {
     }else if(!badges[type.toLowerCase()]){
       badges[type.toLowerCase()] = true;
       badges.count++;
-      message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`).then(m => m.delete({timeout: 5000}));
-      badges.save().catch(err => console.log(err));
+      badges.save()
+            .then(() => db.disconnect())
+            .then(() => message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`))
+            .then(m => m.delete({timeout: 5000}))
+            .catch(err => console.log(err));
     }else{
       message.channel.send(`${pUser.user.tag} already has the ${type} badge.`).then(m => m.delete({timeout: 5000}));
     }
 
-    db.disconnect();
+
   }
 }

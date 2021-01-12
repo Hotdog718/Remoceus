@@ -28,10 +28,11 @@ module.exports = {
 			badges[type.toLowerCase()] = false;
 			badges.count--;
 			await badges.save()
+									.then(() => db.disconnect())
 									.then(() => message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`))
 									.then(msg => msg.delete({timeout: 5000}))
 									.catch(err => console.log(err));
-			db.disconnect();
+
 		}else {
 			return message.channel.send("oof.").then(msg => msg.delete({timeout: 5000}));
 		}
