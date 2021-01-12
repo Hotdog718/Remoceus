@@ -12,6 +12,7 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(!message.member.hasPermission("ADMINISTRATOR", false, true, true)) return client.errors.noPerms(message, "Administrator");
 		let pUser = message.guild.member(message.mentions.users.first());
+		
 		if(!pUser) return client.errors.noUser(message);
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});

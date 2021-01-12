@@ -22,13 +22,13 @@ module.exports = {
 				ign: myNewIGN
 			});
 			await newFC.save()
-								 .then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
-								 .catch(err => console.log(err));
+					   .then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
+					   .catch(err => console.log(err));
 		}else{
 			friendCard.ign = myNewIGN;
 			await friendCard.save()
-											.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
-											.catch(err => console.log(err));
+							.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
+							.catch(err => console.log(err));
 		}
 
 		db.disconnect();

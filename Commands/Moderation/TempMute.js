@@ -12,16 +12,16 @@ module.exports = {
     let tomute = message.guild.member(message.mentions.users.first());
     if(!tomute) return client.errors.noUser(message);
     if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return client.errors.noPerms(message, "Manage Roles");
-    if(!tomute.kickable) return message.reply("Cannot mute member.").then(r => r.delete({timeout: 5000}));
+    if(!tomute.kickable) return message.reply("Cannot mute member.");
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
-    if(!muterole) return message.channel.send("No \"Timeout\" role").then(m => m.delete({timeout: 5000}));
+    if(!muterole) return message.channel.send("No \"Timeout\" role");
 
     let mutetime = args[1];
     if(!mutetime) return message.reply("You didn't specify a time!").then(r => r.delete({timeout: 5000}));
 
     tomute.roles.add(muterole)
     .then(() => {
-      message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`).then(m => m.delete({timeout: 5000}));
+      message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`);
 
       let muteEmbed = new MessageEmbed()
       .setDescription("Temp Mute")
@@ -37,9 +37,9 @@ module.exports = {
         setTimeout(function(){
           tomute.roles.remove(muterole)
           .then(() => {
-            message.channel.send(`${tomute.user.tag} has been unmuted!`).then(m => m.delete({timeout: 5000}).catch(err => {}));
+            message.channel.send(`${tomute.user.tag} has been unmuted!`);
           })
-          .catch(err => message.channel.send("I couldn't unmute them").then(m => m.delete({timeout: 5000}).catch(err => {})))
+          .catch(err => message.channel.send("I couldn't unmute them"));
         }, ms(mutetime));
       })
       .catch(err => {});

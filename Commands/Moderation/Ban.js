@@ -10,7 +10,7 @@ module.exports = {
   permissions: ["Ban Members"],
   run: async (client, message, args) => {
     if(!args[0]){
-      return message.channel.send("You need to mention another user").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("You need to mention another user");
     }
 
     let reason = args.slice(1).join(" ") || "No Reason Given";
@@ -18,7 +18,7 @@ module.exports = {
     let toBan = message.mentions.members.first();
 
     if(!toBan){
-      return message.channel.send("Could not find user").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("Could not find user");
     }
 
     if(!message.member.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
@@ -26,11 +26,11 @@ module.exports = {
     }
 
     if(!message.guild.me.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
-      return message.channel.send("Sorry, but I don't have permission to ban members").then(m => m.delete({timeout: 5000}));
+      return message.channel.send("Sorry, but I don't have permission to ban members");
     }
 
     if(toBan.id === message.author.id){
-      return message.channle.send("You cannot ban yourself").then(m => m.delete({timeout: 5000}));
+      return message.channle.send("You cannot ban yourself");
     }
 
     if(toBan.id === client.user.id){
