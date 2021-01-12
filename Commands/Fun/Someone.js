@@ -8,6 +8,7 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     let role = message.mentions.roles.first();
+    await message.guild.members.fetch();
     let membersArray = message.guild.members.cache.array();
     let guildMembers = !args[0] || !role? membersArray.filter(member => !member.user.bot): membersArray.filter(member => member.roles.cache.find(r => r.id === role.id) && !member.user.bot);
     if(guildMembers.size <= 0) return message.channel.send("Not enough members in role").then(m => m.delete({timeout: 5000}));
