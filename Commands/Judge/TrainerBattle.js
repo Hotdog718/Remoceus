@@ -32,9 +32,28 @@ module.exports = {
     .setTitle(`${name1} vs ${name2}`)
     .setColor(client.config.color)
     .setThumbnail(message.guild.iconURL())
-    .addField(`If ${name1} Wins`, `${name1} earns ${(badges1.points >= badges2.points) ? Math.ceil(10 + ((PD/4)+(PD*client.modifiers[badges1.count]))) : Math.ceil(10 + ((PD/2)+(PD*client.modifiers[badges1.count])))}\n${name2} loses ${(badges2.points >= badges1.points) ? Math.ceil((5 + PD/2)) : Math.ceil((5+(PD/4)))}`)
-    .addField(`If ${name2} Wins`, `${name2} earns ${(badges2.points >= badges1.points) ? Math.ceil(10 + ((PD/4)+(PD*client.modifiers[badges2.count]))) : Math.ceil(10 + ((PD/2)+(PD*client.modifiers[badges2.count])))}\n${name1} loses ${(badges1.points >= badges2.points) ? Math.ceil((5 + PD/2)) : Math.ceil((5+(PD/4)))}`);
+    .addField(`If ${name1} Wins`, `${name1} earns ${winnerPoints(client, badges1, badges2)}\n${name2} loses ${loserPoints(badges1, badges2)}`)
+    .addField(`If ${name2} Wins`, `${name2} earns ${winnerPoints(client, badges2, badges1)}\n${name1} loses ${loserPoints(badges2, badges1)}`);
 
     message.channel.send(embed);
+  }
+}
+
+function winnerPoints(client, winner, loser){
+  let PD = Math.abs(winner.points - loser.points);
+  if(winner.points >= loser.points){
+    return Math.ceil((PD / 4) + ((10 + loser.points) * client.modifiers[winner.count]));
+  }else{
+    return Math.ceil((PD / 2) + ((10 + loser.points) * client.modifiers[winner.count]));
+  }
+}
+
+function loserPoints(winner, loser){
+  
+  let PD = Math.abs(winner.points - loser.points);
+  if(loser.points >= winner.points){
+    return Math.ceil(5 + (PD / 2));
+  }else{
+    return Math.ceil(5 + (PD / 4));
   }
 }
