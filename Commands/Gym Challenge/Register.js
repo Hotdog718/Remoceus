@@ -41,16 +41,20 @@ module.exports = {
 				hometown: (hometown ? hometown : 'Location TBA'),
 				points: 100
 			});
-			await newBadges.save()
-							.then(() => message.channel.send(`You are now signed up for the Ginune Region Gym Challenge with a hometown of ${newBadges.hometown}`))
-							.catch(err => console.log(err));
+			const prom = newBadges.save();
+			prom.then(db.disconnect());
+			prom.then(message.channel.send(`You are now signed up for the Ginune Region Gym Challenge with a hometown of ${newBadges.hometown}`));
+			prom.then(message.react('✅'));
+			prom.catch(console.error);
+			prom.catch((err) => message.react('❌'));
 		}else{
 			badges.hometown = (hometown ? hometown : 'Location TBA');
-			await badges.save()
-						.then(() => message.channel.send(`Changed hometown to ${badges.hometown}`))
-						.catch(err => console.log(err));
+			const prom = badges.save();
+			prom.then(db.disconnect());
+			prom.then(message.channel.send(`Changed hometown to ${badges.hometown}`));
+			prom.then(message.react('✅'));
+			prom.catch(console.error);
+			prom.catch((err) => message.react('❌'));
 		}
-
-		db.disconnect();
 	}
 }

@@ -16,7 +16,11 @@ module.exports = {
     const assignableRoles = await AssignableRoles.findOne({serverID: message.guild.id});
     db.disconnect();
 
-    if(!assignableRoles) return message.channel.send("No self assignable roles found")
+    if(!assignableRoles){
+      message.channel.send("No self assignable roles found");
+      message.react('❌');
+      return;
+    }
 
     let helpEmbed = require("../../Utils/iamroles.js")(client, message.guild, assignableRoles.roles);
     if(!rolename){
@@ -27,8 +31,10 @@ module.exports = {
     if(!assignableRole) return message.channel.send(helpEmbed);
     let role = message.guild.roles.cache.get(assignableRole.id);
     if(!role) return message.channel.send(`Could not find ${role.name} role`);
-    message.member.roles.remove(role)
-      .then(r => message.channel.send(`Removed ${role.name} role from ${message.author.tag}`))
-      .catch(err => message.channel.send(`Failed to remove ${role.name} role from ${message.author.tag}`));
+    const prom = message.member.roles.remove(role);
+    prom.then(() => message.react('✅'));
+    prom.then(r => message.channel.send(`Removed ${role.name} role from ${message.author.tag}`));
+    prom.catch(err => message.channel.send(`Failed to remove ${role.name} role from ${message.author.tag}`));
+    prom.catch(err => message.react('❌'));
   }
 }

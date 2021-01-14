@@ -13,21 +13,34 @@ module.exports = {
     let judgeRole = message.guild.roles.cache.find(r => r.name === 'Battle Judge');
     let gymLeaderRole = message.guild.roles.cache.find(r => r.name === "Gym Leaders")
 
-    if(!(message.author.id === message.guild.ownerID || (judgeRole && message.member.roles.cache.has(judgeRole.id)) || (gymLeaderRole && message.member.roles.cache.has(gymLeaderRole.id)))) return message.author.id('Only Gym Leaders or Judges can use this command');
+    if(!(message.author.id === message.guild.ownerID || (judgeRole && message.member.roles.cache.has(judgeRole.id)) || (gymLeaderRole && message.member.roles.cache.has(gymLeaderRole.id)))){
+      message.channel.send('Only Gym Leaders or Judges can use this command');
+      message.react('❌');
+      return;
+    }
 
     let pUser = message.mentions.users.first();
     let points = parseInt(args[1]);
 
-    if(!pUser) return client.errors.noUser(message);
-    if(!points || isNaN(points)) return message.channel.send('You must enter the number of points to give');
+    if(!pUser){
+      client.errors.noUser(message);
+      return;
+    }
+    if(!points || isNaN(points)){
+      message.channel.send('You must enter the number of points to give');
+      message.react('❌');
+      return;
+    }
 
     const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
     let badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
 
     badges.points += Math.abs(points);
-    badges.save()
-          .then(() => db.disconnect())
-          .then(() => message.channel.send(`Awarded ${Math.abs(points)} to ${pUser}.`))
-          .catch(err => console.log(err));
+    const prom = badges.save();
+    prom.then(() => db.disconnect());
+    prom.then(() => message.channel.send(`Awarded ${Math.abs(points)} to ${pUser}.`));
+    prom.then(() => message.react('✅'));
+    prom.catch(console.error);
+    prom.catch((err) => message.react('❌'));
   }
 }

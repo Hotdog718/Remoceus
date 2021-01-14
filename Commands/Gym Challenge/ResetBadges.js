@@ -10,7 +10,10 @@ module.exports = {
 	usage: "",
 	permissions: ["Server Owner"],
 	run: async (client, message, args) => {
-		if(message.author.id !== message.guild.ownerID) return client.errors.noPerms(message, "Owner");
+		if(message.author.id !== message.guild.ownerID) {
+      client.errors.noPerms(message, "Owner");
+      return;
+    }
 
     message.channel.send(`You are about to revoke the badges of every member on the server, do you wish to continue? (Yes/No)`);
     const filter = m => m.author.id === message.author.id && (m.content.toLowerCase() === "yes" || m.content.toLowerCase() === "no");
@@ -22,8 +25,9 @@ module.exports = {
         await Badges.deleteMany({serverID: message.guild.id});
         db.disconnect();
         message.channel.send(`All badges on the server have been reset`);
+        message.react('✅');
       }
     })
-    .catch(err => console.log(err))
+    .catch(console.error);
 	}
 }

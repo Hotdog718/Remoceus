@@ -21,16 +21,18 @@ module.exports = {
 				fc: "No FC set, use !setfc <fc> to set your fc (ex. !setfc 3883-7141-8049)",
 				ign: myNewIGN
 			});
-			await newFC.save()
-					   .then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
-					   .catch(err => console.log(err));
+			const prom = newFC.save();
+			prom.then(() => db.disconnect());
+			prom.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`));
+			prom.catch(console.error);
+			prom.catch((err) => message.react('❌'));
 		}else{
 			friendCard.ign = myNewIGN;
-			await friendCard.save()
-							.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`))
-							.catch(err => console.log(err));
+			const prom = friendCard.save()
+			prom.then(() => db.disconnect());
+			prom.then(() => message.channel.send(`Set IGN to: ${myNewIGN}`));
+			prom.catch(console.error);
+			prom.catch((err) => message.react('❌'));
 		}
-
-		db.disconnect();
 	}
 }

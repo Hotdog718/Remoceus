@@ -10,25 +10,39 @@ module.exports = {
   usage: "[rolename]",
   permissions: ["Mange Roles"],
   run: async (client, message, args) => {
-    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return message.channel.send("You do not have permission for this.");
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
+      client.error.noPerms(message, "Manage Roles");
+      return;
+    }
 
     let roleName = args.join(" ").toLowerCase();
-    if(!roleName) return message.channel.send("No role found");
+    if(!roleName){
+      message.channel.send("No role found");
+      message.react('❌');
+      return;
+    }
 
     const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
     const assignableRoles = await AssignableRoles.findOne({serverID: message.guild.id});
-    if(!assignableRoles) return message.channel.send("No data found for assignable roles");
+    if(!assignableRoles){
+      message.channel.send("No data found for assignable roles");
+      message.react('❌');
+      return;
+    }
 
     if(assignableRoles.roles[roleName]){
       delete assignableRoles.roles[roleName];
       assignableRoles.markModified('roles')
-      assignableRoles.save()
-           .then(() => db.disconnect())
-           .then(() => message.channel.send(`Removed ${roleName} from assignable roles.`))
-           .catch(err => console.log(err))
+      const prom = assignableRoles.save();
+      prom.then(() => message.react('✅'));
+      prom.then(() => db.disconnect());
+      prom.then(() => message.channel.send(`Removed ${roleName} from assignable roles.`));
+      prom.catch(console.error);
+      prom.catch(err => message.react('❌'));
     }else{
       message.channel.send(`${roleName} was not a self assignable role.`);
-      db.disconnect()
+      message.react('❌');
+      db.disconnect();
     }
   }
 }

@@ -21,16 +21,18 @@ module.exports = {
 				fc: myNewFC,
 				ign: "No IGN set, use !setign <ign> to set your ign (ex. !setign Thot Slayer)"
 			});
-			await newFC.save()
-					   .then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
-					   .catch(err => console.log(err));
+			const prom = newFC.save()
+			prom.then(() => db.disconnect());
+			prom.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`));
+			prom.catch(err => console.log(err));
+			prom.catch((err) => message.react('❌'));
 		}else{
 			friendCard.fc = myNewFC;
-			await friendCard.save()
-							.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`))
-							.catch(err => console.log(err));
+			const prom = friendCard.save();
+			prom.then(() => db.disconnect());
+			prom.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`));
+			prom.catch(err => console.log(err));
+			prom.catch((err) => message.react('❌'));
 		}
-
-		db.disconnect();
 	}
 }

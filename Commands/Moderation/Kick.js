@@ -10,6 +10,7 @@ module.exports = {
   permissions: ["Kick Members"],
   run: async (client, message, args) => {
     if(!args[0]){
+      message.react('❌');
       return message.channel.send("You need to mention another user");
     }
 
@@ -18,26 +19,32 @@ module.exports = {
     let toKick = message.mentions.members.first();
 
     if(!toKick){
+      message.react('❌');
       return message.channel.send("Could not find user");
     }
 
     if(!message.member.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
+      message.react('❌');
       return client.errors.noPerms(message, "Kick Members");
     }
 
     if(!message.guild.me.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
+      message.react('❌');
       return message.channel.send("Sorry, but I don't have permission to kick members");
     }
 
     if(toKick.id === message.author.id){
+      message.react('❌');
       return message.channle.send("You cannot kick yourself");
     }
 
     if(toKick.id === client.user.id){
+      message.react('❌');
       return message.channel.send("You cannot kick me");
     }
 
     if(!toKick.kickable){
+      message.react('❌');
       return message.channel.send("I cannot kick this member");
     }
 
@@ -53,10 +60,10 @@ module.exports = {
       kickEmbed.addField("Reason", reason);
     }
 
-    toKick.kick(reason)
-          .then(() =>{
-            return kickChannel.send(kickEmbed)
-          })
-          .catch(err => console.log(err));
+    const prom = toKick.kick(reason)
+    prom.then(() => kickChannel.send(kickEmbed));
+    prom.then(() => message.react('✅'))
+    prom.catch(console.error);
+    prom.catch((err) => message.react('❌'));
   }
 }
