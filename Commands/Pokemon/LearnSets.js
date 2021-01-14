@@ -24,37 +24,51 @@ module.exports = {
     let search = Pokemon.PokemonInfo[pokemon];
     if(!search) return message.channel.send(`Could not find pokemon`);
     message.channel.send(await getMoveSetEmbed(client, search, MoveSets, index)).then(msg => {
-      const filter = zeMessage => {
-				return zeMessage.author.id === message.author.id;
+      let reactions = ["⬅", "➡", '⏹'];
+			reactions.forEach(function(r, i){
+				setTimeout(function(){
+					msg.react(r);
+				}, i*800)
+			})
+      
+      //set filter to only let only set reactions and message author to respond
+			const filter = (reaction, user) => {
+				return reactions.includes(reaction.emoji.name) && user.id === message.author.id;
 			}
 
-			const collector = new MessageCollector(message.channel, filter, {idle: 60000});
+			//create Reaction Collector
+			const collector = msg.createReactionCollector(filter, {});
 
-			collector.on('collect', async m => {
-				let prefix = client.config.prefix;
-				switch(m.content.toLowerCase()){
-					case `${prefix}b`:{
-						if(m.deletable) m.delete();
+			collector.on('collect', async(reaction, user) => {
+        const userReactions = msg.reactions.cache.filter(reaction => reaction.users.cache.has(message.author.id));
+				try {
+					for (const reaction of userReactions.values()) {
+						await reaction.users.remove(message.author.id);
+					}
+				} catch (error) {
+					console.error('Failed to remove reactions.');
+				}
+				switch(reaction.emoji.name){
+					case `⬅`:{
             index = (index-1) < 0? maxPages-1 :index-1;
             msg.edit(await getMoveSetEmbed(client, Pokemon.PokemonInfo[pokemon], MoveSets, index));
             break;
 					}
-					case `${prefix}n`:{
-						if(m.deletable) m.delete();
+					case `➡`:{
             index = (index+1)%maxPages;
             msg.edit(await getMoveSetEmbed(client, Pokemon.PokemonInfo[pokemon], MoveSets, index));
             break;
 					}
-					case `${prefix}stop`:{
-						if(m.deletable) m.delete();
-						collector.emit('end');
-            msg.delete().catch(err => {});
+					case `⏹`:{
+						collector.stop();
 						break;
 					}
 				}
 			})
 
-      collector.on('end', collected => {})
+      collector.on('end', collected => {
+        msg.delete().catch(console.error);
+      })
     })
   }
 }
