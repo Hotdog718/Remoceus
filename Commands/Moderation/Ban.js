@@ -18,7 +18,7 @@ module.exports = {
     let toBan = message.mentions.members.first();
 
     if(!toBan){
-      return message.channel.send("Could not find user");
+      return client.errors.noUser(message);
     }
 
     if(!message.member.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
@@ -26,18 +26,22 @@ module.exports = {
     }
 
     if(!message.guild.me.hasPermission("BAN_MEMBERS", {checkOwner: true, checkAdmin: true})){
+      message.react('❌');
       return message.channel.send("Sorry, but I don't have permission to ban members");
     }
 
     if(toBan.id === message.author.id){
+      message.react('❌');
       return message.channle.send("You cannot ban yourself");
     }
 
     if(toBan.id === client.user.id){
-      return message.channel.send("You cannot ban me");
+      message.react('❌');
+      return message.channel.send("Please don't ban me!");
     }
 
     if(!toBan.bannable){
+      message.react('❌');
       return message.channel.send("I cannot ban this member");
     }
 
@@ -53,10 +57,10 @@ module.exports = {
       banEmbed.addField("Reason", reason);
     }
 
-    toBan.ban({reason: reason})
-      .then(() =>{
-        return banChannel.send(banEmbed)
-      })
-      .catch(err => console.log(err));
+    const prom = toBan.ban({reason: reason});
+    prom.then(() => banChannel.send(banEmbed));
+    prom.then(() => message.react('✅'));
+    prom.catch(console.error);
+    prom.catch((err) => message.react('❌'));
   }
 }

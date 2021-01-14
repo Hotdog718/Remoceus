@@ -10,39 +10,51 @@ module.exports = {
   permissions: ["Manage Roles"],
   run: async (client, message, args) => {
     let tomute = message.guild.member(message.mentions.users.first());
-    if(!tomute) return client.errors.noUser(message);
-    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return client.errors.noPerms(message, "Manage Roles");
-    if(!tomute.kickable) return message.reply("Cannot mute member.");
+    if(!tomute){
+      client.errors.noUser(message);
+      return;
+    }
+
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
+      client.errors.noPerms(message, "Manage Roles");
+      return;
+    }
+    
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
-    if(!muterole) return message.channel.send("No \"Timeout\" role");
+    if(!muterole){
+      message.channel.send("No \"Timeout\" role");
+      message.react('❌');
+      return;
+    }
 
     let mutetime = args[1];
-    if(!mutetime) return message.reply("You didn't specify a time!").then(r => r.delete({timeout: 5000}));
-
-    tomute.roles.add(muterole)
-    .then(() => {
-      message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`);
-
-      let muteEmbed = new MessageEmbed()
-      .setDescription("Temp Mute")
-      .setColor(client.config.color)
-      .addField("Muted User", `${tomute.user.tag} with ID: ${tomute.id}`)
-      .addField("Muted By",`${message.author.tag} with ID: ${message.author.id}`)
-      .addField("Muted for", mutetime);
-
-      let mutechannel = message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel;
-      if(!mutechannel) return message.channel.send("Couldn't find mute channel");
-
-      mutechannel.send(muteEmbed).then(m => {
-        setTimeout(function(){
-          tomute.roles.remove(muterole)
-          .then(() => {
-            message.channel.send(`${tomute.user.tag} has been unmuted!`);
-          })
-          .catch(err => message.channel.send("I couldn't unmute them"));
-        }, ms(mutetime));
-      })
-      .catch(err => {});
-    })
+    if(!mutetime){
+      message.reply("You didn't specify a time!");
+      message.react('❌');
+      return;
+    }
+    
+    let muteEmbed = new MessageEmbed()
+    .setDescription("Temp Mute")
+    .setColor(client.config.color)
+    .addField("Muted User", `${tomute.user.tag} with ID: ${tomute.id}`)
+    .addField("Muted By",`${message.author.tag} with ID: ${message.author.id}`)
+    .addField("Muted for", mutetime);    
+    
+    const prom = tomute.roles.add(muterole);
+    prom.then(() => message.react('✅'));
+    prom.then(() => message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`))
+    prom.then(() => message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel)
+        .then((mutechannel) => mutechannel.send(muteEmbed))
+        .catch(console.error);
+    prom.then(m => {
+      setTimeout(function(){
+        tomute.roles.remove(muterole)
+        .then(() => message.channel.send(`${tomute.user.tag} has been unmuted!`))
+        .catch(console.error);
+      }, ms(mutetime));
+    });
+    prom.catch(console.error);
+    prom.catch((err) => message.react('❌'));
   }
 }

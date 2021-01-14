@@ -9,28 +9,39 @@ module.exports = {
   permissions: ["Manage Roles"],
   run: async (client, message, args) => {
     let tomute = message.guild.member(message.mentions.users.first());
-    if(!tomute) return client.errors.noUser(message);
-    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return client.errors.noPerms(message, "Manage Roles");
-    // if(!tomute.kickable) return message.channel.send("I cant mute them because I don't have permission to kick them");
+    if(!tomute){
+      client.errors.noUser(message);
+      message.react('❌');
+      return;
+    }
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
+      client.errors.noPerms(message, "Manage Roles");
+      message.react('❌');
+      return;
+    }
+    
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
 
-    if(!muterole) return message.channel.send("No \"Timeout\" role");
+    if(!muterole){
+      message.channel.send("No \"Timeout\" role");
+      message.react('❌');
+      return;
+    }
 
     let mutechannel = message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel;
-    if(!mutechannel) return message.channel.send("Couldn't find mute channel");
 
-    tomute.roles.add(muterole)
-    .then(() => {
-      message.channel.send(`${tomute.user.tag} has been muted`);
+    let muteEmbed = new MessageEmbed()
+    .setDescription("Temp Mute")
+    .setColor(client.config.color)
+    .addField("Muted User", `${tomute} with ID: ${tomute.id}`)
+    .addField("Muted By",`${message.author} with ID: ${message.author.id}`);
 
-      let muteEmbed = new MessageEmbed()
-      .setDescription("Temp Mute")
-      .setColor(client.config.color)
-      .addField("Muted User", `${tomute} with ID: ${tomute.id}`)
-      .addField("Muted By",`${message.author} with ID: ${message.author.id}`);
-
-      mutechannel.send(muteEmbed);
-    })
-    .catch(err => message.channel.send("I'm sorry, but I was unable to mute this user."));
+    const prom = tomute.roles.add(muterole)
+    prom.then(() => message.channel.send(`${tomute.user.tag} has been muted`));
+    prom.then(() => mutechannel.send(muteEmbed))
+        .catch(console.error);
+    prom.then(() => message.react('✅'));
+    prom.catch(err => message.channel.send("I'm sorry, but I was unable to mute this user."));
+    prom.catch((err) => message.react('❌'));
   }
 }

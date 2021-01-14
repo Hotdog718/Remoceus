@@ -11,11 +11,18 @@ module.exports = {
   permissions: ["Mange Roles"],
   run: async (client, message, args) => {
     // Check user permissions
-    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) return message.channel.send("You do not have permission for this.");
+    if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
+      client.errors.noPerms(message, "Manage Roles");
+      return;
+    }
 
     // Get role
     let role = message.mentions.roles.first();
-    if(!role) return message.channel.send("You must provide a role");
+    if(!role){
+      message.channel.send("You must provide a role");
+      message.react('❌');
+      return;
+    }
 
     // Get description
     let description = args.slice(1).join(" ") || "";
@@ -32,20 +39,24 @@ module.exports = {
         id: role.id,
         description: description
       }
-      newAssignableRoles.save()
-                        .then(() => db.disconnect())
-                        .then(() => message.channel.send(`Added ${role.name} to assignable role list!`))
-                        .catch(err => console.log(err))
+      const prom = newAssignableRoles.save()
+      prom.then(() => message.react('✅'));
+      prom.then(() => db.disconnect());
+      prom.then(() => message.channel.send(`Added ${role.name} to assignable role list!`));
+      prom.catch(console.error);
+      prom.catch(err => message.react('❌'));
     }else{
       assignableRoles.roles[role.name.toLowerCase()] = {
         id: role.id,
         description: description
       }
       assignableRoles.markModified('roles')
-      assignableRoles.save()
-                     .then(() => db.disconnect())
-                     .then(() => message.channel.send(`Added ${role.name} to assignable role list!`))
-                     .catch(err => console.log(err))
+      const prom = assignableRoles.save();
+      prom.then(() => message.react('✅'));
+      prom.then(() => db.disconnect());
+      prom.then(() => message.channel.send(`Added ${role.name} to assignable role list!`));
+      prom.catch(console.error);
+      prom.catch(err => message.react('❌'));
     }
   }
 }

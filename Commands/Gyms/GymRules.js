@@ -14,15 +14,25 @@ module.exports = {
 		let type = args[0] ? args[0].toLowerCase(): "";
 
 		//If no type given or type given isn't a gym type, send no type response
-		if(!type) return client.errors.noType(message);
+		if(!type){
+			client.errors.noType(message)
+			return;
+		}
 		type = type.toLowerCase();
-		if(!client.gymTypes.includes(type)) return client.errors.noType(message);
+		if(!client.gymTypes.includes(type)){
+			client.errors.noType(message);
+			return;
+		}
 
 		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		let rules = await GymRules.findOne({serverID: message.guild.id, type: type});
 		db.disconnect();
 
-		if(!rules) return;
+		if(!rules){
+			message.channel.send('No data found.');
+			message.react('❌');
+			return;
+		}
 
 		let embed = new MessageEmbed()
 		.setTitle(`${client.helpers.toTitleCase(type)} Gym Rules`)
@@ -58,8 +68,8 @@ module.exports = {
 
 		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"), !(gymSubs && gymSubs.array().length > 0));
 		embed.addField("__**W-L Ratio**__", `${rules.wins}-${rules.losses}`);
-		embed.addField("__**Challenge Cost**__", "50", true)
-				 .addField("__**Points Accumulated**__", rules.points, true);
+		embed.addField("__**Challenge Cost**__", `${rules.cost}`, true)
+			 .addField("__**Points Accumulated**__", rules.points, true);
 
 		message.channel.send(embed);
 	}

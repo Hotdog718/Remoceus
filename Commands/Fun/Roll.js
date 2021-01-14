@@ -31,11 +31,10 @@ module.exports = {
           }
         }
       });
-      promise.then((embed) => {
-        return message.channel.send(embed);
-      })
-      .catch(err => {})
+      promise.then((embed) => message.channel.send(embed))
+             .catch(console.error())
     }catch(e){
+			message.react('❌');
       message.channel.send("error");
     }
   }
