@@ -52,7 +52,7 @@ function getCategoryEmbed(client, index, categoryNames){
   .setTitle(`${client.helpers.toTitleCase(categoryNames[index])} Commands`)
   .setColor(client.config.color)
   .setThumbnail(client.user.displayAvatarURL())
-  .setFooter(`Page ${index+1} of ${categoryNames.length}\nUse "${client.config.prefix}next" to go to the next page\nUse "${client.config.prefix}back" to go to the last page\nAnd use "${client.config.prefix}stop" to stop the help dialog box.`);
+  .setFooter(`Page ${index+1} of ${categoryNames.length}`);
   if(commands.length == 0){
     embed.addField("No Commands", "No Commands Listed");
   }else{

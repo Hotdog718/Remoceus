@@ -29,17 +29,17 @@ const createMOTWEmbed = (client, index, motws) => {
 	}
 	let currentSet = motws[index];
 	embed.setTitle(currentSet.setName)
-			 .setThumbnail(Pokemon.GetSerebiiURL(currentSet.pokemon, currentSet.forme, currentSet.shiny))
-			 .addField("Pokemon", client.helpers.toTitleCase(currentSet.pokemon))
-			 .addField("Ability(s)", currentSet.ability)
-			 .addField("Item(s)", currentSet.item)
-			 .addField("EVs", `${formatEVSpread(currentSet)}`)
-			 .addField("Moveset", `${currentSet.move1}\n${currentSet.move2}\n${currentSet.move3}\n${currentSet.move4}`)
-			 .setFooter(`Set #${index+1} of ${motws.length}\nUse "${client.config.prefix}next" to go to the next page\nUse "${client.config.prefix}back" to go to the last page\nAnd use "${client.config.prefix}stop" to stop the help dialog box.`);
-			 if(currentSet.ytLink){
-         embed.setURL(currentSet.ytLink);
-       }
-  return embed;
+	.setThumbnail(Pokemon.GetSerebiiURL(currentSet.pokemon, currentSet.forme, currentSet.shiny))
+	.addField("Pokemon", client.helpers.toTitleCase(currentSet.pokemon))
+	.addField("Ability(s)", currentSet.ability)
+	.addField("Item(s)", currentSet.item)
+	.addField("EVs", `${formatEVSpread(currentSet)}`)
+	.addField("Moveset", `${currentSet.move1}\n${currentSet.move2}\n${currentSet.move3}\n${currentSet.move4}`)
+	.setFooter(`Set #${index+1} of ${motws.length}`);
+	if(currentSet.ytLink){
+		embed.setURL(currentSet.ytLink);
+	}
+ 	return embed;
 }
 
 const formatEVSpread = ({evs}) => {
