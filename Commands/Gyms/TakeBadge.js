@@ -24,13 +24,15 @@ module.exports = {
 		
 		if(!client.gymTypes.includes(type.toLowerCase())) {
 			message.channel.send(`Sorry, but ${type} is not a gym type.`);
-			message.react('❌');
+			message.react('❌')
+				   .catch(console.error);
 			return;
 		}
 
 		if(!client.helpers.checkGyms(client, type, message.member, true)){
 			message.channel.send("You do not have permission for this action.")
-			message.react('❌');
+			message.react('❌')
+				   .catch(console.error);
 			return;
 		}
 
@@ -49,8 +51,10 @@ module.exports = {
 		prom.then(() => db.disconnect())
 			.catch(console.error);
 		prom.then(() => message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`));
-		prom.then(() => message.react('✅'));
+		prom.then(() => message.react('✅'))
+        	.catch(console.error);
 		prom.catch(console.error);
-		prom.catch((err) => message.react('❌'));
+		prom.catch((err) => message.react('❌'))
+        	.catch(console.error);
 	}
 }

@@ -30,7 +30,8 @@ module.exports = {
 
 		if(!rules){
 			message.channel.send('No data found.');
-			message.react('❌');
+			message.react('❌')
+				   .catch(console.error);
 			return;
 		}
 

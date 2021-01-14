@@ -23,14 +23,16 @@ module.exports = {
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
     if(!muterole){
       message.channel.send("No \"Timeout\" role");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
     let mutetime = args[1];
     if(!mutetime){
       message.reply("You didn't specify a time!");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
     
@@ -42,7 +44,8 @@ module.exports = {
     .addField("Muted for", mutetime);    
     
     const prom = tomute.roles.add(muterole);
-    prom.then(() => message.react('✅'));
+    prom.then(() => message.react('✅'))
+				.catch(console.error);
     prom.then(() => message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`))
     prom.then(() => message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel)
         .then((mutechannel) => mutechannel.send(muteEmbed))
@@ -55,6 +58,7 @@ module.exports = {
       }, ms(mutetime));
     });
     prom.catch(console.error);
-    prom.catch((err) => message.react('❌'));
+    prom.catch((err) => message.react('❌'))
+				.catch(console.error);
   }
 }

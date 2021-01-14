@@ -24,13 +24,15 @@ module.exports = {
 
 		if(!status || !(status.toLowerCase() === "open" || status.toLowerCase() === "closed")){
 			message.channel.send(`Status must be either Open or Closed`);
-			message.react('❌');
+			message.react('❌')
+				   .catch(console.error);
 			return;
 		}
 
 		if(!client.helpers.checkGyms(client, type, message.member)){
 			message.channel.send("You aren't a gym leader");
-			message.react('❌');
+			message.react('❌')
+				   .catch(console.error);
 			return;
 		}
 		
@@ -67,18 +69,22 @@ module.exports = {
 			prom.then(() => db.disconnect());
 			prom.then(() => message.guild.roles.cache.find(r => r.name === "Gym Challenger"))
 				.then((role) => gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && role ? ` ${role}`: '')}`));
-			prom.then(() => message.react('✅'));
+			prom.then(() => message.react('✅'))
+				.catch(console.error);
 			prom.catch(console.error);
-			prom.catch(message.react('❌'));
+			prom.catch((err) => message.react('❌'))
+				.catch(console.error);
 		}else{
 			gym.open = (status.toLowerCase() === "open") ? true : false;
 			const prom = gym.save();
 			prom.then(() => db.disconnect());
 			prom.then(() => message.guild.roles.cache.find(r => r.name === "Gym Challenger"))
 				.then((role) => gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && role ? ` ${role}`: '')}`));
-			prom.then(() => message.react('✅'));
+			prom.then(() => message.react('✅'))
+				.catch(console.error);
 			prom.catch(console.error);
-			prom.catch((err) => message.react('❌'));
+			prom.catch((err) => message.react('❌'))
+				.catch(console.error);
 		}
 	}
 }

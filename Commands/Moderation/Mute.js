@@ -11,12 +11,14 @@ module.exports = {
     let tomute = message.guild.member(message.mentions.users.first());
     if(!tomute){
       client.errors.noUser(message);
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
     if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
       client.errors.noPerms(message, "Manage Roles");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
     
@@ -24,7 +26,8 @@ module.exports = {
 
     if(!muterole){
       message.channel.send("No \"Timeout\" role");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -40,8 +43,10 @@ module.exports = {
     prom.then(() => message.channel.send(`${tomute.user.tag} has been muted`));
     prom.then(() => mutechannel.send(muteEmbed))
         .catch(console.error);
-    prom.then(() => message.react('✅'));
+    prom.then(() => message.react('✅'))
+				.catch(console.error);
     prom.catch(err => message.channel.send("I'm sorry, but I was unable to mute this user."));
-    prom.catch((err) => message.react('❌'));
+    prom.catch((err) => message.react('❌'))
+				.catch(console.error);
   }
 }

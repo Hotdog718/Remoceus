@@ -34,7 +34,8 @@ module.exports = {
       promise.then((embed) => message.channel.send(embed))
              .catch(console.error())
     }catch(e){
-			message.react('❌');
+			message.react('❌')
+						 .catch(console.error);
       message.channel.send("error");
     }
   }
