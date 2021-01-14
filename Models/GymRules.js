@@ -26,6 +26,7 @@ const gymRulesSchema = mongoose.Schema({
   wins: Number,
   losses: Number,
   points: Number,
+  cost: Number,
   open: Boolean,
   majorLeague: Boolean
 })
