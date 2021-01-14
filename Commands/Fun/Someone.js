@@ -13,7 +13,8 @@ module.exports = {
     let guildMembers = !args[0] || !role? membersArray.filter(member => !member.user.bot): membersArray.filter(member => member.roles.cache.find(r => r.id === role.id) && !member.user.bot);
     if(guildMembers.size <= 0){
       message.channel.send("Not enough members in role");
-			message.react('❌');
+			message.react('❌')
+						 .catch(console.error);
       return;
     }
     let member = guildMembers[Math.floor(Math.random()*guildMembers.length)];

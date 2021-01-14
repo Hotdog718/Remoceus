@@ -25,6 +25,7 @@ module.exports = {
 		await Badges.findOneAndDelete({userID: pUser.id, serverID: message.guild.id})
 		db.disconnect();
 		message.channel.send(`${pUser.user.username}\'s badges have been revoked`);
-		message.react('✅');
+		message.react('✅')
+			   .catch(console.error);
 	}
 }

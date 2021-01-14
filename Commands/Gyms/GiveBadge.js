@@ -24,13 +24,15 @@ module.exports = {
 
     if(!client.gymTypes.includes(type.toLowerCase())){
       message.channel.send(`Sorry, but ${type} is not a gym type.`);
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
     if(!client.helpers.checkGyms(client, type, message.member, true)){
       message.channel.send("You don't have permission for this action.");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -39,7 +41,8 @@ module.exports = {
 
     if(!badges){
       message.channel.send(`${pUser.user.username} has not registered for the gym challenge. They need to use !register [hometown] to sign up.`);
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
     
@@ -50,12 +53,15 @@ module.exports = {
       prom.then(() => db.disconnect())
 			  .catch(console.error);
       prom.then(() => message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`));
-      prom.then(() => message.react('✅'));
+      prom.then(() => message.react('✅'))
+				  .catch(console.error);
       prom.catch(console.error);
-      prom.catch((err) => message.react('❌'));
+      prom.catch((err) => message.react('❌'))
+				  .catch(console.error);
     }else{
       message.channel.send(`${pUser.user.tag} already has the ${type} badge.`);
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
   }

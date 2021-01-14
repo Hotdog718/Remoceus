@@ -25,7 +25,8 @@ module.exports = {
         await Badges.deleteMany({serverID: message.guild.id});
         db.disconnect();
         message.channel.send(`All badges on the server have been reset`);
-        message.react('✅');
+        message.react('✅')
+						   .catch(console.error);
       }
     })
     .catch(console.error);

@@ -9,7 +9,8 @@ module.exports = {
 	run: async (client, message, args) => {
 		if(message.deletable) message.delete();
         if(message.author.id === client.config.botowner){
-    		await message.react('✅');
+    		await message.react('✅')
+						 .catch(console.error);
 			client.destory();	
         }
 	}

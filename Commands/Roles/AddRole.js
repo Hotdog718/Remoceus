@@ -20,7 +20,8 @@ module.exports = {
     let role = message.mentions.roles.first();
     if(!role){
       message.channel.send("You must provide a role");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -40,7 +41,8 @@ module.exports = {
         description: description
       }
       const prom = newAssignableRoles.save()
-      prom.then(() => message.react('✅'));
+      prom.then(() => message.react('✅'))
+				.catch(console.error);
       prom.then(() => db.disconnect());
       prom.then(() => message.channel.send(`Added ${role.name} to assignable role list!`));
       prom.catch(console.error);
@@ -52,7 +54,8 @@ module.exports = {
       }
       assignableRoles.markModified('roles')
       const prom = assignableRoles.save();
-      prom.then(() => message.react('✅'));
+      prom.then(() => message.react('✅'))
+				.catch(console.error);
       prom.then(() => db.disconnect());
       prom.then(() => message.channel.send(`Added ${role.name} to assignable role list!`));
       prom.catch(console.error);

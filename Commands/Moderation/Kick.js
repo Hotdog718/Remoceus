@@ -10,7 +10,8 @@ module.exports = {
   permissions: ["Kick Members"],
   run: async (client, message, args) => {
     if(!args[0]){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channel.send("You need to mention another user");
     }
 
@@ -19,32 +20,38 @@ module.exports = {
     let toKick = message.mentions.members.first();
 
     if(!toKick){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channel.send("Could not find user");
     }
 
     if(!message.member.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return client.errors.noPerms(message, "Kick Members");
     }
 
     if(!message.guild.me.hasPermission("KICK_MEMBERS", {checkOwner: true, checkAdmin: true})){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channel.send("Sorry, but I don't have permission to kick members");
     }
 
     if(toKick.id === message.author.id){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channle.send("You cannot kick yourself");
     }
 
     if(toKick.id === client.user.id){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channel.send("You cannot kick me");
     }
 
     if(!toKick.kickable){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return message.channel.send("I cannot kick this member");
     }
 
@@ -60,10 +67,12 @@ module.exports = {
       kickEmbed.addField("Reason", reason);
     }
 
-    const prom = toKick.kick(reason)
+    const prom = toKick.kick(reason);
     prom.then(() => kickChannel.send(kickEmbed));
     prom.then(() => message.react('✅'))
+				.catch(console.error);
     prom.catch(console.error);
-    prom.catch((err) => message.react('❌'));
+    prom.catch((err) => message.react('❌'))
+				.catch(console.error);
   }
 }

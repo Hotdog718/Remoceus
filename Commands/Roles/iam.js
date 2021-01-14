@@ -18,7 +18,8 @@ module.exports = {
 
     if(!assignableRoles){
       message.channel.send("No self assignable roles found");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -32,9 +33,11 @@ module.exports = {
     let role = message.guild.roles.cache.get(assignableRole.id);
     if(!role) return message.channel.send(`Could not find ${role.name} role`);
     const prom = message.member.roles.add(role)
-    prom.then(() => message.react('✅'));
+    prom.then(() => message.react('✅'))
+				.catch(console.error);
     prom.then(r => message.channel.send(`Added ${role.name} role to ${message.author.tag}`));
-    prom.catch(err => message.channel.send(`Failed to add ${role.name} role to ${message.author.tag}`));
-    prom.catch(err => message.react('❌'));
+    prom.catch((err) => message.channel.send(`Failed to add ${role.name} role to ${message.author.tag}`));
+    prom.catch((err) => message.react('❌'))
+				.catch(console.error);
   }
 }

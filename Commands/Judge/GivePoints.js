@@ -15,7 +15,8 @@ module.exports = {
 
     if(!(message.author.id === message.guild.ownerID || (judgeRole && message.member.roles.cache.has(judgeRole.id)) || (gymLeaderRole && message.member.roles.cache.has(gymLeaderRole.id)))){
       message.channel.send('Only Gym Leaders or Judges can use this command');
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -28,7 +29,8 @@ module.exports = {
     }
     if(!points || isNaN(points)){
       message.channel.send('You must enter the number of points to give');
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -39,8 +41,10 @@ module.exports = {
     const prom = badges.save();
     prom.then(() => db.disconnect());
     prom.then(() => message.channel.send(`Awarded ${Math.abs(points)} to ${pUser}.`));
-    prom.then(() => message.react('✅'));
+    prom.then(() => message.react('✅'))
+        .catch(console.error);
     prom.catch(console.error);
-    prom.catch((err) => message.react('❌'));
+    prom.catch((err) => message.react('❌'))
+        .catch(console.error);
   }
 }

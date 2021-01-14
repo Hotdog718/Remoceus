@@ -23,16 +23,22 @@ module.exports = {
 			});
 			const prom = newFC.save()
 			prom.then(() => db.disconnect());
+			prom.then(() => message.react('✅'))
+				.catch(console.error);
 			prom.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`));
 			prom.catch(err => console.log(err));
-			prom.catch((err) => message.react('❌'));
+			prom.catch((err) => message.react('❌'))
+				.catch(console.error);
 		}else{
 			friendCard.fc = myNewFC;
 			const prom = friendCard.save();
 			prom.then(() => db.disconnect());
+			prom.then(() => message.react('✅'))
+				.catch(console.error);
 			prom.then(() => message.channel.send(`Set Friend Code to: ${myNewFC}`));
 			prom.catch(err => console.log(err));
-			prom.catch((err) => message.react('❌'));
+			prom.catch((err) => message.react('❌'))
+				.catch(console.error);
 		}
 	}
 }

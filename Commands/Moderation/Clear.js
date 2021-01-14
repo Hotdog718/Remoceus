@@ -13,19 +13,22 @@ module.exports = {
     }
 
     if(!args[0] || isNaN(args[0])){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       message.channel.send("You need to enter a number.");
       return;
     }
 
     if(args[0]>100){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       message.channel.send("Cannot delete more than 100 messages at a time.");
       return;
     }
 
     if(args[0]<=0){
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       message.channel.send("Must enter a number greater than 0.");
       return;
     }

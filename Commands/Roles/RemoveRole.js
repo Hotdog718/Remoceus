@@ -18,7 +18,8 @@ module.exports = {
     let roleName = args.join(" ").toLowerCase();
     if(!roleName){
       message.channel.send("No role found");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -26,7 +27,8 @@ module.exports = {
     const assignableRoles = await AssignableRoles.findOne({serverID: message.guild.id});
     if(!assignableRoles){
       message.channel.send("No data found for assignable roles");
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
@@ -34,14 +36,17 @@ module.exports = {
       delete assignableRoles.roles[roleName];
       assignableRoles.markModified('roles')
       const prom = assignableRoles.save();
-      prom.then(() => message.react('✅'));
+      prom.then(() => message.react('✅'))
+          .catch(console.error);
       prom.then(() => db.disconnect());
       prom.then(() => message.channel.send(`Removed ${roleName} from assignable roles.`));
       prom.catch(console.error);
-      prom.catch(err => message.react('❌'));
+      prom.catch((err) => message.react('❌'))
+          .catch(console.error);
     }else{
       message.channel.send(`${roleName} was not a self assignable role.`);
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       db.disconnect();
     }
   }

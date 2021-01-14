@@ -21,15 +21,18 @@ module.exports = {
     let muterole = message.guild.roles.cache.find(role => role.name === client.config.muteRole);
     if(!muterole){
       message.channel.send("No \"Timeout\" role")
-      message.react('❌');
+      message.react('❌')
+						 .catch(console.error);
       return;
     }
 
     const prom = tomute.roles.remove(muterole);
-    prom.then(() => message.react('✅'));
+    prom.then(() => message.react('✅'))
+				.catch(console.error);
     prom.then(() => message.channel.send(`${tomute.user.tag} has been unmuted`));
     prom.catch(console.error);
     prom.catch((err) => message.channel.send("Could not remove role."));
-    prom.catch((err) => message.react('❌'));
+    prom.catch((err) => message.react('❌'))
+				.catch(console.error);
   }
 }
