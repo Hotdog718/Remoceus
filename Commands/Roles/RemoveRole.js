@@ -3,7 +3,7 @@ module.exports = {
   aliases: [],
   category: "Roles",
   description: "Removes a self assignable role",
-  usage: "[rolename]",
+  usage: "<rolename>",
   permissions: ["Mange Roles"],
   run: async (client, message, args) => {
     if(!message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){

@@ -6,7 +6,7 @@ module.exports = {
   aliases: [],
   category: "Moderation",
   description: "Kicks a user",
-  usage: "<@user> <reason>",
+  usage: "<@user> [reason]",
   permissions: ["Kick Members"],
   run: async (client, message, args) => {
     if(!args[0]){

@@ -3,7 +3,7 @@ module.exports = {
   aliases: [],
   category: "Roles",
   description: "Adds a new self assignable role",
-  usage: "<@role> <description>",
+  usage: "<@role> [description]",
   permissions: ["Mange Roles"],
   run: async (client, message, args) => {
     // Check user permissions
