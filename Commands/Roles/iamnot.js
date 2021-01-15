@@ -1,8 +1,3 @@
-const { MessageEmbed } = require("discord.js");
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const AssignableRoles = require("../../Models/AssignableRoles.js");
-
 module.exports = {
   name: "iamnot",
   aliases: [],
@@ -12,9 +7,7 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     let rolename = args.join(" ");
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    const assignableRoles = await AssignableRoles.findOne({serverID: message.guild.id});
-    db.disconnect();
+    const assignableRoles = await client.roles.getRoles(message.guild.id);
 
     if(!assignableRoles){
       message.channel.send("No self assignable roles found");

@@ -1,6 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const GymRules = require("../../Models/GymRules.js");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
@@ -24,9 +21,7 @@ module.exports = {
 			return;
 		}
 
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let rules = await GymRules.findOne({serverID: message.guild.id, type: type});
-		db.disconnect();
+		let rules = await client.gymrules.getGymType(type, message.guild.id);
 
 		if(!rules){
 			message.channel.send('No data found.');
@@ -40,9 +35,10 @@ module.exports = {
 		.setColor(client.typeColors[type])
 		.setDescription(`__***${rules.title}***__`)
 		.setFooter(`${rules.location || "TBA"}\n${rules.majorLeague ? "Major League" : "Minor League"}`);
-		let thumb = client.emojis.cache.find(e => e.name === type.toLowerCase()).url || message.guild.iconURL();
+		let emote = client.emojis.cache.find(e => e.name === type.toLowerCase());
+		let thumb = emote ? emote.url : message.guild.iconURL();
 		if(thumb){
-				embed.setThumbnail(thumb);
+			embed.setThumbnail(thumb);
 		}
 		if(rules.banner){
 			embed.setImage(rules.banner)

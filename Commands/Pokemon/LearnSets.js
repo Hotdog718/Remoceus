@@ -1,5 +1,5 @@
 const Pokemon = require("../../Utils/Pokemon.js");
-const { MessageEmbed, MessageCollector } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const movesPerPage = 5;
 let isShiny = false;
 

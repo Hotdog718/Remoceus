@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const Gyms = require("../../Models/GymRules.js")
-
 module.exports = {
 	name: "setgym",
 	aliases: [],
@@ -36,55 +32,11 @@ module.exports = {
 			return;
 		}
 		
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let gym = await Gyms.findOne({type: type, serverID: message.guild.id});
-		if(!gym){
-			const newGym = new Gyms({
-				type: type,
-				serverID: message.guild.id,
-				rules: {
-					singles: {
-						bannedPokemon: "",
-						bannedDynamax: "",
-						itemClause: "",
-						noLegends: false,
-						battleReadyClause: false
-					},
-					doubles: {
-						bannedPokemon: "",
-						bannedDynamax: "",
-						itemClause: "",
-						noLegends: false,
-						battleReadyClause: false
-					}
-				},
-				banner: "",
-				title: "COMING SOON",
-				location: "Location TBA",
-				separateRules: false,
-				open: (status.toLowerCase() === "open") ? true : false,
-				majorLeague: client.major.includes(type)
-			})
-			const prom = newGym.save()
-			prom.then(() => db.disconnect());
-			prom.then(() => message.guild.roles.cache.find(r => r.name === "Gym Challenger"))
-				.then((role) => gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && role ? ` ${role}`: '')}`));
-			prom.then(() => message.react('✅'))
-				.catch(console.error);
-			prom.catch(console.error);
-			prom.catch((err) => message.react('❌'))
-				.catch(console.error);
-		}else{
-			gym.open = (status.toLowerCase() === "open") ? true : false;
-			const prom = gym.save();
-			prom.then(() => db.disconnect());
-			prom.then(() => message.guild.roles.cache.find(r => r.name === "Gym Challenger"))
-				.then((role) => gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && role ? ` ${role}`: '')}`));
-			prom.then(() => message.react('✅'))
-				.catch(console.error);
-			prom.catch(console.error);
-			prom.catch((err) => message.react('❌'))
-				.catch(console.error);
-		}
+		await client.gymrules.setGymStatus(type, message.guild.id, ((status.toLowerCase() === "open") ? true : false));
+
+		const role = message.guild.roles.cache.find(r => r.name === "Gym Challenger")
+		gymAnnouncements.send(`The ${type.toLowerCase()} gym is now ${status.toLowerCase()}${(status.toLowerCase() === "open" && role ? ` ${role}`: '')}`);
+		message.react('✅')
+		.catch(console.error);
 	}
 }

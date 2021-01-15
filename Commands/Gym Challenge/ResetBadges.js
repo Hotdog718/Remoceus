@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const Badges = require("../../Models/Badges.js");
-
 module.exports = {
 	name: "reset",
 	aliases: [],
@@ -21,9 +17,7 @@ module.exports = {
     message.channel.awaitMessages(filter, {max: 1, time: 60000})
     .then(async collected => {
       if(collected.first().content.toLowerCase() === "yes"){
-        const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-        await Badges.deleteMany({serverID: message.guild.id});
-        db.disconnect();
+        await client.badges.reset(message.guild.id);
         message.channel.send(`All badges on the server have been reset`);
         message.react('✅')
 						   .catch(console.error);

@@ -1,7 +1,4 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
 const { MessageEmbed } = require("discord.js");
-const Badges = require("../../Models/Badges.js");
 
 module.exports = {
 	name: "rankings",
@@ -11,10 +8,8 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let badgeArray = await Badges.find({serverID: message.guild.id});
+		let badgeArray = await client.badges.getAllBadges(message.guild.id);
 		const resultsPerPage = 5;
-		db.disconnect();
 		await message.guild.members.fetch();
 		if(badgeArray.length <= 0) return message.channel.send(`Sorry, there was no documents that I could find.`);
 		await message.guild.members.fetch();

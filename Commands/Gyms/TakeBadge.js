@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const Badges = require("../../Models/Badges.js");
-
 module.exports = {
 	name: "takebadge",
 	aliases: ["tb"],
@@ -36,8 +32,7 @@ module.exports = {
 			return;
 		}
 
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
+		let badges = await client.badges.getBadges(pUser.id, message.guild.id);
 
 		if(!badges){
 			message.channel.send(`There was an error. No data for this user was found.`);
@@ -45,16 +40,9 @@ module.exports = {
 		}
 
 		if(!badges[type.toLowerCase()]) return message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`);
-		badges[type.toLowerCase()] = false;
-		badges.count--;
-		const prom = badges.save();
-		prom.then(() => db.disconnect())
-			.catch(console.error);
-		prom.then(() => message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`));
-		prom.then(() => message.react('✅'))
-        	.catch(console.error);
-		prom.catch(console.error);
-		prom.catch((err) => message.react('❌'))
-        	.catch(console.error);
+		await client.badges.takeBadge(pUser.id, message.guild.id, type);
+		message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`);
+		message.react('✅')
+		.catch(console.error);
 	}
 }
