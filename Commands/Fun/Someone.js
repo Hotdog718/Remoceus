@@ -4,7 +4,7 @@ module.exports = {
   aliases: [],
   category: "Fun",
   description: "Selects a random member from the chat",
-  usage: "<none or @role>",
+  usage: "[@role]",
   permissions: [],
   run: async (client, message, args) => {
     let role = message.mentions.roles.first();

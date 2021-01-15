@@ -50,6 +50,7 @@ function getCategoryEmbed(client, index, categoryNames){
   })
   let embed = new MessageEmbed()
   .setTitle(`${client.helpers.toTitleCase(categoryNames[index])} Commands`)
+  .setDescription('[] and <> are not needed in the command\'s, <> means the argument is required for the command to work and [] means the argument is option for the command.')
   .setColor(client.config.color)
   .setThumbnail(client.user.displayAvatarURL())
   .setFooter(`Page ${index+1} of ${categoryNames.length}`);

@@ -6,7 +6,7 @@ module.exports = {
 	aliases: [],
 	category: "General",
 	description: "Displays yours or other another member's profile",
-	usage: "none or <@user>",
+	usage: "[@user]",
 	permissions: [],
 	run: async (client, message, args) => {
 		await message.guild.members.fetch();

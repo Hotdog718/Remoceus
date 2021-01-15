@@ -6,7 +6,7 @@ module.exports = {
 	aliases: [],
 	category: "Pokemon",
 	description: "Displays most recent MOTW moveset, or all movesets to a specific pokemon (Only has pokemon in motws after 2020)",
-	usage: "<none or PokemonName>",
+	usage: "[PokemonName]",
 	permissions: [],
 	run: async (client, message, args) => {
 		let motws = args[0] ? await client.acla.getMovesetWithSpecies(args.join(" ")) : await client.acla.getMoveset();
