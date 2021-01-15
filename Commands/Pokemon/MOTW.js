@@ -1,7 +1,4 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const { MessageEmbed, MessageCollector } = require("discord.js");
-const MOTW = require("../../Models/MOTW.js");
+const { MessageEmbed } = require("discord.js");
 const Pokemon = require("../../Utils/Pokemon.js");
 
 module.exports = {
@@ -12,7 +9,7 @@ module.exports = {
 	usage: "<none or PokemonName>",
 	permissions: [],
 	run: async (client, message, args) => {
-		let motws = args[0] ? await getMOTWWithSpecies(args.join(" ")) : await getMOTW();
+		let motws = args[0] ? await client.acla.getMovesetWithSpecies(args.join(" ")) : await client.acla.getMoveset();
 		if(motws && motws.length > 1){
 			motws = motws.reverse();
 		}
@@ -52,18 +49,4 @@ const formatEVSpread = ({evs}) => {
 		}
 	}
 	return res.substring(0, res.length - 2);
-}
-
-const getMOTW = async () => {
-	const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-	let motws = await MOTW.find();
-	db.disconnect();
-	return motws;
-}
-
-const getMOTWWithSpecies = async (species) => {
-	const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-	let motws = await MOTW.find({pokemon: species.toLowerCase()});
-	db.disconnect();
-	return motws;
 }

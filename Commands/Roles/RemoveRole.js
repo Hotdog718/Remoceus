@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const AssignableRoles = require("../../Models/AssignableRoles.js");
-
 module.exports = {
   name: "removerole",
   aliases: [],
@@ -19,35 +15,27 @@ module.exports = {
     if(!roleName){
       message.channel.send("No role found");
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
 
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    const assignableRoles = await AssignableRoles.findOne({serverID: message.guild.id});
+    const assignableRoles = await client.roles.getRoles(message.guild.id);
     if(!assignableRoles){
       message.channel.send("No data found for assignable roles");
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
 
     if(assignableRoles.roles[roleName]){
-      delete assignableRoles.roles[roleName];
-      assignableRoles.markModified('roles')
-      const prom = assignableRoles.save();
-      prom.then(() => message.react('✅'))
-          .catch(console.error);
-      prom.then(() => db.disconnect());
-      prom.then(() => message.channel.send(`Removed ${roleName} from assignable roles.`));
-      prom.catch(console.error);
-      prom.catch((err) => message.react('❌'))
-          .catch(console.error);
+      Roles.removeRole(message.guild.id, roleName)
+      message.react('✅')
+      .catch(console.error);
+      message.channel.send(`Removed ${roleName} from assignable roles.`);
     }else{
       message.channel.send(`${roleName} was not a self assignable role.`);
       message.react('❌')
-						 .catch(console.error);
-      db.disconnect();
+      .catch(console.error);
     }
   }
 }

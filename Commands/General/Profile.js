@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const FC = require("../../Models/FC.js");
-const Badges = require("../../Models/Badges.js");
 const b = require("../../Badges.json");
 const { MessageEmbed } = require("discord.js");
 
@@ -16,14 +12,12 @@ module.exports = {
 		await message.guild.members.fetch();
     let leUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.find(member => member.user.username === args.join(" ")) || message.member;
 
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let friendCard = await FC.findOne({userID: leUser.id});
-    let badges = await Badges.findOne({userID: leUser.id, serverID: message.guild.id})
-		db.disconnect();
+		let friendCard = await client.gameinfo.getGameInfo(leUser.id);
+    let badges = await client.badges.getBadges(leUser.id, message.guild.id)
 
 		let embed = new MessageEmbed()
 		.setTitle(`${leUser.nickname || leUser.user.username}\'s Profile`)
-		.setColor(leUser.roles.color.color || client.config.color)
+		.setColor(leUser.roles.color ? leUser.roles.color.color : client.config.color)
 		.setThumbnail(leUser.user.displayAvatarURL())
     .setDescription(badges ? badges.hometown : '')
 		.addField("FC", friendCard? friendCard.fc: "No FC set, use !setfc <fc> to set your fc (ex. !setfc 3883-7141-8049)")

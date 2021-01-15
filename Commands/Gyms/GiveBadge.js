@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const Badges = require("../../Models/Badges.js")
-
 module.exports = {
   name: "givebadge",
   aliases: ["gb"],
@@ -36,8 +32,8 @@ module.exports = {
       return;
     }
 
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    const badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
+    // const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    const badges = await client.badges.getBadges(pUser.id, message.guild.id);
 
     if(!badges){
       message.channel.send(`${pUser.user.username} has not registered for the gym challenge. They need to use !register [hometown] to sign up.`);
@@ -47,21 +43,14 @@ module.exports = {
     }
     
     if(!badges[type.toLowerCase()]){
-      badges[type.toLowerCase()] = true;
-      badges.count++;
-      const prom = badges.save();
-      prom.then(() => db.disconnect())
-			  .catch(console.error);
-      prom.then(() => message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`));
-      prom.then(() => message.react('✅'))
-				  .catch(console.error);
-      prom.catch(console.error);
-      prom.catch((err) => message.react('❌'))
-				  .catch(console.error);
+      await client.badges.giveBadge(pUser.id, message.guild.id, type);
+      message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`);
+      message.react('✅')
+      .catch(console.error);
     }else{
       message.channel.send(`${pUser.user.tag} already has the ${type} badge.`);
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
   }

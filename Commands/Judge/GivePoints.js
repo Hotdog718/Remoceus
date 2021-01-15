@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require('mongoose');
-const Badges = require('../../Models/Badges.js');
-
 module.exports = {
   name: "givepoints",
   aliases: [],
@@ -34,17 +30,18 @@ module.exports = {
       return;
     }
 
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    let badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
+    const badges = await client.badges.getBadges(pUser.id, message.guild.id);
 
-    badges.points += Math.abs(points);
-    const prom = badges.save();
-    prom.then(() => db.disconnect());
-    prom.then(() => message.channel.send(`Awarded ${Math.abs(points)} to ${pUser}.`));
-    prom.then(() => message.react('✅'))
-        .catch(console.error);
-    prom.catch(console.error);
-    prom.catch((err) => message.react('❌'))
-        .catch(console.error);
+    if(!badges){
+      message.channel.send(`${pUser} is not registered for the gym challenge, use !register [hometown] to sign up!`);
+      message.react('❌')
+      .catch(console.error);
+      return;
+    }
+
+    await client.badges.givePoints(pUser.id, message.guild.id, Math.abs(points));
+    message.channel.send(`Awarded ${Math.abs(points)} to ${pUser}.`);
+    message.react('✅')
+    .catch(console.error);
   }
 }

@@ -1,6 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require('mongoose');
-const Badges = require('../../Models/Badges.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -16,10 +13,8 @@ module.exports = {
     let member1 = members[0];
     let member2 = members[1];
 
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    const badges1 = await Badges.findOne({userID: member1.id, serverID: message.guild.id});
-    const badges2 = await Badges.findOne({userID: member2.id, serverID: message.guild.id});
-    db.disconnect();
+    const badges1 = await client.badges.getBadges(member1.id, message.guild.id);
+    const badges2 = await client.badges.getBadges(member2.id, message.guild.id);
 
     if(!badges1 || !badges2) return message.channel.send(`One or both of the members is not signed up for the gym challenge.`);
 

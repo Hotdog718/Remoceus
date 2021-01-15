@@ -1,7 +1,3 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require('mongoose');
-const Badges = require('../../Models/Badges.js');
-
 module.exports = {
   name: "takepoints",
   aliases: [],
@@ -16,7 +12,7 @@ module.exports = {
     if(!(message.author.id === message.guild.ownerID || (judgeRole && message.member.roles.cache.has(judgeRole.id)) || (gymLeaderRole && message.member.roles.cache.has(gymLeaderRole.id)))){
       message.channel.send('Only Gym Leaders or Judges can use this command');
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
 
@@ -30,22 +26,22 @@ module.exports = {
     if(!points || isNaN(points)){
       message.channel.send('You must enter the number of points to give');
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
 
-    const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    let badges = await Badges.findOne({userID: pUser.id, serverID: message.guild.id});
+    let badges = await client.badges.getBadges(pUser.id, message.guild.id);
 
-    badges.points -= Math.abs(points);
-    if(badges.points < 0) badges.points = 0;
-    const prom = badges.save();
-    prom.then(() => db.disconnect());
-    prom.then(() => message.react('✅'))
-        .catch(console.error);
-    prom.then(() => message.channel.send(`Removed ${Math.abs(points)} from ${pUser}.`))
-    prom.catch(console.error);
-    prom.catch((err) => message.react('❌'))
-        .catch(console.error);
+    if(!badges){
+      message.channel.send(`${pUser} is not registered for the gym challenge, use !register [hometown] to sign up!`);
+      message.react('❌')
+      .catch(console.error);
+      return;
+    }
+
+    await client.badges.takePoints(pUser.id, message.guild.id, Math.abs(points));
+    message.channel.send(`Removed ${Math.abs(points)} from ${pUser}.`);
+    message.react('✅')
+    .catch(console.error);
   }
 }

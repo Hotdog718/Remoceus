@@ -1,7 +1,4 @@
-const { mongodb_uri } = require("../../token.json");
-const mongoose = require("mongoose");
-const Badges = require("../../Models/Badges.js");
-const { MessageEmbed, MessageCollector } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
 	name: "displaybadges",
@@ -16,13 +13,7 @@ module.exports = {
 		if(!type) return client.errors.noType(message);
 
 		if(!client.gymTypes.includes(type)) return client.errors.noType(message)
-		const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		let query = {
-			serverID: message.guild.id
-		}
-		query[type] = true;
-		let badges = await Badges.find(query);
-		db.disconnect();
+		let badges = await client.badges.getDocumentWithBadge(message.guild.id, type);
 
 		await message.guild.members.fetch();
 		badges.sort((a, b) => {
@@ -54,7 +45,6 @@ function getEmbed(client, message, badges, resultsPerPage, index){
 	if(badges.length === 0){
 		embed.setDescription("No one has earned this badge on the current server.");
 	}else{
-		// embed.setDescription(`Users who have earned the badge on the server`);
 		let users = [];
 		for(let i = index*resultsPerPage; i<(index+1)*resultsPerPage && i<badges.length; i++){
 			let user = message.guild.members.cache.get(badges[i].userID);
@@ -68,14 +58,3 @@ function getEmbed(client, message, badges, resultsPerPage, index){
 	}
 	return embed;
 }
-
-// function filterType(array, type){
-// 	let newArray = [];
-// 	for(let i = 0; i<array.length; i++){
-// 		let result = array[i];
-// 		if(result[type]){
-// 			newArray.push(result);
-// 		}
-// 	}
-// 	return newArray;
-// }
