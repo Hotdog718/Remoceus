@@ -30,18 +30,15 @@ module.exports = {
       return;
     }
 
-    let badges = await client.badges.getBadges(pUser.id, message.guild.id);
-
-    if(!badges){
-      message.channel.send(`${pUser} is not registered for the gym challenge, use !register [hometown] to sign up!`);
-      message.react('❌')
+    try{
+      await client.badges.takePoints(pUser.id, message.guild.id, Math.abs(points));
+      message.channel.send(`Removed ${Math.abs(points)} from ${pUser}.`);
+      message.react('✅')
       .catch(console.error);
-      return;
+    }catch(e){
+        message.channel.send('This user is not registered for the gym challenge, use !register [hometown] to sign up!');
+        message.react('❌').catch(console.error);
     }
-
-    await client.badges.takePoints(pUser.id, message.guild.id, Math.abs(points));
-    message.channel.send(`Removed ${Math.abs(points)} from ${pUser}.`);
-    message.react('✅')
-    .catch(console.error);
+    
   }
 }
