@@ -15,25 +15,26 @@ module.exports = {
 			client.errors.noType(message)
 			return;
 		}
-		type = type.toLowerCase();
+		
+		// return error if gym is not included in gym types
 		if(!client.gymTypes.includes(type)){
 			client.errors.noType(message);
 			return;
 		}
-
+		
 		let rules = await client.gymrules.getGymType(type, message.guild.id);
-
+		
 		if(!rules){
 			message.channel.send('No data found.');
 			message.react('❌')
-				   .catch(console.error);
+			.catch(console.error);
 			return;
 		}
-
+		
 		let embed = new MessageEmbed()
 		.setTitle(`${client.helpers.toTitleCase(type)} Gym Rules`)
 		.setColor(client.typeColors[type])
-		.setDescription(`__***${rules.title}***__`)
+		.setDescription(`__*~${rules.title}~*__`)
 		.setFooter(`${rules.location || "TBA"}\n${rules.majorLeague ? "Major League" : "Minor League"}`);
 		let emote = client.emojis.cache.find(e => e.name === type.toLowerCase());
 		let thumb = emote ? emote.url : message.guild.iconURL();
@@ -44,30 +45,26 @@ module.exports = {
 			embed.setImage(rules.banner)
 		}
 
+		
 		embed.addField(`__**${(rules.separateRules) ? `Singles Rules` : `Rules`}**__`, formatRules(rules.rules.singles));
 		if(rules.separateRules){
 			embed.addField(`__**Doubles Rules**__`, formatRules(rules.rules.doubles));
 		}
 
-		//let roleManager = await message.guild.roles.fetch();
-		//let role = roleManager.cache.find(r => r.name === `${client.helpers.toTitleCase(type)} Gym Leader`);
-
+		embed.addField('Stats', `W-L Ratio: ${rules.wins}-${rules.losses}\nChallenge Cost: ${rules.cost}\nPoints Accumulated: ${rules.points}`)
+		
 		let gymLeaders = await client.helpers.getGymLeaders(message, client.helpers.toTitleCase(type));
-		if(gymLeaders && gymLeaders.array().length > 0){
-			embed.addField("__**Gym Leader**__", gymLeaders.array().join(",\n"), true);
+		if(gymLeaders && gymLeaders.size > 0){
+			embed.addField("__**Gym Leader(s)**__", gymLeaders.array().join(",\n"), true);
 		}
-
-
+		
 		let gymSubs = await client.helpers.getGymSubs(message, client.helpers.toTitleCase(type));
-		if(gymSubs && gymSubs.array().length > 0){
-			embed.addField("__**Gym Subs**__", gymSubs.array().join(",\n"), true);
+		if(gymSubs && gymSubs.size > 0){
+			embed.addField("__**Gym Sub(s)**__", gymSubs.array().join(",\n"), true);
 		}
 
-		embed.addField("__**Status**__", (rules.open ? "Open" : "Closed"), !(gymSubs && gymSubs.array().length > 0));
-		embed.addField("__**W-L Ratio**__", `${rules.wins}-${rules.losses}`);
-		embed.addField("__**Challenge Cost**__", `${rules.cost}`, true)
-			 .addField("__**Points Accumulated**__", rules.points, true);
-
+		embed.addField('Status', rules.open ? 'Open' : 'Closed');
+		
 		message.channel.send(embed);
 	}
 }
