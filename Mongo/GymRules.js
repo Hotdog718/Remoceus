@@ -36,6 +36,8 @@ module.exports.setGymStatus = async (type, serverID, status) => {
             if(result){
                 result.open = status;
                 return await result.save();
+            }else{
+                throw 'No Document';
             }
         } finally {
             mongoose.connection.close();
