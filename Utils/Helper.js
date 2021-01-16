@@ -64,7 +64,7 @@ module.exports = {
 			}
 
 			//create reactionCollector
-			const collector = msg.createReactionCollector(filter, {});
+			const collector = msg.createReactionCollector(filter, {idle: 60000});
 
 			collector.on('collect', async (reaction, user) => {
 				const userReactions = msg.reactions.cache.filter(reaction => reaction.users.cache.has(message.author.id));
@@ -94,10 +94,10 @@ module.exports = {
 			})
 
 			collector.on('end', collected => {
-				msg.delete();
+				msg.delete().catch(() => {});
 			})
 		})
-		.catch(console.error);
+		.catch(() => {});
 	},
 	createMenuEmbed: (client, message, data, embedFunction) => {
 		const { MessageCollector } = require('discord.js');
@@ -117,7 +117,7 @@ module.exports = {
 			}
 
 			//create Reaction Collector
-			const collector = msg.createReactionCollector(filter, {});
+			const collector = msg.createReactionCollector(filter, {idle: 60000});
 
 			collector.on('collect', async(reaction, user) => {
 				const userReactions = msg.reactions.cache.filter(reaction => reaction.users.cache.has(message.author.id));
@@ -148,8 +148,9 @@ module.exports = {
 			})
 
 			collector.on('end', collected => {
-				msg.delete();
+				msg.delete().catch(() => {});
 			})
 		})
+		.catch(() => {});
 	}
 }
