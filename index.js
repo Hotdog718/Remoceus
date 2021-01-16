@@ -3,7 +3,7 @@ const client = new Client({
 	presence: {
 		status: "online",
 		activity: {
-			name: "!help or !help list"
+			name: "!help"
 		}
 	}
 });
