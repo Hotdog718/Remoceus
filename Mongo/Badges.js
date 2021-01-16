@@ -53,9 +53,14 @@ module.exports.giveBadge = async (userID, serverID, type) => {
             const result = await Badges.findOne({userID: userID, serverID: serverID});
 
             if(result) {
+                if(result[type]){
+                    throw 'User has badge';
+                }
                 result[type] = true;
                 result.count++;
                 return await result.save();
+            }else{
+                throw 'No Document';
             }
         }finally{
             mongoose.connection.close();
@@ -69,9 +74,14 @@ module.exports.takeBadge = async (userID, serverID, type) => {
             const result = await Badges.findOne({userID: userID, serverID: serverID});
 
             if(result) {
+                if(!result[type]){
+                    throw 'No badge';
+                }
                 result[type] = false;
                 result.count--;
                 return await result.save();
+            }else{
+                throw 'No Document';
             }
         }finally{
             mongoose.connection.close();
@@ -97,6 +107,8 @@ module.exports.givePoints = async (userID, serverID, points) => {
             if(results){
                 results.points += points;
                 return await results.save();
+            }else{
+                throw 'No Document';
             }
         } finally {
             mongoose.connection.close();
@@ -115,6 +127,8 @@ module.exports.takePoints = async (userID, serverID, points) => {
                     results.points = 0;
                 }
                 return await results.save();
+            }else{
+                throw 'No Document';
             }
         } finally {
             mongoose.connection.close();

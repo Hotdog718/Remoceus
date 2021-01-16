@@ -32,17 +32,19 @@ module.exports = {
 			return;
 		}
 
-		let badges = await client.badges.getBadges(pUser.id, message.guild.id);
-
-		if(!badges){
-			message.channel.send(`There was an error. No data for this user was found.`);
-			return;
+		try{
+			await client.badges.takeBadge(pUser.id, message.guild.id, type);
+			message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`);
+			message.react('✅')
+			.catch(console.error);
+		}catch(err){
+			if(err === 'No badge'){
+				message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`);
+			}else{
+				message.channel.send('This user is not registered for the gym challenge, use !register [hometown] to sign up!');
+			}
+			message.react('❌').catch(console.error);
 		}
 
-		if(!badges[type.toLowerCase()]) return message.channel.send(`${pUser.user.tag} didn't have the ${type.toLowerCase()} badge.`);
-		await client.badges.takeBadge(pUser.id, message.guild.id, type);
-		message.channel.send(`${message.author.tag} has taken ${pUser.user.tag}\'s ${type.toLowerCase()} badge!`);
-		message.react('✅')
-		.catch(console.error);
 	}
 }

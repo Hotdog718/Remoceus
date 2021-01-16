@@ -20,7 +20,7 @@ module.exports = {
         await client.badges.reset(message.guild.id);
         message.channel.send(`All badges on the server have been reset`);
         message.react('✅')
-						   .catch(console.error);
+        .catch(console.error);
       }
     })
     .catch(console.error);

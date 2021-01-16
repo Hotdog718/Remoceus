@@ -21,6 +21,6 @@ module.exports = {
 
 		message.channel.send(`${pUser.user.username}\'s badges have been revoked`);
 		message.react('✅')
-			   .catch(console.error);
+		.catch(console.error);
 	}
 }

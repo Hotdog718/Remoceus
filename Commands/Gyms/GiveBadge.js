@@ -21,37 +21,32 @@ module.exports = {
     if(!client.gymTypes.includes(type.toLowerCase())){
       message.channel.send(`Sorry, but ${type} is not a gym type.`);
       message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
 
     if(!client.helpers.checkGyms(client, type, message.member, true)){
       message.channel.send("You don't have permission for this action.");
       message.react('❌')
-						 .catch(console.error);
-      return;
-    }
-
-    // const db = await mongoose.connect(mongodb_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-    const badges = await client.badges.getBadges(pUser.id, message.guild.id);
-
-    if(!badges){
-      message.channel.send(`${pUser.user.username} has not registered for the gym challenge. They need to use !register [hometown] to sign up.`);
-      message.react('❌')
-						 .catch(console.error);
+      .catch(console.error);
       return;
     }
     
-    if(!badges[type.toLowerCase()]){
+    try{
       await client.badges.giveBadge(pUser.id, message.guild.id, type);
       message.channel.send(`${message.author.tag} has given ${pUser.user.tag} the ${type.toLowerCase()} badge!`);
       message.react('✅')
       .catch(console.error);
-    }else{
-      message.channel.send(`${pUser.user.tag} already has the ${type} badge.`);
-      message.react('❌')
-      .catch(console.error);
-      return;
+    }catch(err){
+      if(err === 'User has badge'){
+        message.channel.send(`${pUser.user.tag} already has the ${type.toLowerCase()} badge.`);
+        message.react('❌')
+        .catch(console.error);
+      }else{
+        message.channel.send('This user is not registered for the gym challenge, use !register [hometown] to sign up!');
+        message.react('❌')
+        .catch(console.error);
+      }
     }
   }
 }
