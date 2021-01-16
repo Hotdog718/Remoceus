@@ -37,7 +37,7 @@ module.exports = {
 			}
 
 			//create Reaction Collector
-			const collector = msg.createReactionCollector(filter, {});
+			const collector = msg.createReactionCollector(filter, {idle: 60000});
 
 			collector.on('collect', async(reaction, user) => {
         const userReactions = msg.reactions.cache.filter(reaction => reaction.users.cache.has(message.author.id));
@@ -67,7 +67,7 @@ module.exports = {
 			})
 
       collector.on('end', collected => {
-        msg.delete().catch(console.error);
+        msg.delete().catch(() => {});
       })
     })
   }
