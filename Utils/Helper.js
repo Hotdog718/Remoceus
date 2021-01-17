@@ -45,6 +45,17 @@ module.exports = {
 		let typeGymLeaders = guildMembers.filter(member => member.roles.cache.has(typeRole.id) && member.roles.cache.has(subRole.id))
 		return typeGymLeaders;
 	},
+	getClass: (points) => {
+		if(points < 1000){
+			return 'Normal';
+		}else if(points < 10000){
+			return 'Great';
+		}else if(points < 1000000){
+			return 'Ultra';
+		}else{
+			return 'Master';
+		}
+	},
 	createListEmbed: (client, message, data, resultsPerPage, embedFunction) => {
 		let index = 0;
 		let maxPages = Math.ceil(data.length/resultsPerPage);

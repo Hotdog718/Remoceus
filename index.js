@@ -31,12 +31,14 @@ client.modifiers = modifiers;
 
 const acla = require('./Mongo/ACLA.js');
 const badges = require('./Mongo/Badges.js');
+const banlist = require('./Mongo/BanList.js');
 const gameinfo = require('./Mongo/GameInfo.js');
 const gymrules = require('./Mongo/GymRules.js');
 const roles = require('./Mongo/Roles.js');
 
 client.acla = acla;
 client.badges = badges;
+client.banlist = banlist;
 client.gameinfo = gameinfo;
 client.gymrules = gymrules;
 client.roles = roles;

@@ -42,7 +42,7 @@ module.exports = {
 
       embed.addField(`__Major League Badges__`, major.length > 0 ? major.join(" ") : `No Major League badges.`)
            .addField(`__Minor League Badges__`, minor.length > 0 ? minor.join(" ") : `No Minor League badges.`)
-					 .addField(`__Points__`, badges.points)
+					 .addField(`__Points__`, `${badges.points} (${client.helpers.getClass(badges.points)} Class)`)
            .setFooter(`Badge Count: ${badges.count} out of 18`);
     }else{
       embed.addField(`No Badges`, `Use !register [hometown] to sign up to challenge the gyms.`);
