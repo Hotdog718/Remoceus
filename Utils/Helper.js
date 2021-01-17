@@ -48,7 +48,7 @@ module.exports = {
 	getClass: (points) => {
 		if(points < 1000){
 			return 'Normal';
-		}else if(points < 10000){
+		}else if(points < 100000){
 			return 'Great';
 		}else if(points < 1000000){
 			return 'Ultra';
