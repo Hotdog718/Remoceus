@@ -17,7 +17,6 @@ const modifiers = require('./Utils/BadgeModifiers.js');
 
 client.commands = new Collection();
 client.aliases = new Collection();
-client.polls = new Collection();
 
 client.gymTypes = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
 client.major = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];

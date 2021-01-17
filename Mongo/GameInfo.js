@@ -42,7 +42,7 @@ module.exports.setIGN = async (userID, ign) => {
             const result = await GameInfo.findOne({userID});
 
             if(result){
-                result.fc = fc;
+                result.ign = ign;
                 return await result.save();
             }else{
                 return await new GameInfo({
