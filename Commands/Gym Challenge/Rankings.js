@@ -50,7 +50,7 @@ function getEmbed(client, message, badgeArray, resultsPerPage, index){
 
 	for(let i = index*resultsPerPage; i < badgeArray.length && i < (index+1)*resultsPerPage; i++){
 		let member = message.guild.members.cache.get(badgeArray[i].userID);
-		embed.addField(`#${i+1}: ${member ? (member.nickname || member.user.username) : "User not found"}`, `Hometown: ${badgeArray[i].hometown || "Location TBA"}\nPoints: ${badgeArray[i].points} (${client.helpers.getClass(badgeArray[i].points)} Class)\nBadge Count: ${badgeArray[i].count}`);
+		embed.addField(`#${i+1}: ${member ? (member.nickname || member.user.username) : "User not found"}`, `Hometown: ${badgeArray[i].hometown || "Location TBA"}\nPoints: ${badgeArray[i].points} (${client.helpers.getClass(badgeArray[i].points)} Division)\nBadge Count: ${badgeArray[i].count}`);
 	}
 	return embed;
 }

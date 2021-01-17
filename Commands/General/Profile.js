@@ -20,8 +20,8 @@ module.exports = {
 		.setColor(leUser.roles.color ? leUser.roles.color.color : client.config.color)
 		.setThumbnail(leUser.user.displayAvatarURL())
     .setDescription(badges ? badges.hometown : '')
-		.addField("FC", friendCard? friendCard.fc: "No FC set, use !setfc <fc> to set your fc (ex. !setfc 3883-7141-8049)")
-		.addField("IGN", friendCard? friendCard.ign: "No IGN set, use !setign <ign> to set your ign (ex. !setign Thot Slayer)");
+		.addField("FC", friendCard? friendCard.fc: "No FC set, use !setfc <fc> to set your fc (ex. !setfc 1234-5678-9012)")
+		.addField("IGN", friendCard? friendCard.ign: "No IGN set, use !setign <ign> to set your ign (ex. !setign John)");
 
     if(badges){
       let major = [];
@@ -42,7 +42,7 @@ module.exports = {
 
       embed.addField(`__Major League Badges__`, major.length > 0 ? major.join(" ") : `No Major League badges.`)
            .addField(`__Minor League Badges__`, minor.length > 0 ? minor.join(" ") : `No Minor League badges.`)
-					 .addField(`__Points__`, `${badges.points} (${client.helpers.getClass(badges.points)} Class)`)
+					 .addField(`__Points__`, `${badges.points} (${client.helpers.getClass(badges.points)} Division)`)
            .setFooter(`Badge Count: ${badges.count} out of 18`);
     }else{
       embed.addField(`No Badges`, `Use !register [hometown] to sign up to challenge the gyms.`);
