@@ -20,18 +20,32 @@ module.exports = {
 
     let name1 = member1.nickname || member1.user.username;
     let name2 = member2.nickname || member2.user.username;
-
-    let PD = Math.abs(badges1.points - badges2.points);
-
+    
     const embed = new MessageEmbed()
     .setTitle(`${name1} vs ${name2}`)
     .setColor(client.config.color)
     .setThumbnail(message.guild.iconURL())
-    .addField(`If ${name1} Wins`, `${name1} earns ${winnerPoints(client, badges1, badges2)}\n${name2} loses ${loserPoints(badges1, badges2)}`)
-    .addField(`If ${name2} Wins`, `${name2} earns ${winnerPoints(client, badges2, badges1)}\n${name1} loses ${loserPoints(badges2, badges1)}`);
-
+    .addField(`If ${name1} Wins`, tempName(client, name1, name2, badges1, badges2))
+    .addField(`If ${name2} Wins`, tempName(client, name2, name1, badges2, badges1));
+    
     message.channel.send(embed);
   }
+}
+
+function tempName(client, winnerName, loserName, winnerBadges, loserBadges){
+  let pointsEarned = winnerPoints(client, winnerBadges, loserBadges);
+  let pointsLost = loserPoints(winnerBadges, loserBadges);
+
+  let arr = [];
+  arr.push(`${winnerName} earns ${pointsEarned}`);
+  arr.push(`${loserName} loses ${pointsLost}`);
+  if(client.helpers.getClass(winnerBadges.points) !== client.helpers.getClass(winnerBadges.points + pointsEarned)){
+    arr.push(`${winnerName} goes from ${client.helpers.getClass(winnerBadges.points)} to ${client.helpers.getClass(winnerBadges.points + pointsEarned)} class.`)
+  }
+  if(client.helpers.getClass(loserBadges.points) !== client.helpers.getClass(Math.max(loserBadges.points - pointsLost, 0))){
+    arr.push(`${loserName} goes from ${client.helpers.getClass(loserBadges.points)} to ${client.helpers.getClass(Math.max(loserBadges.points - pointsLost, 0))} class.`)
+  }
+  return arr.join('\n');
 }
 
 function winnerPoints(client, winner, loser){
@@ -44,7 +58,6 @@ function winnerPoints(client, winner, loser){
 }
 
 function loserPoints(winner, loser){
-  
   let PD = Math.abs(winner.points - loser.points);
   if(loser.points >= winner.points){
     return Math.ceil(5 + (PD / 2));
