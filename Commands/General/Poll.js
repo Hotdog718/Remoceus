@@ -96,7 +96,7 @@ function getPoll(client, msg, poll){
   .setTitle("Poll")
   .setThumbnail(msg.guild.iconURL())
   .setColor(client.config.color)
-  .addField("Question:", poll.question);
+  .setDescription(`${poll.question}?`);
 
   for(let i = 0; i < responses.length; i++){
     if(!poll[responses[i]]) continue;
