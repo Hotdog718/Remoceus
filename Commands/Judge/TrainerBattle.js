@@ -8,8 +8,12 @@ module.exports = {
   usage: "<@user1> <@user2>",
   permissions: [],
   run: async (client, message, args) => {
-    let members = message.mentions.members.first(2);
-    if(!members || members.length < 2) return client.errors.noUser(message);
+    let members = message.mentions.members.size > 1 ? message.mentions.members.first(2) : (message.mentions.members.size == 1 ? [message.member, message.mentions.members.first()] : '');
+
+    if(!members || members.length < 2){
+      return client.errors.noUser(message);
+    }
+
     let member1 = members[0];
     let member2 = members[1];
 
@@ -40,10 +44,10 @@ function tempName(client, winnerName, loserName, winnerBadges, loserBadges){
   arr.push(`${winnerName} earns ${pointsEarned}`);
   arr.push(`${loserName} loses ${pointsLost}`);
   if(client.helpers.getClass(winnerBadges.points) !== client.helpers.getClass(winnerBadges.points + pointsEarned)){
-    arr.push(`${winnerName} goes from ${client.helpers.getClass(winnerBadges.points)} to ${client.helpers.getClass(winnerBadges.points + pointsEarned)} class.`)
+    arr.push(`${winnerName} goes from ${client.helpers.getClass(winnerBadges.points)} to ${client.helpers.getClass(winnerBadges.points + pointsEarned)} division.`)
   }
   if(client.helpers.getClass(loserBadges.points) !== client.helpers.getClass(Math.max(loserBadges.points - pointsLost, 0))){
-    arr.push(`${loserName} goes from ${client.helpers.getClass(loserBadges.points)} to ${client.helpers.getClass(Math.max(loserBadges.points - pointsLost, 0))} class.`)
+    arr.push(`${loserName} goes from ${client.helpers.getClass(loserBadges.points)} to ${client.helpers.getClass(Math.max(loserBadges.points - pointsLost, 0))} division.`)
   }
   return arr.join('\n');
 }
