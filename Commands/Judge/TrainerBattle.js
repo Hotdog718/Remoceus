@@ -57,7 +57,7 @@ function winnerPoints(client, winner, loser){
   if(winner.points >= loser.points){
     return Math.ceil((PD / 4) + ((10 + loser.points) * client.modifiers[winner.count]));
   }else{
-    return Math.ceil((PD / 2) + ((10 + loser.points) * client.modifiers[winner.count]));
+    return Math.ceil((PD / 2) + ((10 + (loser.points/2)) * client.modifiers[winner.count]));
   }
 }
 
