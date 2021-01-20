@@ -8,21 +8,20 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-    	let thumbnail = message.guild.iconURL();
-
-		await message.guild.members.fetch({force: true});
-
+		await message.guild.members.fetch();
+		
+		let date = new Date();
+		
 		let serverEmbed = new MessageEmbed()
 		.setTitle(`${message.guild.name}`)
 		.setColor(client.config.color)
 		.addField("Server Owner",`${message.guild.owner}`)
+		.setThumbnail(message.guild.iconURL())
 		.addField("Region",`${message.guild.region}`)
+		.addField('Server Date/Time', `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}\n${((date.getHours()-1)%12)+1}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()} ${date.getHours() >= 12 ? 'P.M.' : 'A.M.'}`)
 		.addField("Member Count",`${message.guild.members.cache.filter(member => !member.user.bot).array().length}`, true)
 		.addField("Bot Count",`${message.guild.members.cache.filter(member => member.user.bot).array().length}`, true)
 		.addField("Creation Date",`${message.guild.createdAt}`);
-		if(thumbnail){
-			serverEmbed.setThumbnail(`${thumbnail}`);
-		}
 		message.channel.send(serverEmbed);
 	}
 }
