@@ -56,6 +56,27 @@ module.exports = {
 			return 'Master';
 		}
 	},
+	getRanking: (points, pointsArray) => {
+		const isUser = (user) => points.userID == user.userID && points.serverID == user.serverID;
+		pointsArray.sort((a, b) => {
+			let aPoints = isUser(a) ? points.points : a.points;
+			let bPoints = isUser(b) ? points.points : b.points;
+			if(aPoints > bPoints){
+				return -1;
+			}
+			if(a.points < b.points){
+				return 1;
+			}
+			return 0;
+		})
+
+		let ranking = 1;
+		for(let i = 0; i < pointsArray.length; i++){
+			if(i > 0 && pointsArray[i-1].points > pointsArray[i].points) ranking++;
+			if(points.userID == pointsArray[i].userID && points.serverID == pointsArray[i].serverID) break;
+		}
+		return ranking;
+	},
 	createListEmbed: (client, message, data, resultsPerPage, embedFunction) => {
 		let index = 0;
 		let maxPages = Math.ceil(data.length/resultsPerPage);

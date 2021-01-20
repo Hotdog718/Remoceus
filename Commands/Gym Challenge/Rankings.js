@@ -47,10 +47,14 @@ function getEmbed(client, message, badgeArray, resultsPerPage, index){
 	.setColor(client.config.color)
 	.setThumbnail(message.guild.iconURL())
 	.setFooter(`Page ${index+1} of ${maxPages}`);
-
+	let rank = 1;
+	for(let i = 0; i < badgeArray.length && i < index*resultsPerPage; i++){
+		if(i > 0 && badgeArray[i-1].points > badgeArray[i].points) rank++;
+	}
 	for(let i = index*resultsPerPage; i < badgeArray.length && i < (index+1)*resultsPerPage; i++){
 		let member = message.guild.members.cache.get(badgeArray[i].userID);
-		embed.addField(`#${i+1}: ${member ? (member.nickname || member.user.username) : "User not found"}`, `Hometown: ${badgeArray[i].hometown || "Location TBA"}\nPoints: ${badgeArray[i].points} (${client.helpers.getClass(badgeArray[i].points)} Division)\nBadge Count: ${badgeArray[i].count}`);
+		if(i > 0 && badgeArray[i-1].points > badgeArray[i].points) rank++;
+		embed.addField(`#${rank}: ${member ? (member.nickname || member.user.username) : "User not found"}`, `Hometown: ${badgeArray[i].hometown || "Location TBA"}\nPoints: ${badgeArray[i].points} (${client.helpers.getClass(badgeArray[i].points)} Division)\nBadge Count: ${badgeArray[i].count}`);
 	}
 	return embed;
 }
