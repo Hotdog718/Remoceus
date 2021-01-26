@@ -19,8 +19,8 @@ client.commands = new Collection();
 client.aliases = new Collection();
 
 client.gymTypes = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
-client.major = ["bug", "dark", "dragon", "electric","fairy","fighting","fire","flying","ghost","grass","ground","ice","normal","poison","psychic","rock","steel","water"];
-client.minor = [];
+client.major = ["dragon", "fairy","fighting", "flying", "ghost", "grass", "ground", "psychic"];
+client.minor = ["bug", "dark", "electric", "fire", "ice", "normal", "poison", "rock", "steel", "water"];
 
 client.config = config;
 client.errors = errors;
