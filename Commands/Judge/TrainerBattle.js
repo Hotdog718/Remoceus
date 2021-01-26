@@ -123,17 +123,17 @@ function winnerPoints(client, winner, loser, rankWin, rankLoser){
   let PD = Math.abs(winner.points - loser.points);
   let RD = Math.abs(rankWin-rankLoser);
   if(winner.points > loser.points){
-    return Math.ceil((PD / 4)/RD + ((10 + (loser.points/4)/RD) * client.modifiers[winner.count]));
+    return Math.ceil(((PD/4)/RD + (1000 + (loser.points/4)/RD)) * client.modifiers[winner.count]);
   }else{
-    return Math.ceil((PD / 4) + ((10 + loser.points/4) * client.modifiers[winner.count]));
+    return Math.ceil((PD/4 + (1000 + loser.points/4)) * client.modifiers[winner.count]);
   }
 }
 
 function loserPoints(winner, loser){
   let PD = Math.abs(winner.points - loser.points);
   if(loser.points >= winner.points){
-    return Math.ceil(5 + (PD / 2));
-  }else{
     return Math.ceil(5 + (PD / 4));
+  }else{
+    return Math.ceil(5 + (PD / 8));
   }
 }
