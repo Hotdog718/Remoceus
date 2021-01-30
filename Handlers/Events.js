@@ -55,7 +55,17 @@ module.exports = (client) => {
 		let messageArray = message.content.split(" ");
 		let cmd = messageArray[0];
 		let args = messageArray.slice(1);
-		let command = client.commands.get(cmd.slice(prefix.length) ||client.aliases.get(cmd.slice(prefix.length)));
+		let command = client.commands.get(cmd.slice(prefix.length) || client.aliases.get(cmd.slice(prefix.length)));
+
+		if(message.content.startsWith(`${prefix}updategymcache`)){
+			try{
+				await client.gymrules.updateCache();
+				message.channel.send(`Gym Cache Updated.`);
+			}catch(e){
+				message.channel.send('An Error Occured, please try again...');
+			}
+		}
+
 		if(!command || !message.content.startsWith(prefix)){
 			return;
 		}
@@ -74,6 +84,19 @@ module.exports = (client) => {
 			}
 		}
 	})
+
+	// client.on('presenceUpdate', async (oldPresence, newPresence) => {
+	// 	if(newPresence.status === 'offline'){
+	// 		let guildMember = newPresence.member;
+	// 		let type = client.helpers.getGymType(client, guildMember);
+	// 		if(type){
+	// 			let rules = await client.gymrules.getGymType(type, guildMember.guild.id);
+	// 			if(rules.open){
+	// 				guildMember.send('You forgot to close your gym');
+	// 			}
+	// 		}
+	// 	}
+	// })
 
 	client.on("error", (err) => console.log(err));
 	client.on("warn", (info) => console.warn(info));
