@@ -36,8 +36,14 @@ module.exports = {
       message.react('✅')
       .catch(console.error);
     }catch(e){
+      if(e == 'No Document'){
         message.channel.send('This user is not registered for the gym challenge, use !register [hometown] to sign up!');
-        message.react('❌').catch(console.error);
+      }else if(e == 'Failed to save'){
+        message.channel.send('Failed to save data');
+      }else{
+        message.channel.send('I have no clue what the problem is, sorry to say.');
+      }
+      message.react('❌').catch(console.error);
     }
     
   }
