@@ -31,7 +31,7 @@ module.exports = {
       return;
     }
 
-    let mutechannel = message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel;
+    let mutechannel = message.guild.channels.cache.find(channel => channel.name === client.config.logsChannel) || message.channel;
 
     let muteEmbed = new MessageEmbed()
     .setDescription("Temp Mute")

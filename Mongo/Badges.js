@@ -353,10 +353,10 @@ module.exports.register = async (userID, serverID, hometown) => {
 module.exports.changeHometown = async (userID, serverID, hometown) => {
     return await Mongo().then(async (mongoose) => {
         try{
-            let results = await Badges.findOne({userID: userID, serverID: serverID});
-            if(results){
-                results.hometown = hometown;
-                await results.save().then(() => {
+            const result = await Badges.findOne({userID: userID, serverID: serverID});
+            if(result){
+                result.hometown = hometown;
+                await result.save().then(() => {
                     cache[`${serverID}-${userID}`] = {
                         userID: result.userID,
                         serverID: result.serverID,
@@ -385,6 +385,46 @@ module.exports.changeHometown = async (userID, serverID, hometown) => {
                 });
             }
         }finally{
+            mongoose.connection.close();
+        }
+    })
+}
+
+module.exports.updateCache = async () => {
+    return await Mongo().then(async (mongoose) => {
+        try {
+            const result = await Badges.find();
+
+            if(result){
+                for(const badge of result){
+                    cache[`${badge.serverID}-${badge.type}`] = {
+                        userID: badge.userID,
+                        serverID: badge.serverID,
+                        bug: badge.bug,
+                        dark: badge.dark,
+                        dragon: badge.dragon,
+                        electric: badge.electric,
+                        fairy: badge.fairy,
+                        fighting: badge.fighting,
+                        fire: badge.fire,
+                        flying: badge.flying,
+                        ghost: badge.ghost,
+                        grass: badge.grass,
+                        ground: badge.ground,
+                        ice: badge.ice,
+                        normal: badge.normal,
+                        poison: badge.poison,
+                        psychic: badge.psychic,
+                        rock: badge.rock,
+                        steel: badge.steel,
+                        water: badge.water,
+                        count: badge.count,
+                        hometown: badge.hometown,
+                        points: badge.points
+                    }
+                }
+            }
+        } finally {
             mongoose.connection.close();
         }
     })

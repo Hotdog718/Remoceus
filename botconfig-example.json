@@ -3,5 +3,80 @@
 	"botowner": "",
 	"prefix": "!",
 	"modChannel": "moderation",
-	"muteRole": "Timeout"
+	"muteRole": "Timeout",
+	"judgeRoles": [],
+	"gymTypes": {
+		"bug": {
+			"name": "Bug",
+			"major": true
+		},
+		"dark": {
+			"name": "Dark",
+			"major": true
+		},
+		"dragon": {
+			"name": "Dragon",
+			"major": true
+		},
+		"electric": {
+			"name": "Electric",
+			"major": true
+		},
+		"fairy": {
+			"name": "Fairy",
+			"major": true
+		},
+		"fighting": {
+			"name": "Fighting",
+			"major": true
+		},
+		"fire": {
+			"name": "Fire",
+			"major": true
+		},
+		"flying": {
+			"name": "Flying",
+			"major": true
+		},
+		"ghost": {
+			"name": "Ghost",
+			"major": true
+		},
+		"grass": {
+			"name": "Grass",
+			"major": true
+		},
+		"ground": {
+			"name": "Ground",
+			"major": true
+		},
+		"ice": {
+			"name": "Ice",
+			"major": true
+		},
+		"normal": {
+			"name": "Normal",
+			"major": true
+		},
+		"poison": {
+			"name": "Poison",
+			"major": true
+		},
+		"psychic": {
+			"name": "Psychic",
+			"major": true
+		},
+		"rock": {
+			"name": "Rock",
+			"major": true
+		},
+		"steel": {
+			"name": "Steel",
+			"major": true
+		},
+		"water": {
+			"name": "Water",
+			"major": true
+		}
+	}
 }

@@ -19,14 +19,15 @@ module.exports = {
 		"D": "https://i.imgur.com/TSAzjav.png",
 	},
 	checkGyms: (client, type, member, checkAdmin=false) => {
-		return (checkAdmin && member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) || (client.gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
+		const gymTypes = Object.keys(client.config.gymTypes);
+		return (checkAdmin && member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})) || (gymTypes.includes(type.toLowerCase()) && member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(type)} Gym Leader`));
 	},
 	getGymType: (client, member) => {
-		// client.gymTypes
-		for(let i = 0; i < client.gymTypes.length; i++){
-			//console.log(client.helpers.toTitleCase(client.gymTypes[i]));
-			if(member.roles.cache.find(role => role.name === `${client.helpers.toTitleCase(client.gymTypes[i])} Gym Leader`)){
-				return client.gymTypes[i];
+		const gymTypes = Object.keys(client.config.gymTypes);
+		for(let i = 0; i < gymTypes.length; i++){
+			let type = gymTypes[i];
+			if(member.roles.cache.find(role => role.name === `${client.config.gymTypes[type].name} Gym Leader`)){
+				return type;
 			}
 		}
 		return;

@@ -49,7 +49,7 @@ module.exports = {
       return message.channel.send("I cannot ban this member");
     }
 
-    let banChannel = message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel;
+    let banChannel = message.guild.channels.cache.find(channel => channel.name === client.config.logsChannel) || message.channel;
 
     const banEmbed = new MessageEmbed()
     .setTitle("Ban Embed")

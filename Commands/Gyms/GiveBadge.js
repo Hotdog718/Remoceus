@@ -18,7 +18,9 @@ module.exports = {
       return;
     }
 
-    if(!client.gymTypes.includes(type.toLowerCase())){
+    const gymTypes = Object.keys(client.config.gymTypes);
+
+    if(!gymTypes.includes(type.toLowerCase())){
       message.channel.send(`Sorry, but ${type} is not a gym type.`);
       message.react('❌')
       .catch(console.error);

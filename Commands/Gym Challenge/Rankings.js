@@ -13,6 +13,11 @@ module.exports = {
 		await message.guild.members.fetch();
 		if(badgeArray.length <= 0) return message.channel.send(`Sorry, there was no documents that I could find.`);
 		await message.guild.members.fetch();
+		badgeArray = badgeArray.filter(value => {
+			const member = message.guild.members.cache.get(value.userID);
+			if(!member) return false;
+			return true;
+		})
 		badgeArray = badgeArray.sort((a, b) => {
 			if(a.points > b.points){
 				return -1;

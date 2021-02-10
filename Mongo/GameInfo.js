@@ -1,7 +1,7 @@
 const mongo = require('./Mongo.js');
 const GameInfo = require('./Models/FC.js');
 
-const cache = {} // {'userID' : {fc: String, ign: String}}
+const cache = {} // {'userID' : {userID: String, fc: String, ign: String}}
 
 module.exports.getGameInfo = async (userID) => {
     const cachedValue = cache[userID];
@@ -109,6 +109,26 @@ module.exports.setIGN = async (userID, ign) => {
                     }
                     return;
                 });
+            }
+        } finally {
+            mongoose.connection.close();
+        }
+    })
+}
+
+module.exports.updateCache = async () => {
+    return await mongo().then(async (mongoose) => {
+        try{
+            const result = await GameInfo.find();
+
+            if(result){
+                for(const gameInfo of result){
+                    cache[gameInfo.userID] = {
+                        userID: gameInfo.userID,
+                        fc: gameInfo.fc,
+                        ign: gameInfo.ign
+                    }
+                }
             }
         } finally {
             mongoose.connection.close();

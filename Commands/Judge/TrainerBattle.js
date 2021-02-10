@@ -25,8 +25,15 @@ module.exports = {
     let name1 = member1.nickname || member1.user.username;
     let name2 = member2.nickname || member2.user.username;
 
-    const badgeArray = await client.badges.getAllBadges(message.guild.id);
-    
+    await message.guild.members.fetch();
+
+    let badgeArray = await client.badges.getAllBadges(message.guild.id);
+    badgeArray = badgeArray.filter(value => {
+			const member = message.guild.members.cache.get(value.userID);
+			if(!member) return false;
+			return true;
+		})
+
     const embed = new MessageEmbed()
     .setTitle(`${name1} vs ${name2}`)
     .setColor(client.config.color)

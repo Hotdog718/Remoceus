@@ -26,17 +26,20 @@ module.exports = {
     if(badges){
       let major = [];
       let minor = [];
-      for(let i = 0; i < client.major.length; i++){
-        let emote = client.emojis.cache.find(emote => emote.name === `${client.major[i]}`)
-        if(badges[client.major[i]]){
-          major.push(emote ? emote : b[client.major[i]]);
-        }
-      }
 
-      for(let i = 0; i < client.minor.length; i++){
-        let emote = client.emojis.cache.find(emote => emote.name === `${client.minor[i]}`)
-        if(badges[client.minor[i]]){
-          minor.push(emote ? emote : b[client.minor[i]]);
+      const gymTypes = Object.keys(client.config.gymTypes);
+      
+      for(const type of gymTypes){
+        const gym = client.config.gymTypes[type];
+        const emote = client.emojis.cache.find(emote => emote.name === `type_${type}`)
+        if(gym.major){
+          if(badges[type]){
+            major.push(emote ? emote : b[type]);
+          }
+        }else{
+          if(badges[type]){
+            minor.push(emote ? emote : b[type]);
+          } 
         }
       }
 
