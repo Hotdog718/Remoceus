@@ -15,9 +15,11 @@ module.exports = {
 			client.errors.noType(message)
 			return;
 		}
+
+		const gymTypes = Object.keys(client.config.gymTypes);
 		
 		// return error if gym is not included in gym types
-		if(!client.gymTypes.includes(type)){
+		if(!gymTypes.includes(type)){
 			client.errors.noType(message);
 			return;
 		}
@@ -36,7 +38,7 @@ module.exports = {
 		.setColor(client.typeColors[type])
 		.setDescription(`__*~${rules.title}~*__`)
 		.setFooter(`${rules.location || "TBA"}\n${rules.majorLeague ? "Major League" : "Minor League"}`);
-		let emote = client.emojis.cache.find(e => e.name === type.toLowerCase());
+		let emote = client.emojis.cache.find(e => e.name === `type_${type.toLowerCase()}`);
 		let thumb = emote ? emote.url : message.guild.iconURL();
 		if(thumb){
 			embed.setThumbnail(thumb);

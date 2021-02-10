@@ -12,7 +12,9 @@ module.exports = {
 		let type = args[0]? args[0].toLowerCase(): "";
 		if(!type) return client.errors.noType(message);
 
-		if(!client.gymTypes.includes(type)) return client.errors.noType(message)
+		const gymTypes = Object.keys(client.config.gymTypes);
+
+		if(!gymTypes.includes(type)) return client.errors.noType(message)
 		let badges = await client.badges.getDocumentWithBadge(message.guild.id, type);
 
 		await message.guild.members.fetch();

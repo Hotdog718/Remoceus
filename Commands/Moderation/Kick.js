@@ -55,7 +55,7 @@ module.exports = {
       return message.channel.send("I cannot kick this member");
     }
 
-    let kickChannel = message.guild.channels.find(channel => channel.name === client.config.modChannel) || message.channel;
+    let kickChannel = message.guild.channels.find(channel => channel.name === client.config.logsChannel) || message.channel;
 
     const kickEmbed = new MessageEmbed()
     .setTitle("Kick Embed")

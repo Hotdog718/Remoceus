@@ -47,7 +47,7 @@ module.exports = {
     prom.then(() => message.react('✅'))
 				.catch(console.error);
     prom.then(() => message.channel.send(`${tomute.user.tag} has been muted for ${ms(ms(mutetime))}`))
-    prom.then(() => message.guild.channels.cache.find(channel => channel.name === client.config.modChannel) || message.channel)
+    prom.then(() => message.guild.channels.cache.find(channel => channel.name === client.config.logsChannel) || message.channel)
         .then((mutechannel) => mutechannel.send(muteEmbed))
         .catch(console.error);
     prom.then(m => {

@@ -20,12 +20,12 @@ module.exports = {
 		.setFooter(`${majorGyms.length+minorGyms.length} gyms open out of 18`);
 		let majorEmotes = [];
 		for(let i = 0; i < majorGyms.length; i++){
-			let emote = client.emojis.cache.find(emote => emote.name === `${majorGyms[i].type}`);
+			let emote = client.emojis.cache.find(emote => emote.name === `type_${majorGyms[i].type}`);
 			majorEmotes.push(emote ? emote : b[majorGyms[i].type]);
 		}
 		let minorEmotes = [];
 		for(let i = 0; i < minorGyms.length; i++){
-			let emote = client.emojis.cache.find(emote => emote.name === `${minorGyms[i].type}`);
+			let emote = client.emojis.cache.find(emote => emote.name === `type_${minorGyms[i].type}`);
 			minorEmotes.push(emote ? emote : b[minorGyms[i].type]);
 		}
 

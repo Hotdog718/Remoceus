@@ -42,7 +42,6 @@ module.exports = (client) => {
 			// 	return;
 			// }
 		}
-
 		checkMember(message.member);
 		for(let i = 0; i < client.bannedWords.length; i++){
 			if(message.content.toLowerCase().includes(client.bannedWords[i])){
@@ -51,20 +50,56 @@ module.exports = (client) => {
 			}
 		}
 
+		if(message.content === "update cache" && message.author.id === client.config.botowner){
+			// Update Gym Cache
+			try{
+				await client.gymrules.updateCache();
+				message.channel.send("Updated Gym Cache");
+			}catch(e){
+				message.channel.send('Something went wrong updating gymrules cache');
+			}
+			
+			// Update badge cache
+			try{
+				await client.badges.updateCache();
+				message.channel.send("Updated Badge Cache");
+			}catch(e){
+				message.channel.send('Something went wrong updating badge cache');
+			}
+
+			// Update Game Info Cache
+			try{
+				await client.gameinfo.updateCache();
+				message.channel.send("Updated Game Info Cache");
+			}catch(e){
+				message.channel.send("Failed to update Game Info cache.");
+			}
+		}
+		
+		if(/^wins:\s*[0-9]+$/gmi.test(message.content) && /^losses:\s*[0-9]+$/gmi.test(message.content) && /^total\spoints\scollected:\s*[0-9]+$/gmi.test(message.content)){
+			let wins = message.content.match(/^wins:\s*[0-9]+$/gmi)[0].split(/:\s*/gmi)[1];
+			let losses = message.content.match(/^losses:\s*[0-9]+$/gmi)[0].split(/:\s*/gmi)[1];
+			let points = message.content.match(/^total\spoints\scollected:\s*[0-9]+$/gmi)[0].split(/:\s*/gmi)[1];
+			
+			let type = client.helpers.getGymType(client, message.member);
+			if(type){
+				try{
+					await client.gymrules.updateGymStats(wins, losses, points, type, message.guild.id);
+					message.channel.send('Updated gym wins-losses');
+					message.react('☑️');
+				}catch(e){
+					console.error(e);
+					message.channel.send(`Something went wrong trying to update your score, please try again later or just ask hotdog to do it for you`);
+					message.react('❌');
+				}
+			}
+		}
+
 		let prefix = client.config.prefix;
 		let messageArray = message.content.split(" ");
 		let cmd = messageArray[0];
 		let args = messageArray.slice(1);
 		let command = client.commands.get(cmd.slice(prefix.length) || client.aliases.get(cmd.slice(prefix.length)));
-
-		if(message.content.startsWith(`${prefix}updategymcache`)){
-			try{
-				await client.gymrules.updateCache();
-				message.channel.send(`Gym Cache Updated.`);
-			}catch(e){
-				message.channel.send('An Error Occured, please try again...');
-			}
-		}
 
 		if(!command || !message.content.startsWith(prefix)){
 			return;

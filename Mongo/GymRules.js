@@ -88,6 +88,40 @@ module.exports.setGymStatus = async (type, serverID, status) => {
     })
 }
 
+module.exports.updateGymStats = async (wins, losses, points, type, serverID) => {
+    return await mongo().then(async (mongoose) => {
+        try{
+            const result = await GymRules.findOne({type: type, serverID: serverID});
+
+            if(result){
+                result.wins = wins;
+                result.losses = losses;
+                result.points = points;
+                
+                return await result.save().then(() => {
+                    cache[`${serverID}-${type}`] = {
+                        type: result.type,
+                        serverID: result.serverID,
+                        rules: result.rules,
+                        banner: result.banner,
+                        title: result.title,
+                        location: result.location,
+                        separateRules: result.separateRules,
+                        wins: result.wins,
+                        losses: result.losses,
+                        points: result.points,
+                        cost: result.cost,
+                        open: result.open,
+                        majorLeague: result.majorLeague
+                    }
+                })
+            }
+        } finally {
+            mongoose.connection.close();
+        }
+    })
+}
+
 module.exports.updateCache = async () => {
     return await mongo().then(async (mongoose) => {
         try{
