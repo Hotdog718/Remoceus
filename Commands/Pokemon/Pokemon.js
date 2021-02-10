@@ -14,14 +14,18 @@ module.exports = {
     if(!pokemon) return message.channel.send("No name given");
     let PokeObject = Pokemon.PokemonInfo[pokemon];
     if(!PokeObject) return message.channel.send("Could not find pokemon");
-    message.channel.send(getPokeEmbed(PokeObject, client))
+    message.channel.send(getPokeEmbed(PokeObject, client, message.member))
   }
 }
 
-function getPokeEmbed(obj, client, page = "stats"){
+function getPokeEmbed(obj, client, member){
   let numOfPokemon = getMaxDex();
   const { forme, baseSpecies, name, types, num, heightm, weightkg, baseStats, abilities, eggGroups, color, evos, prevo } = obj;
-  let url = Pokemon.GetSerebiiURL(name, forme || '', (Math.floor(Math.random() * 100) == 0))
+  let shiny = (Math.floor(Math.random() * 100) == 0)
+  if(client.config.shinies[member.id].includes(obj.name.toLowerCase())){
+    shiny = true;
+  }
+  let url = Pokemon.GetSerebiiURL(name, forme || '', shiny);
   let embed = new MessageEmbed()
   .setTitle(`${(forme?`${baseSpecies}-${forme}`:name)}`)
   .setThumbnail(url)

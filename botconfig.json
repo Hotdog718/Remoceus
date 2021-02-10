@@ -79,5 +79,11 @@
 			"name": "Water",
 			"major": false
 		}
+	},
+	"shinies": {
+		"618882987580194839": ["celebi", "ribombee", "cutiefly"],
+		"199901583633416195": ["buneary", "lopunny"],
+		"162022407291273216": ["ninetales"],
+		"130821192905916416": ["arcanine", "growlithe"]
 	}
 }
