@@ -12,7 +12,6 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     if(message.deletable) message.delete();
-    isShiny = (Math.floor(Math.random() * 100) == 0);
     const learnsets = Pokemon.LearnSets;
     let pokemon = args.join(" ").replace(/[^a-z]/gi, "").toLowerCase();
     if(!pokemon) return message.channel.send("Could not find argument");
@@ -23,6 +22,10 @@ module.exports = {
     let index = 0;
     let search = Pokemon.PokemonInfo[pokemon];
     if(!search) return message.channel.send(`Could not find pokemon`);
+    isShiny = (Math.floor(Math.random() * 100) == 0);
+    if(client.config.shinies[message.member.id].includes(pokemon)){
+      isShiny = true;
+    }
     message.channel.send(await getMoveSetEmbed(client, search, MoveSets, index)).then(msg => {
       let reactions = ["⬅", "➡", '⏹'];
 			reactions.forEach(function(r, i){
