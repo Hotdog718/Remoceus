@@ -1,10 +1,17 @@
 const mongo = require('./Mongo.js');
 const GymRules = require('./Models/GymRules.js');
 
-const cache = {} // {'serverID-type': gymData}
+const cache = {} // {'serverID': {'type': gymData}}
+
+const getServerCache = async (serverID) => {
+    if(!cache[serverID]){
+        cache[serverID] = {};
+    }
+    return cache[serverID];
+}
 
 module.exports.getGymType = async (type, serverID) => {
-    const cachedValue = cache[`${serverID}-${type}`];
+    const cachedValue = getServerCache(serverID)[type];
     if(cachedValue){
         return cachedValue;
     }
@@ -13,7 +20,8 @@ module.exports.getGymType = async (type, serverID) => {
             const result = await GymRules.findOne({type, serverID});
             
             if(result){
-                cache[`${serverID}-${type}`] = {
+                getServerCache(serverID);
+                cache[serverID][type] = {
                     type: type,
                     serverID: serverID,
                     rules: result.rules,
@@ -37,6 +45,14 @@ module.exports.getGymType = async (type, serverID) => {
 }
 
 module.exports.getGyms = async (serverID) => {
+    if(cache[serverID]){
+        let gymArray = [];
+        for(const key of Object.keys(cache[serverID])){
+            gymArray.push(cache[serverID][key]);
+        }
+        return gymArray;
+    }
+
     return await mongo().then(async (mongoose) => {
         try{
             const result = await GymRules.find({serverID});
@@ -57,9 +73,10 @@ module.exports.setGymStatus = async (type, serverID, status) => {
             if(result){
                 result.open = status;
                 return await result.save().then(() => {
-                    const cachedValue = cache[`${serverID}-${type}`];
+                    getServerCache(serverID);
+                    const cachedValue = getServerCache(serverID)[type];
                     if(!cachedValue){
-                        cache[`${serverID}-${type}`] = {
+                        cache[serverID][type] = {
                             type: type,
                             serverID: serverID,
                             rules: result.rules,
@@ -75,7 +92,7 @@ module.exports.setGymStatus = async (type, serverID, status) => {
                             majorLeague: result.majorLeague
                         }
                     }else{
-                        cache[`${serverID}-${type}`].open = status;
+                        cache[serverID][type].open = status;
                     }
                     return;
                 });
@@ -99,7 +116,8 @@ module.exports.updateGymStats = async (wins, losses, points, type, serverID) => 
                 result.points = points;
                 
                 return await result.save().then(() => {
-                    cache[`${serverID}-${type}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][type] = {
                         type: result.type,
                         serverID: result.serverID,
                         rules: result.rules,
@@ -129,7 +147,8 @@ module.exports.updateCache = async () => {
 
             if(result){
                 for(const gym of result){
-                    cache[`${gym.serverID}-${gym.type}`] = {
+                    getServerCache(gym.serverID);
+                    cache[gym.serverID][gym.type] = {
                         type: gym.type,
                         serverID: gym.serverID,
                         rules: gym.rules,
