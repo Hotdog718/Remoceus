@@ -1,10 +1,17 @@
 const Mongo = require('./Mongo.js');
 const Badges = require('./Models/Badges.js');
 
-let cache = {} // {'serverID-userID' : badgeData}
+let cache = {} // {'serverID' : {'userID': badgeData}}
+
+const getServerCache = (serverID) => {
+    if(!cache[serverID]){
+        cache[serverID] = {};
+    }
+    return cache[serverID];
+}
 
 module.exports.getBadges = async (userID, serverID) => {
-    const cachedValue = cache[`${serverID}-${userID}`];
+    const cachedValue = getServerCache(serverID)[userID];
     if(cachedValue){
         return cachedValue;
     }
@@ -13,7 +20,8 @@ module.exports.getBadges = async (userID, serverID) => {
             const result = await Badges.findOne({userID: userID, serverID: serverID});
 
             if(result){
-                cache[`${serverID}-${userID}`] = {
+                getServerCache(serverID);
+                cache[serverID][userID] = {
                     userID: result.userID,
                     serverID: result.serverID,
                     bug: result.bug,
@@ -47,6 +55,15 @@ module.exports.getBadges = async (userID, serverID) => {
 }
 
 module.exports.getDocumentWithBadge = async (serverID, type) => {
+    if(cache[serverID]){
+        let badgeArray = [];
+        for(const key of Object.keys(cache[serverID])){
+            if(cache[serverID][key][type]){
+                badgeArray.push(cache[serverID][key]);
+            }
+        }
+        return badgeArray;
+    }
     return await Mongo().then(async (mongoose) => {
         try {
             let query = {
@@ -65,6 +82,14 @@ module.exports.getDocumentWithBadge = async (serverID, type) => {
 }
 
 module.exports.getAllBadges = async (serverID) => {
+    if(cache[serverID]){
+        let badges = [];
+        for(const key of Object.keys(cache[serverID])){
+            badges.push(cache[serverID][key]);
+        }
+
+        return badges;
+    }
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await Badges.find({serverID: serverID});
@@ -90,7 +115,8 @@ module.exports.giveBadge = async (userID, serverID, type) => {
                 result[type] = true;
                 result.count++;
                 return await result.save().then(() => {
-                    cache[`${serverID}-${userID}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][userID] = {
                         userID: result.userID,
                         serverID: result.serverID,
                         bug: result.bug,
@@ -137,7 +163,8 @@ module.exports.takeBadge = async (userID, serverID, type) => {
                 result[type] = false;
                 result.count--;
                 return await result.save().then(() => {
-                    cache[`${serverID}-${userID}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][userID] = {
                         userID: result.userID,
                         serverID: result.serverID,
                         bug: result.bug,
@@ -176,8 +203,8 @@ module.exports.takeAllBadges = async (userID, serverID) => {
     return await Mongo().then(async (mongoose) => {
         try{
             return await Badges.findOneAndDelete({userID: userID, serverID: serverID}).then(() => {
-                if(cache[`${serverID}-${userID}`]){
-                    delete cache[`${serverID}-${userID}`];
+                if(getServerCache(serverID)[userID]){
+                    delete cache[serverID][userID];
                 }
             });
         }finally{
@@ -194,7 +221,8 @@ module.exports.givePoints = async (userID, serverID, points) => {
             if(result){
                 result.points += points;
                 return await result.save().then(() => {
-                    cache[`${serverID}-${userID}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][userID] = {
                         userID: result.userID,
                         serverID: result.serverID,
                         bug: result.bug,
@@ -240,7 +268,8 @@ module.exports.takePoints = async (userID, serverID, points) => {
                     result.points = 0;
                 }
                 return await result.save().then(() => {
-                    cache[`${serverID}-${userID}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][userID] = {
                         userID: result.userID,
                         serverID: result.serverID,
                         bug: result.bug,
@@ -318,7 +347,8 @@ module.exports.register = async (userID, serverID, hometown) => {
                 hometown: hometown,
                 points: 100
             }).save().then(() => {
-                cache[`${serverID}-${userID}`] = {
+                getServerCache(serverID);
+                cache[serverID][userID] = {
                     userID: userID,
                     serverID: serverID,
                     bug: false,
@@ -357,7 +387,8 @@ module.exports.changeHometown = async (userID, serverID, hometown) => {
             if(result){
                 result.hometown = hometown;
                 await result.save().then(() => {
-                    cache[`${serverID}-${userID}`] = {
+                    getServerCache(serverID);
+                    cache[serverID][userID] = {
                         userID: result.userID,
                         serverID: result.serverID,
                         bug: result.bug,
@@ -397,7 +428,8 @@ module.exports.updateCache = async () => {
 
             if(result){
                 for(const badge of result){
-                    cache[`${badge.serverID}-${badge.type}`] = {
+                    getServerCache(badge.serverID);
+                    cache[badge.serverID][badge.userID] = {
                         userID: badge.userID,
                         serverID: badge.serverID,
                         bug: badge.bug,
