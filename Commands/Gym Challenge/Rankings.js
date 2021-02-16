@@ -8,17 +8,15 @@ module.exports = {
 	usage: "",
 	permissions: [],
 	run: async (client, message, args) => {
-		let badgeArray = await client.badges.getAllBadges(message.guild.id);
 		const resultsPerPage = 5;
 		await message.guild.members.fetch();
-		if(badgeArray.length <= 0) return message.channel.send(`Sorry, there was no documents that I could find.`);
-		await message.guild.members.fetch();
-		badgeArray = badgeArray.filter(value => {
+		const badgeArray = (await client.badges.getAllBadges(message.guild.id))
+		.filter(value => {
 			const member = message.guild.members.cache.get(value.userID);
 			if(!member) return false;
 			return true;
 		})
-		badgeArray = badgeArray.sort((a, b) => {
+		.sort((a, b) => {
 			if(a.points > b.points){
 				return -1;
 			}
@@ -40,6 +38,8 @@ module.exports = {
 			}
 			return b.count - a.count;
 		})
+
+		if(badgeArray.length <= 0) return message.channel.send(`Sorry, there was no documents that I could find.`);
 		
 		client.helpers.createListEmbed(client, message, badgeArray, resultsPerPage, getEmbed);
 	}
