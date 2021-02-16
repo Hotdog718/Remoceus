@@ -57,7 +57,7 @@ module.exports = {
   LearnSets: require("./Pokemon/Learn Sets.json"),
   GetNum: GetNum,
   GetSerebiiURL: (pokemon, form, shiny) => {
-    let poke = PokemonInfo[pokemon.replace(/[^a-z]/gi, '').toLowerCase()];
+    let poke = PokemonInfo[pokemon.replace(/[^a-z0-9]/gi, '').toLowerCase()];
 
     let forme = form ? `-${getFormLetter(pokemon, form)}` : '';
     if(shiny){

@@ -10,7 +10,7 @@ module.exports = {
   permissions: [],
   run: async (client, message, args) => {
     let str = args.join(" ");
-    let pokemon = str.replace(/[^a-z]/gi, "").toLowerCase().trim();
+    let pokemon = str.replace(/[^a-z0-9]/gi, "").toLowerCase().trim();
     if(!pokemon) return message.channel.send("No name given");
     let PokeObject = Pokemon.PokemonInfo[pokemon];
     if(!PokeObject) return message.channel.send("Could not find pokemon");
@@ -22,7 +22,7 @@ function getPokeEmbed(obj, client, member){
   let numOfPokemon = getMaxDex();
   const { forme, baseSpecies, name, types, num, heightm, weightkg, baseStats, abilities, eggGroups, color, evos, prevo } = obj;
   let shiny = (Math.floor(Math.random() * 100) == 0)
-  if(client.config.shinies[member.id].includes(obj.name.toLowerCase())){
+  if(client.config.shinies[member.id] && client.config.shinies[member.id].includes(obj.name.toLowerCase())){
     shiny = true;
   }
   let url = Pokemon.GetSerebiiURL(name, forme || '', shiny);
