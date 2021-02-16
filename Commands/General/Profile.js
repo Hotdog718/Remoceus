@@ -27,28 +27,32 @@ module.exports = {
       let major = [];
       let minor = [];
 
-      const gymTypes = Object.keys(client.config.gymTypes);
-      
-      for(const type of gymTypes){
-        const gym = client.config.gymTypes[type];
-        const emote = client.emojis.cache.find(emote => emote.name === `type_${type}`)
-        if(gym.major){
-          if(badges[type]){
-            major.push(emote ? emote : b[type]);
+      const gymRules = await client.gymrules.getGyms(message.guild.id);
+
+      for(const rules of gymRules){
+        const emote = client.emojis.cache.find(emote => emote.name === `type_${rules.type}`);
+        if(rules.majorLeague){
+          if(badges[rules.type]){
+            major.push(emote ? emote : b[rules.type]);
           }
         }else{
-          if(badges[type]){
-            minor.push(emote ? emote : b[type]);
+          if(badges[rules.type]){
+            minor.push(emote ? emote : b[rules.type]);
           } 
         }
       }
 
-      const badgeArray = await client.badges.getAllBadges(message.guild.id);
+      const badgeArray = (await client.badges.getAllBadges(message.guild.id))
+      .filter(value => {
+        const member = message.guild.members.cache.get(value.userID);
+        if(!member) return false;
+        return true;
+      })
 
       embed.addField(`__Major League Badges__`, major.length > 0 ? major.join(" ") : `No Major League badges.`)
            .addField(`__Minor League Badges__`, minor.length > 0 ? minor.join(" ") : `No Minor League badges.`)
            .addField(`__Points__`, `${badges.points} (${client.helpers.getClass(badges.points)} Division)`, true)
-           .addField('Ranking', `#${client.helpers.getRanking(badges, badgeArray)}`, true)
+           .addField('Ranking', `#${client.helpers.getRanking(message, badges, badgeArray)}`, true)
            .setFooter(`Badge Count: ${badges.count} out of 18`);
     }else{
       embed.addField(`No Badges`, `Use !register [hometown] to sign up to challenge the gyms.`);

@@ -2,9 +2,60 @@ const token = require("../token.json")
 
 module.exports = (client) => {
 
-	client.once("ready", () => {
-		console.log(`${client.user.tag} is online!`);
+	const updateGymCache = async () => {
+		// Update Gym Cache
+		try{
+			return await client.gymrules.updateCache();
+		}catch(e){
+			throw 'Something went wrong updating gymrules cache';
+		}
+	}
+
+	const updateBadgeCache = async () => {
+		// Update badge cache
+		try{
+			return await client.badges.updateCache();
+		}catch(e){
+			throw 'Something went wrong updating badge cache';
+		}
+	}
+
+	const updateGameInfoCache = async () => {
+		// Update Game Info Cache
+		try{
+			await client.gameinfo.updateCache();
+		}catch(e){
+			throw "Failed to update Game Info cache.";
+		}
+	}
+
+	client.once("ready", async () => {
+		try{
+			await updateBadgeCache();
+			console.log("Updated Badge Cache");
+			await updateGymCache();
+			console.log("Updated Gym Cache");
+			await updateGameInfoCache();
+			console.log("Updated Game Info Cache");
+		}catch(e){
+			console.error(e);
+		}finally{
+			console.log(`${client.user.tag} is online!`);
+		}
 	});
+
+	client.setInterval(async () => {
+		try{
+			await updateBadgeCache();
+			console.log("Updated Badge Cache");
+			await updateGymCache();
+			console.log("Updated Gym Cache");
+			await updateGameInfoCache();
+			console.log("Updated Game Info Cache");
+		}catch(e){
+			console.error(e);
+		}
+	}, 21600000);
 
 	client.on("guildMemberAdd", async (member) => {
 		let joinMessage = ["Please leave your soul at the door, LowRes will come to collect it later.", "Be sure to leave a tribute to appease the glitch gods!", "Don't ask the humble merchant about the monkey's paw, he's out of stock!", "Please don't clap your hands thinking it'll rain. That stopped working after Gen 5.", "If you don't pick Moo Moo Meadows, you're against freedom."]
@@ -57,6 +108,7 @@ module.exports = (client) => {
 				message.channel.send("Updated Gym Cache");
 			}catch(e){
 				message.channel.send('Something went wrong updating gymrules cache');
+				console.error(e);
 			}
 			
 			// Update badge cache
@@ -65,6 +117,7 @@ module.exports = (client) => {
 				message.channel.send("Updated Badge Cache");
 			}catch(e){
 				message.channel.send('Something went wrong updating badge cache');
+				console.error(e);
 			}
 
 			// Update Game Info Cache
@@ -73,6 +126,7 @@ module.exports = (client) => {
 				message.channel.send("Updated Game Info Cache");
 			}catch(e){
 				message.channel.send("Failed to update Game Info cache.");
+				console.error(e);
 			}
 		}
 		

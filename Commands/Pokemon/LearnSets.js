@@ -13,7 +13,7 @@ module.exports = {
   run: async (client, message, args) => {
     if(message.deletable) message.delete();
     const learnsets = Pokemon.LearnSets;
-    let pokemon = args.join(" ").replace(/[^a-z]/gi, "").toLowerCase();
+    let pokemon = args.join(" ").replace(/[^a-z0-9]/gi, "").toLowerCase();
     if(!pokemon) return message.channel.send("Could not find argument");
     if(!learnsets[pokemon]) return message.channel.send(`Could not find moveset for ${pokemon}`);
     let MoveSets = learnsets[pokemon].learnset;
@@ -23,7 +23,7 @@ module.exports = {
     let search = Pokemon.PokemonInfo[pokemon];
     if(!search) return message.channel.send(`Could not find pokemon`);
     isShiny = (Math.floor(Math.random() * 100) == 0);
-    if(client.config.shinies[message.member.id].includes(pokemon)){
+    if(client.config.shinies[message.member.id] && client.config.shinies[message.member.id].includes(pokemon)){
       isShiny = true;
     }
     message.channel.send(await getMoveSetEmbed(client, search, MoveSets, index)).then(msg => {

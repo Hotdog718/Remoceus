@@ -17,10 +17,15 @@ module.exports = {
     message.channel.awaitMessages(filter, {max: 1, time: 60000})
     .then(async collected => {
       if(collected.first().content.toLowerCase() === "yes"){
-        await client.badges.reset(message.guild.id);
-        message.channel.send(`All badges on the server have been reset`);
-        message.react('✅')
-        .catch(console.error);
+        try{
+          await client.badges.reset(message.guild.id);
+          message.channel.send(`All badges on the server have been reset`);
+          message.react('✅')
+        }catch(e){
+          console.error(e)
+        }finally{
+          await client.badges.updateCache();
+        }
       }
     })
     .catch(console.error);

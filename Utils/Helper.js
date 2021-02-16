@@ -57,9 +57,15 @@ module.exports = {
 			return 'Master';
 		}
 	},
-	getRanking: (points, pointsArray) => {
+	getRanking: (message, points, pointsArray) => {
 		const isUser = (user) => points.userID == user.userID && points.serverID == user.serverID;
-		pointsArray.sort((a, b) => {
+				
+		const badgeArray = pointsArray.filter(value => {
+			const member = message.guild.members.cache.get(value.userID);
+			if(!member) return false;
+			return true;
+		})
+		.sort((a, b) => {
 			let aPoints = isUser(a) ? points.points : a.points;
 			let bPoints = isUser(b) ? points.points : b.points;
 			if(aPoints > bPoints){
@@ -72,9 +78,9 @@ module.exports = {
 		})
 
 		let ranking = 1;
-		for(let i = 0; i < pointsArray.length; i++){
-			if(i > 0 && pointsArray[i-1].points > pointsArray[i].points) ranking++;
-			if(points.userID == pointsArray[i].userID && points.serverID == pointsArray[i].serverID) break;
+		for(let i = 0; i < badgeArray.length; i++){
+			if(i > 0 && badgeArray[i-1].points > badgeArray[i].points) ranking++;
+			if(points.userID == badgeArray[i].userID && points.serverID == badgeArray[i].serverID) break;
 		}
 		return ranking;
 	},

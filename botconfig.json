@@ -8,76 +8,58 @@
 	"judgeRoles": ["Battle Judge", "Mods", "Gym Leaders", "Gym Subs"],
 	"gymTypes": {
 		"bug": {
-			"name": "Bug",
-			"major": false
+			"name": "Bug"
 		},
 		"dark": {
-			"name": "Dark",
-			"major": false
+			"name": "Dark"
 		},
 		"dragon": {
-			"name": "Dragon",
-			"major": true
+			"name": "Dragon"
 		},
 		"electric": {
-			"name": "Electric",
-			"major": false
+			"name": "Electric"
 		},
 		"fairy": {
-			"name": "Fairy",
-			"major": true
+			"name": "Fairy"
 		},
 		"fighting": {
-			"name": "Fighting",
-			"major": true
+			"name": "Fighting"
 		},
 		"fire": {
-			"name": "Fire",
-			"major": false
+			"name": "Fire"
 		},
 		"flying": {
-			"name": "Flying",
-			"major": true
+			"name": "Flying"
 		},
 		"ghost": {
-			"name": "Ghost",
-			"major": true
+			"name": "Ghost"
 		},
 		"grass": {
-			"name": "Grass",
-			"major": true
+			"name": "Grass"
 		},
 		"ground": {
-			"name": "Ground",
-			"major": true
+			"name": "Ground"
 		},
 		"ice": {
-			"name": "Ice",
-			"major": false
+			"name": "Ice"
 		},
 		"normal": {
-			"name": "Normal",
-			"major": false
+			"name": "Normal"
 		},
 		"poison": {
-			"name": "Poison",
-			"major": false
+			"name": "Poison"
 		},
 		"psychic": {
-			"name": "Psychic",
-			"major": true
+			"name": "Psychic"
 		},
 		"rock": {
-			"name": "Rock",
-			"major": false
+			"name": "Rock"
 		},
 		"steel": {
-			"name": "Steel",
-			"major": false
+			"name": "Steel"
 		},
 		"water": {
-			"name": "Water",
-			"major": false
+			"name": "Water"
 		}
 	},
 	"shinies": {
