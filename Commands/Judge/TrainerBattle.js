@@ -46,8 +46,8 @@ module.exports = {
 }
 
 function tempName(client, message, winnerName, loserName, winnerBadges, loserBadges, badgeArray){
-  let rankWin = client.helpers.getRanking(winnerBadges, badgeArray);
-  let rankLoser = client.helpers.getRanking(loserBadges, badgeArray);
+  let rankWin = client.helpers.getRanking(message, winnerBadges, badgeArray);
+  let rankLoser = client.helpers.getRanking(message, loserBadges, badgeArray);
   
   let pointsEarned = winnerPoints(client, winnerBadges, loserBadges, rankWin, rankLoser);
   let pointsLost = loserPoints(winnerBadges, loserBadges);
