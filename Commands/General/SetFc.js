@@ -8,7 +8,12 @@ module.exports = {
 	run: async (client, message, args) => {
 		let myNewFC = args.length > 0 ? args.join(" "): "No FC set, use !setfc <fc> to set your fc (ex. !setfc 1234-5678-9012)";
 
-		await client.gameinfo.setFC(message.author.id, myNewFC);
-		message.channel.send(`Set FC to ${myNewFC}`);
+		try{
+			await client.gameinfo.setFC(message.author.id, myNewFC);
+			message.channel.send(`Set FC to ${myNewFC}`);
+		}catch(e){
+			message.channel.send("An error occurred, please try again.");
+			console.error(e);
+		}
 	}
 }
