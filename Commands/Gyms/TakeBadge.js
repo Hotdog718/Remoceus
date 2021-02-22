@@ -9,8 +9,8 @@ module.exports = {
 		let pUser = message.guild.member(message.mentions.users.first());
 		let type = args[0];
 		
-		const types = Object.keys(client.config.gymTypes);
-    	if(!types.includes(type)){
+		const gymTypes = Object.keys(client.config.gymTypes);
+    	if(!gymTypes.includes(type)){
 			type = client.helpers.getGymType(client, message.member);
 		}
 
@@ -18,12 +18,10 @@ module.exports = {
 			client.errors.noUser(message);
 			return;
 		}
-		if(!type || !types.includes(type)){
+		if(!type){
 			client.errors.noType(message);
 			return;
 		}
-		
-		const gymTypes = Object.keys(client.config.gymTypes);
 
 		if(!gymTypes.includes(type.toLowerCase())) {
 			message.channel.send(`Sorry, but ${type} is not a gym type.`);

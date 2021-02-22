@@ -6,17 +6,25 @@ module.exports = {
 	usage: "[open/closed]",
 	permissions: [],
 	run: async (client, message, args) => {
-		let status = args[0];
-
-		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
-
-		let type = args[1];
-		let types = Object.keys(client.config.gymTypes);
-		if(!type || !types.includes(type)){
+		let status, type;
+		type = args[0];
+		const types = Object.keys(client.config.gymTypes);
+		if(type && types.includes(type) && message.member.hasPermission("MANAGE_ROLES", {checkOwner: true, checkAdmin: true})){
+			status = args[1];
+			if(status.toLowerCase() !== 'closed' && !client.helpers.checkGyms(client, type, message.member)){
+				message.channel.send('Non-Gym-Leaders can only set gym status to closed.');
+				message.react('❌')
+				   .catch(console.error);
+				return;
+			}
+		}else{
+			status = args[0];
 			type = client.helpers.getGymType(client, message.member);
 		}
 
-		if(!type || !types.includes(type)){
+		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
+
+		if(!type){
 			client.errors.noType(message);
 			return;
 		}
