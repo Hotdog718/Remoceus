@@ -1,12 +1,25 @@
 const BanList = require('./Models/BanList.js');
 const Mongo = require('./Mongo.js');
 
+const cache = {}; // {serverID: banListData}
+
 module.exports.getBanList = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID];
+    }
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result;
             }
         } finally {
@@ -16,11 +29,22 @@ module.exports.getBanList = async (serverID) => {
 }
 
 module.exports.getBannedPokemon = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID].pokemon;
+    }
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result.pokemon;
             }
         } finally {
@@ -30,11 +54,23 @@ module.exports.getBannedPokemon = async (serverID) => {
 }
 
 module.exports.getBannedDynamax = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID].dynamax;
+    }
+    
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result.dynamax;
             }
         } finally {
@@ -44,11 +80,23 @@ module.exports.getBannedDynamax = async (serverID) => {
 }
 
 module.exports.getBannedAbilities = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID].abilities;
+    }
+    
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result.abilities;
             }
         } finally {
@@ -58,11 +106,23 @@ module.exports.getBannedAbilities = async (serverID) => {
 }
 
 module.exports.getBannedMoves = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID].moves;
+    }
+    
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result.moves;
             }
         } finally {
@@ -72,12 +132,47 @@ module.exports.getBannedMoves = async (serverID) => {
 }
 
 module.exports.getClauses = async (serverID) => {
+    if(cache[serverID]){
+        return cache[serverID].clauses;
+    }
+
     return await Mongo().then(async (mongoose) => {
         try {
             const result = await BanList.findOne({serverID: serverID});
 
             if(result){
+                cache[serverID] = {
+                    serverID: result.serverID,
+                    pokemon: result.pokemon,
+                    dynamax: result.dynamax,
+                    abilities: result.abilities,
+                    moves: result.moves,
+                    clauses: result.clauses
+                }
                 return result.clauses;
+            }
+        } finally {
+            mongoose.connection.close();
+        }
+    })
+}
+
+module.exports.updateCache = async () => {
+    return await Mongo().then(async (mongoose) => {
+        try{
+            const results = await BanList.find();
+
+            if(results){
+                for(const result of results){
+                    cache[result.serverID] = {
+                        serverID: result.serverID,
+                        pokemon: result.pokemon,
+                        dynamax: result.dynamax,
+                        abilities: result.abilities,
+                        moves: result.moves,
+                        clauses: result.clauses
+                    }
+                }
             }
         } finally {
             mongoose.connection.close();
