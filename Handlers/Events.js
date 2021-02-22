@@ -28,6 +28,24 @@ module.exports = (client) => {
 		}
 	}
 
+	const updateBanListCache = async() => {
+		// Update Ban List Cache
+		try{
+			await client.banlist.updateCache();
+		}catch(e){
+			throw "Failed to update Ban List cache.";
+		}
+	}
+
+	const updateACLACache = async () => {
+		// Update ACLA cache
+		try{
+			await client.acla.updateCache();
+		}catch(e){
+			throw "Failed to update ACLA cache.";
+		}
+	}
+
 	client.once("ready", async () => {
 		try{
 			await updateBadgeCache();
@@ -36,6 +54,8 @@ module.exports = (client) => {
 			console.log("Updated Gym Cache");
 			await updateGameInfoCache();
 			console.log("Updated Game Info Cache");
+			await updateACLACache();
+			console.log("Updated ACLA Cache");
 		}catch(e){
 			console.error(e);
 		}finally{
@@ -43,18 +63,18 @@ module.exports = (client) => {
 		}
 	});
 
-	client.setInterval(async () => {
-		try{
-			await updateBadgeCache();
-			console.log("Updated Badge Cache");
-			await updateGymCache();
-			console.log("Updated Gym Cache");
-			await updateGameInfoCache();
-			console.log("Updated Game Info Cache");
-		}catch(e){
-			console.error(e);
-		}
-	}, 21600000);
+	// client.setInterval(async () => {
+	// 	try{
+	// 		await updateBadgeCache();
+	// 		console.log("Updated Badge Cache");
+	// 		await updateGymCache();
+	// 		console.log("Updated Gym Cache");
+	// 		await updateGameInfoCache();
+	// 		console.log("Updated Game Info Cache");
+	// 	}catch(e){
+	// 		console.error(e);
+	// 	}
+	// }, 21600000);
 
 	client.on("guildMemberAdd", async (member) => {
 		let joinMessage = ["Please leave your soul at the door, LowRes will come to collect it later.", "Be sure to leave a tribute to appease the glitch gods!", "Don't ask the humble merchant about the monkey's paw, he's out of stock!", "Please don't clap your hands thinking it'll rain. That stopped working after Gen 5.", "If you don't pick Moo Moo Meadows, you're against freedom."]
@@ -120,6 +140,23 @@ module.exports = (client) => {
 			}catch(e){
 				message.channel.send("Failed to update Game Info cache.");
 				console.error(e);
+			}
+
+			// Update Banlist Cache
+			try{
+				await client.banlist.updateCache();
+				message.channel.send("Updated Banlist Cache");
+			}catch(e){
+				message.channel.send("Failed to update banlist cache.");
+				console.error(e);
+			}
+
+			// Update ACLA Cache
+			try{
+				await client.acla.updateCache();
+				message.channel.send("Updated ACLA Cache");
+			}catch(e){
+				message.channel.send("Failed to update ACLA cache.");
 			}
 		}
 		

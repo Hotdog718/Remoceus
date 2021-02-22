@@ -27,8 +27,8 @@ module.exports = {
       return;
     }
 
-    if(assignableRoles.roles[roleName]){
-      Roles.removeRole(message.guild.id, roleName)
+    if(roleName.toLowerCase() in assignableRoles.roles){
+      await client.roles.removeRole(message.guild.id, roleName.toLowerCase());
       message.react('✅')
       .catch(console.error);
       message.channel.send(`Removed ${roleName} from assignable roles.`);
