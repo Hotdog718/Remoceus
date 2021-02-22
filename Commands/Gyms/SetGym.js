@@ -10,9 +10,13 @@ module.exports = {
 
 		let gymAnnouncements = message.guild.channels.cache.find(channel => channel.name === "announcements") || message.channel;
 
-		let type = client.helpers.getGymType(client, message.member);
+		let type = args[1];
+		let types = Object.keys(client.config.gymTypes);
+		if(!type || !types.includes(type)){
+			type = client.helpers.getGymType(client, message.member);
+		}
 
-		if(!type){
+		if(!type || !types.includes(type)){
 			client.errors.noType(message);
 			return;
 		}
@@ -24,7 +28,7 @@ module.exports = {
 			return;
 		}
 
-		if(!client.helpers.checkGyms(client, type, message.member)){
+		if(!client.helpers.checkGyms(client, type, message.member, true)){
 			message.channel.send("You aren't a gym leader");
 			message.react('❌')
 				   .catch(console.error);
