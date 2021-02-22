@@ -6,3 +6,4 @@ start.bat
 /.vs/
 bannedWords.js
 package-lock.json
+/.vscode/

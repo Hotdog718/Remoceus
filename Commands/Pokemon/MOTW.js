@@ -44,7 +44,7 @@ const formatEVSpread = ({evs}) => {
 	let keys = Object.keys(evs);
 	let stat = {hp: "HP", atk: "Atk", def: "Def", spa: "Sp. Atk", spd: "Sp. Def", spe: "Speed"};
 	for(let i = 0; i < keys.length; i++){
-		if(evs[i] != 0){
+		if(evs[keys[i]] && evs[keys[i]] !== 0){
 			res += `${evs[keys[i]]} ${stat[keys[i]]}, `;
 		}
 	}

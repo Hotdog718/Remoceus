@@ -1,6 +1,6 @@
 {
-  "name": "remoceus-remake",
-  "version": "1.3.0",
+  "name": "remoceus",
+  "version": "1.3.1",
   "description": "A bot created for the Silver League",
   "main": "index.js",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hotdog718/Remoceus-Remake.git"
+    "url": "git+https://github.com/Hotdog718/Remoceus.git"
   },
   "author": "Hotdog",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Hotdog718/Remoceus-Remake/issues"
+    "url": "https://github.com/Hotdog718/Remoceus/issues"
   },
-  "homepage": "https://github.com/Hotdog718/Remoceus-Remake#readme",
+  "homepage": "https://github.com/Hotdog718/Remoceus#readme",
   "dependencies": {
     "discord.js": "^12.5.1",
     "fs": "0.0.1-security",
