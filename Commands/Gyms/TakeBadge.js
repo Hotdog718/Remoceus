@@ -7,13 +7,18 @@ module.exports = {
 	permissions: [],
 	run: async (client, message, args) => {
 		let pUser = message.guild.member(message.mentions.users.first());
-		let type = client.helpers.getGymType(client, message.member) || args[0];
+		let type = args[0];
 		
+		const types = Object.keys(client.config.gymTypes);
+    	if(!types.includes(type)){
+			type = client.helpers.getGymType(client, message.member);
+		}
+
 		if(!pUser){
 			client.errors.noUser(message);
 			return;
 		}
-		if(!type){
+		if(!type || !types.includes(type)){
 			client.errors.noType(message);
 			return;
 		}

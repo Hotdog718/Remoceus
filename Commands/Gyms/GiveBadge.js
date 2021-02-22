@@ -7,7 +7,12 @@ module.exports = {
   permissions: ["Manage Roles"],
   run: async (client, message, args) => {
   	let pUser = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[1]);
-    let type = client.helpers.getGymType(client, message.member) || args[0];
+    let type = args[0];
+    
+    const gymTypes = Object.keys(client.config.gymTypes);
+    if(!gymTypes.includes(type)){
+      type = client.helpers.getGymType(client, message.member);
+    }
 
     if(!pUser){
       client.errors.noUser(message);
@@ -17,8 +22,6 @@ module.exports = {
       client.errors.noType(message);
       return;
     }
-
-    const gymTypes = Object.keys(client.config.gymTypes);
 
     if(!gymTypes.includes(type.toLowerCase())){
       message.channel.send(`Sorry, but ${type} is not a gym type.`);
