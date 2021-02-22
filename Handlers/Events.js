@@ -1,5 +1,6 @@
-module.exports = (client) => {
+const { MessageEmbed, DiscordAPIError } = require('discord.js');
 
+module.exports = (client) => {
 	const updateGymCache = async () => {
 		// Update Gym Cache
 		try{
@@ -169,6 +170,47 @@ module.exports = (client) => {
 	// 		}
 	// 	}
 	// })
+
+	client.on('guildBanAdd', async (guild, user) => {
+		const logsChannel = guild.channels.cache.find(c => c.name === client.config.logsChannel);
+
+		if(!logsChannel) return;
+		
+		// const banInfo = await guild.fetchBan(user);
+		const banLogs = (await guild.fetchAuditLogs({type: 'MEMBER_BAN_ADD'}));
+
+		const banInfo = banLogs.entries.first();
+		const banEmbed = new MessageEmbed()
+		.setTitle("Banned User Log")
+		.setThumbnail(user.displayAvatarURL())
+		.setColor(client.config.color)
+		.addField("Banned User", `${user.tag} (${user.id})`)
+		.addField("Banned By", `${banInfo.executor.tag} (${banInfo.executor.id})`);
+		if(banInfo.reason){
+			banEmbed.addField("Reason", banInfo.reason);
+		}
+		logsChannel.send(banEmbed);
+	})
+
+	client.on('guildMemberRemove', async (member) => {
+		const logsChannel = member.guild.channels.cache.find(c => c.name === client.config.logsChannel);
+		
+		if(!logsChannel) return;
+		const logs = await member.guild.fetchAuditLogs();
+		if(logs.entries.first().target.id === member.id && logs.entries.first().action === 'MEMBER_KICK'){
+			const kicklog = logs.entries.first();
+			const kickEmbed = new MessageEmbed()
+			.setTitle("Kick Embed")
+			.setThumbnail(member.user.displayAvatarURL())
+			.setColor(client.config.color)
+			.addField("Kicked User", `${member.user.tag} (${member.id})`)
+			.addField("Kicked By", `${kicklog.executor.tag} (${kicklog.executor.id})`);
+			if(kicklog.reason){
+				kickEmbed.addField("Reason", kicklog.reason);
+			}
+			logsChannel.send(kickEmbed);
+		}
+	})
 
 	client.on("error", (err) => console.log(err));
 	client.on("warn", (info) => console.warn(info));
