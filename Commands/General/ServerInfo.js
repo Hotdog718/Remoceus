@@ -10,8 +10,14 @@ module.exports = {
 	run: async (client, message, args) => {
 		await message.guild.members.fetch();
 		
-		let date = new Date();
+		let tmpdate = new Date();
 		
+		let invdate = new Date(tmpdate.toLocaleString("en-US", {timeZone: "America/Toronto"}));
+
+		let diff = tmpdate.getTime() - invdate.getTime();
+
+		let date = new Date(tmpdate.getTime() - diff);
+
 		let serverEmbed = new MessageEmbed()
 		.setTitle(`${message.guild.name}`)
 		.setColor(client.config.color)
