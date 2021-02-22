@@ -22,7 +22,6 @@ client.config = config;
 client.errors = errors;
 client.helpers = helpers;
 client.typeColors = typeColors;
-client.bannedWords = bannedWords;
 client.modifiers = modifiers;
 
 const acla = require('./Mongo/ACLA.js');

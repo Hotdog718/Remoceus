@@ -92,12 +92,6 @@ module.exports = (client) => {
 			// }
 		}
 		checkMember(message.member);
-		for(let i = 0; i < client.bannedWords.length; i++){
-			if(message.content.toLowerCase().includes(client.bannedWords[i])){
-				message.delete();
-				return message.author.send("We don't use those words on this server (If this was on accident, please message Hotdog)");
-			}
-		}
 
 		if(message.content === "update cache" && message.author.id === client.config.botowner){
 			// Update Gym Cache
@@ -160,15 +154,6 @@ module.exports = (client) => {
 			command.run(client, message, args);
 		}catch(e){
 			console.log(e)
-		}
-	})
-
-	client.on("messageUpdate", async (oldMessage, newMessage) => {
-		for(let i = 0; i < client.bannedWords.length; i++){
-			if(newMessage.content.toLowerCase().includes(client.bannedWords[i])){
-				newMessage.delete();
-				return newMessage.author.send("We don't use those words on this server (If this was on accident, please message Hotdog)");
-			}
 		}
 	})
 
