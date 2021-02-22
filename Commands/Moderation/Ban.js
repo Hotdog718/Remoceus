@@ -49,20 +49,7 @@ module.exports = {
       return message.channel.send("I cannot ban this member");
     }
 
-    let banChannel = message.guild.channels.cache.find(channel => channel.name === client.config.logsChannel) || message.channel;
-
-    const banEmbed = new MessageEmbed()
-    .setTitle("Ban Embed")
-    .setThumbnail(toBan.user.displayAvatarURL())
-    .setColor(client.config.color)
-    .addField("Banned User", `${toBan.user.tag} (${toBan.id})`)
-    .addField("Banned By", `${message.author.tag} (${message.author.id})`);
-    if(reason){
-      banEmbed.addField("Reason", reason);
-    }
-
     const prom = toBan.ban({reason: reason});
-    prom.then(() => banChannel.send(banEmbed));
     prom.then(() => message.react('✅'))
 				.catch(console.error);
     prom.catch(console.error);

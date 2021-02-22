@@ -1,5 +1,6 @@
-module.exports = (client) => {
+const { MessageEmbed, DiscordAPIError } = require('discord.js');
 
+module.exports = (client) => {
 	const updateGymCache = async () => {
 		// Update Gym Cache
 		try{
@@ -27,6 +28,24 @@ module.exports = (client) => {
 		}
 	}
 
+	const updateBanListCache = async() => {
+		// Update Ban List Cache
+		try{
+			await client.banlist.updateCache();
+		}catch(e){
+			throw "Failed to update Ban List cache.";
+		}
+	}
+
+	const updateACLACache = async () => {
+		// Update ACLA cache
+		try{
+			await client.acla.updateCache();
+		}catch(e){
+			throw "Failed to update ACLA cache.";
+		}
+	}
+
 	client.once("ready", async () => {
 		try{
 			await updateBadgeCache();
@@ -35,6 +54,8 @@ module.exports = (client) => {
 			console.log("Updated Gym Cache");
 			await updateGameInfoCache();
 			console.log("Updated Game Info Cache");
+			await updateACLACache();
+			console.log("Updated ACLA Cache");
 		}catch(e){
 			console.error(e);
 		}finally{
@@ -42,18 +63,18 @@ module.exports = (client) => {
 		}
 	});
 
-	client.setInterval(async () => {
-		try{
-			await updateBadgeCache();
-			console.log("Updated Badge Cache");
-			await updateGymCache();
-			console.log("Updated Gym Cache");
-			await updateGameInfoCache();
-			console.log("Updated Game Info Cache");
-		}catch(e){
-			console.error(e);
-		}
-	}, 21600000);
+	// client.setInterval(async () => {
+	// 	try{
+	// 		await updateBadgeCache();
+	// 		console.log("Updated Badge Cache");
+	// 		await updateGymCache();
+	// 		console.log("Updated Gym Cache");
+	// 		await updateGameInfoCache();
+	// 		console.log("Updated Game Info Cache");
+	// 	}catch(e){
+	// 		console.error(e);
+	// 	}
+	// }, 21600000);
 
 	client.on("guildMemberAdd", async (member) => {
 		let joinMessage = ["Please leave your soul at the door, LowRes will come to collect it later.", "Be sure to leave a tribute to appease the glitch gods!", "Don't ask the humble merchant about the monkey's paw, he's out of stock!", "Please don't clap your hands thinking it'll rain. That stopped working after Gen 5.", "If you don't pick Moo Moo Meadows, you're against freedom."]
@@ -120,6 +141,23 @@ module.exports = (client) => {
 				message.channel.send("Failed to update Game Info cache.");
 				console.error(e);
 			}
+
+			// Update Banlist Cache
+			try{
+				await client.banlist.updateCache();
+				message.channel.send("Updated Banlist Cache");
+			}catch(e){
+				message.channel.send("Failed to update banlist cache.");
+				console.error(e);
+			}
+
+			// Update ACLA Cache
+			try{
+				await client.acla.updateCache();
+				message.channel.send("Updated ACLA Cache");
+			}catch(e){
+				message.channel.send("Failed to update ACLA cache.");
+			}
 		}
 		
 		if(/^wins:\s*[0-9]+$/gmi.test(message.content) && /^losses:\s*[0-9]+$/gmi.test(message.content) && /^total\spoints\scollected:\s*[0-9]+$/gmi.test(message.content)){
@@ -169,6 +207,47 @@ module.exports = (client) => {
 	// 		}
 	// 	}
 	// })
+
+	client.on('guildBanAdd', async (guild, user) => {
+		const logsChannel = guild.channels.cache.find(c => c.name === client.config.logsChannel);
+
+		if(!logsChannel) return;
+		
+		// const banInfo = await guild.fetchBan(user);
+		const banLogs = (await guild.fetchAuditLogs({type: 'MEMBER_BAN_ADD'}));
+
+		const banInfo = banLogs.entries.first();
+		const banEmbed = new MessageEmbed()
+		.setTitle("Banned User Log")
+		.setThumbnail(user.displayAvatarURL())
+		.setColor(client.config.color)
+		.addField("Banned User", `${user.tag} (${user.id})`)
+		.addField("Banned By", `${banInfo.executor.tag} (${banInfo.executor.id})`);
+		if(banInfo.reason){
+			banEmbed.addField("Reason", banInfo.reason);
+		}
+		logsChannel.send(banEmbed);
+	})
+
+	client.on('guildMemberRemove', async (member) => {
+		const logsChannel = member.guild.channels.cache.find(c => c.name === client.config.logsChannel);
+		
+		if(!logsChannel) return;
+		const logs = await member.guild.fetchAuditLogs();
+		if(logs.entries.first().target.id === member.id && logs.entries.first().action === 'MEMBER_KICK'){
+			const kicklog = logs.entries.first();
+			const kickEmbed = new MessageEmbed()
+			.setTitle("Kick Embed")
+			.setThumbnail(member.user.displayAvatarURL())
+			.setColor(client.config.color)
+			.addField("Kicked User", `${member.user.tag} (${member.id})`)
+			.addField("Kicked By", `${kicklog.executor.tag} (${kicklog.executor.id})`);
+			if(kicklog.reason){
+				kickEmbed.addField("Reason", kicklog.reason);
+			}
+			logsChannel.send(kickEmbed);
+		}
+	})
 
 	client.on("error", (err) => console.log(err));
 	client.on("warn", (info) => console.warn(info));

@@ -55,20 +55,7 @@ module.exports = {
       return message.channel.send("I cannot kick this member");
     }
 
-    let kickChannel = message.guild.channels.find(channel => channel.name === client.config.logsChannel) || message.channel;
-
-    const kickEmbed = new MessageEmbed()
-    .setTitle("Kick Embed")
-    .setThumbnail(toKick.user.displayAvatarURL())
-    .setColor(client.config.color)
-    .addField("Kicked User", `${toKick.user.tag} (${toKick.id})`)
-    .addField("Kicked By", `${message.author.tag} (${message.author.id})`);
-    if(reason){
-      kickEmbed.addField("Reason", reason);
-    }
-
-    const prom = toKick.kick(reason);
-    prom.then(() => kickChannel.send(kickEmbed));
+    const prom = toKick.kick(reason)
     prom.then(() => message.react('✅'))
 				.catch(console.error);
     prom.catch(console.error);
