@@ -1,5 +1,3 @@
-const token = require("../token.json")
-
 module.exports = (client) => {
 
 	const updateGymCache = async () => {
@@ -190,5 +188,5 @@ module.exports = (client) => {
 	client.on("error", (err) => console.log(err));
 	client.on("warn", (info) => console.warn(info));
 
-	client.login(token.token);
+	client.login(process.env.TOKEN);
 }
