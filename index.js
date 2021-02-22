@@ -12,7 +12,6 @@ const config = require("./botconfig.json");
 const errors = require("./Utils/Errors.js");
 const helpers = require("./Utils/Helper.js");
 const typeColors = require("./Type Colors.json");
-const bannedWords = require("./bannedWords.js");
 const modifiers = require('./Utils/BadgeModifiers.js');
 
 client.commands = new Collection();
